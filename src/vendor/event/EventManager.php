@@ -10,6 +10,8 @@
 
 namespace app\vendor\event;
 
+use app\vendor\debug\StringUtil;
+
 /**
  * +----------------------------------------------------------
  * Class EventManager
@@ -27,60 +29,61 @@ class EventManager
     private static $eventList = [];
 
 
-	/**
-	 * +----------------------------------------------------------
-	 * 事件注册，主要是注册给拓展使用
-	 * +----------------------------------------------------------
-	 */
-	public static function register()
+    /**
+     * +----------------------------------------------------------
+     * 事件注册，主要是注册给拓展使用
+     * +----------------------------------------------------------
+     */
+    public static function register()
     {
         $data = scandir(APP_EXTEND);
         foreach ($data as $value) {
-            if ($value != '.' && $value != '..') {
+            if (!StringUtil::get($value)->startsWith(".")) {
                 $file = APP_EXTEND  . $value . DS . 'register.php';
                 if (file_exists($file))
                     include_once $file;
+
             }
         }
     }
 
 
-	/**
-	 * +----------------------------------------------------------
-	 * 绑定事件
-	 * +----------------------------------------------------------
-	 * @param  string  $eventName 事件名
-	 * @param  string  $listener 监听器名
-	 * +----------------------------------------------------------
-	 */
-	public static function attach(string $eventName, string $listener)
+    /**
+     * +----------------------------------------------------------
+     * 绑定事件
+     * +----------------------------------------------------------
+     * @param  string  $eventName 事件名
+     * @param  string  $listener 监听器名
+     * +----------------------------------------------------------
+     */
+    public static function attach(string $eventName, string $listener)
     {
         //一个事件名绑定多个监听器
         self::$eventList[$eventName][] = $listener;
     }
 
 
-	/**
-	 * +----------------------------------------------------------
-	 * 删除事件
-	 * +----------------------------------------------------------
-	 * @param $eventName
-	 * +----------------------------------------------------------
-	 */
-	public static function detach($eventName)
+    /**
+     * +----------------------------------------------------------
+     * 删除事件
+     * +----------------------------------------------------------
+     * @param $eventName
+     * +----------------------------------------------------------
+     */
+    public static function detach($eventName)
     {
         unset(self::$eventList[$eventName]);
     }
 
-	/**
-	 * +----------------------------------------------------------
-	 * 触发事件
-	 * +----------------------------------------------------------
-	 * @param  string  $eventName  事件名
-	 * @param  null    $data       事件携带的数据
-	 * +----------------------------------------------------------
-	 */
-	public static function fire(string $eventName, $data=null)
+    /**
+     * +----------------------------------------------------------
+     * 触发事件
+     * +----------------------------------------------------------
+     * @param  string  $eventName  事件名
+     * @param  null    $data       事件携带的数据
+     * +----------------------------------------------------------
+     */
+    public static function fire(string $eventName, $data=null)
     {
         foreach (self::$eventList as $attachEventName => $listenerList) {
             //匹配监听列表

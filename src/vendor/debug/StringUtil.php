@@ -35,12 +35,12 @@ class StringUtil{
         return strpos($this->str,$s)!== false;
     }
 
-    public function startsWith(string $subString) : bool{
+    public function startsWith( $subString) {
         return substr($this->str, 0, strlen($subString)) === $subString;
         // 或者 strpos($s2, $s1) === 0
     }
 
-    public function endsWith( String $subString) : bool{
+    public function endsWith(  $subString) {
         return substr($this->str, strpos($this->str, $subString)) === $subString;
     }
 
@@ -49,9 +49,9 @@ class StringUtil{
     }
 
     public function findStart($startString){
-       $str = substr($this->str,0,strpos($this->str,$startString));
-       if($str=="")
-           $str=$this->str;
-       return $str;
+        $str = substr($this->str,0,strpos($this->str,$startString));
+        if($str=="")
+            $str=$this->str;
+        return $str;
     }
 }
