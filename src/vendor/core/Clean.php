@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2021. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\vendor\core;
@@ -47,16 +47,18 @@ class Clean
 
     static private function Console(){
         if(isset($_SERVER['CLEAN_CONSOLE'])&&$_SERVER['CLEAN_CONSOLE']){
-            if($_SERVER["REQUEST_URI"]=="clean_check"){
+            if ($_SERVER["REQUEST_URI"] == "clean_check") {
                 FileCheck::run();
-
-            }else if($_SERVER["REQUEST_URI"]=="clean_release"){
+                exitApp("命令行执行完毕");
+            } else if ($_SERVER["REQUEST_URI"] == "clean_release") {
                 Release::run();
-            }else if($_SERVER["REQUEST_URI"]=="clean_clean"){
+                exitApp("命令行执行完毕");
+            } else if ($_SERVER["REQUEST_URI"] == "clean_clean") {
                 Release::clean();
+                exitApp("命令行执行完毕");
             }
 
-            exitApp("命令行执行完毕");
+
         }
     }
     /**

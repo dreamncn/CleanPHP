@@ -43,6 +43,8 @@ class Main extends BaseController
         dump("定时任务3,每隔2分钟执行,执行3次");
         $tasker->add($tasker->cycleNMinute(2),url('index','tasker','tasker_start_3',["id"=>$id]),"write_2_3",3);
 
+
+
         dump("定时任务添加完成，请打开日志文件（storage/logs/今天日期/tasker.log）查看定时任务执行情况");
     }
 
