@@ -175,7 +175,7 @@ class Route
                 $__action = ($route_arr['a']);
                 unset($route_arr['a']);
 
-                $nowUrl=urldecode(Response::getNowAddress());
+                $nowUrl=strtolower(urldecode(Response::getNowAddress()));
                 $defineUrl=urldecode(url($__module, $__controller, $__action, $route_arr));
                 if ($defineUrl!== $nowUrl) {
                     Error::_err_router("错误的路由，该路由已被定义，请使用定义路由访问.\n当前地址:" . $nowUrl . '  定义的路由为:' . $defineUrl);
