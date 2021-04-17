@@ -6,7 +6,7 @@
  * Description  :文件文件夹io操作类
  */
 namespace app\vendor\release;
-use ZipArchive;
+
 
 /**
  * Class File

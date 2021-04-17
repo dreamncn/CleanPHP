@@ -6,6 +6,7 @@
 namespace app\vendor\debug;
 
 use app\vendor\config\Config;
+use app\vendor\release\File;
 
 /**
  * +----------------------------------------------------------
@@ -99,13 +100,13 @@ private  $file = null;
 	{
 		if ($date == null && $logName == null) {
 			if(is_dir(APP_LOG)){
-				rmdir(APP_LOG);
+				File::del(APP_LOG);
 				mkdir(APP_LOG);
 			}
 
 		} elseif ($date !== null && $logName == null) {
 			if(is_dir(APP_LOG.$date)){
-				rmdir(APP_LOG.$date);
+				File::del(APP_LOG.$date);
 			}
 
 		} elseif ($date !== null && $logName !== null) {
