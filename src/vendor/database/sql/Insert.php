@@ -148,6 +148,9 @@ class Insert extends sqlBase
         }
         $value = '(' . rtrim($value, ",") . ')';
         $this->opt['key'] = $value;
+        if($columns==null){
+            $columns=[];
+        }
         foreach ($columns as $k) {
             $update[] = "`{$k}`" . " = VALUES(" . $k . ')';
         }

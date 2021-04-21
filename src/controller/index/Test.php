@@ -40,8 +40,11 @@ class Test extends BaseController
         }
     }
     function upload(){
+        Session::getInstance()->start();
         $csrf=new DefenseAgainstCSRF();
+
         if(Request::isPost()){
+            dump($_SESSION);
             $this->_auto_display=false;
             dump("csrfToken(Cookie):".Cookie::getInstance()->get("csrftoken"));
             dump("csrfToken(Session):".Session::getInstance()->get("csrftoken"));
@@ -61,8 +64,8 @@ class Test extends BaseController
             }
 
         }else{
-
             $csrf->setCSRFToken(Session::getInstance()->Id());
+         //   dump($_SESSION);
            // dump("csrfToken:".Session::getInstance()->get("csrftoken"));
         }
         return null;
