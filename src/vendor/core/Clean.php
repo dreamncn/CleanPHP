@@ -151,8 +151,11 @@ class Clean
         $result = null;
         if ($controller_class_exists && $controller_method_exists) {
             $controller_obj = new $controller_name();
-
-            $result = $controller_obj->$action_name();
+            $result = $controller_obj->getInit();
+            //获取初始化结果
+            if($result==null)
+                $result = $controller_obj->$action_name();
+            //初始化如果有输出则直接输出，不执行函数。
             if ($controller_obj->_auto_display) {
 
                 if ($auto_tpl_file_exists) {
