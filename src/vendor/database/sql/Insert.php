@@ -92,6 +92,7 @@ class Insert extends sqlBase
     {
         $key = array_keys($kv);
         $value = array_values($kv);
+
         return $this->keys($key,$udpKey)->values([$value]);
     }
 
@@ -148,14 +149,12 @@ class Insert extends sqlBase
         }
         $value = '(' . rtrim($value, ",") . ')';
         $this->opt['key'] = $value;
-        if($columns==null){
-            $columns=[];
-        }
-        foreach ($columns as $k) {
-            $update[] = "`{$k}`" . " = VALUES(" . $k . ')';
-        }
-        if ($columns !== [])
+        if(is_array($columns)&&sizeof($columns)!=0){
+            foreach ($columns as $k) {
+                $update[] = "`{$k}`" . " = VALUES(" . $k . ')';
+            }
             $this->opt['columns'] = implode(', ', $update);
+        }
         return $this;
     }
 
