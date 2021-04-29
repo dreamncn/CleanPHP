@@ -7,6 +7,7 @@ namespace app\extend\net_ankio_tasker\core;
 
 
 use app\vendor\debug\Log;
+use app\vendor\mvc\Model;
 use app\vendor\web\Response;
 
 /**
@@ -21,7 +22,7 @@ use app\vendor\web\Response;
  * Desciption:Tasker服务
  * +----------------------------------------------------------
  */
-class Server
+class Server extends Model
 {
 
     private static $instance=null;
@@ -30,7 +31,14 @@ class Server
 
     public function __construct()
     {
-        Db::initLock();
+        parent::__construct("extend_lock");
+        $this->setDbLocation(EXTEND_TASKER."data".DS, "db");
+        $this->setDatabase("sqlite");
+        $this->execute(
+        "CREATE TABLE  IF NOT EXISTS extend_lock(
+                    lock_time varchar(200)
+                    )"
+    );
         $this->taskerUrl=Response::getAddress()."/tasker_server/";
         //任务URL
     }
@@ -88,7 +96,7 @@ class Server
      * +----------------------------------------------------------
      */
     public function stop(){
-        Db::getInstance()->emptyTable("extend_lock");
+        self::getInstance()->emptyTable("extend_lock");
     }
 
 
@@ -132,7 +140,7 @@ class Server
      * +----------------------------------------------------------
      */
     private function lock($time){
-        Db::getInstance()->update()->set(["lock_time"=>$time])->table("extend_lock")->commit();
+        self::getInstance()->update()->set(["lock_time"=>$time])->table("extend_lock")->commit();
     }
 
     /**
@@ -143,7 +151,7 @@ class Server
      * +----------------------------------------------------------
      */
     private function isStop(){
-        $data=Db::getInstance()->select()->table("extend_lock")->limit(1)->commit();
+        $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
         if(empty($data))return false;
         return (time()-intval($data[0]['lock_time'])>20);
     }
@@ -156,7 +164,7 @@ class Server
      * +----------------------------------------------------------
      */
     private function isLock(){
-        $data=Db::getInstance()->select()->table("extend_lock")->limit(1)->commit();
+        $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
         if(empty($data))return false;
         return (time()-intval($data[0]['lock_time'])<12);
     }

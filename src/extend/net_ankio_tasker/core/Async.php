@@ -5,6 +5,7 @@
 
 namespace app\extend\net_ankio_tasker\core;
 use app\vendor\debug\Log;
+use app\vendor\mvc\Model;
 use app\vendor\web\Request;
 use app\vendor\web\Response;
 
@@ -20,15 +21,38 @@ use app\vendor\web\Response;
  * Desciption:异步处理，多用于后台与多线程
  * +----------------------------------------------------------
  */
-class Async
+class Async extends Model
 {
     static private $err = '';
-
+    private static $instance=null;
     public static function err()
     {
         return self::$err;
     }
 
+
+
+    public function __construct()
+    {
+        parent::__construct("extend_async");
+        $this->setDbLocation(EXTEND_TASKER."data".DS, "db");
+        $this->setDatabase("sqlite");
+        $this->execute(
+            "CREATE TABLE  IF NOT EXISTS extend_async(
+                    id integer PRIMARY KEY autoincrement,
+                    identify varchar(200),
+                    timeout varchar(200),
+                    token varchar(200)
+                    )"
+        );
+    }
+
+    /**
+     * @return Async
+     */
+    public static function getInstance(){
+        return self::$instance===null?(self::$instance=new Async()):self::$instance;
+    }
     /**
      * +----------------------------------------------------------
      *  发起异步请求，就是后台服务请求
@@ -79,9 +103,8 @@ class Async
         $token = getRandom(128);
 
         $identify=md5($token . $identify);
-
-        Db::initAsync();
-        Db::getInstance()->insert(SQL_INSERT_NORMAL)->table("extend_async")->keyValue(['identify'=>$identify,'token' => $token, 'timeout' => time() + 60])->commit();
+        
+        self::getInstance()->insert(SQL_INSERT_NORMAL)->table("extend_async")->keyValue(['identify'=>$identify,'token' => $token, 'timeout' => time() + 60])->commit();
 
         $header .= "Token: " . md5($token) . PHP_EOL;
         $header .= "Identify: $identify" . PHP_EOL;
@@ -158,13 +181,13 @@ class Async
         $header = Request::getHeader();
         if (isset($header['Token']) && isset($header['Identify'])) {
 
-            $data = Db::getInstance()->select()->table("extend_async")->where(['identify'=>$header['Identify']])->limit(1)->commit();
+            $data = self::getInstance()->select()->table("extend_async")->where(['identify'=>$header['Identify']])->limit(1)->commit();
 
             if (empty($data)) {
                 self::$err = 'token缺失';
                 return false;
             }
-            Db::getInstance()->delete()->table("extend_async")->where(['identify'=>$header['Identify']])->commit();
+            self::getInstance()->delete()->table("extend_async")->where(['identify'=>$header['Identify']])->commit();
 
             $token = $data[0];
 

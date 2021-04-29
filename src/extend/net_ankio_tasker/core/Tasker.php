@@ -6,6 +6,7 @@
 namespace app\extend\net_ankio_tasker\core;
 
 use app\vendor\debug\Log;
+use app\vendor\mvc\Model;
 
 /**
  * +----------------------------------------------------------
@@ -20,13 +21,29 @@ use app\vendor\debug\Log;
  * +----------------------------------------------------------
  */
 
-class Tasker
+class Tasker extends Model
 {
     private static $instance;
 
     public function __construct()
     {
-        Db::initTasker();
+        parent::__construct("extend_tasker");
+        $this->setDbLocation(EXTEND_TASKER."data".DS, "db");
+        $this->setDatabase("sqlite");
+        $this->execute(
+            "CREATE TABLE  IF NOT EXISTS extend_tasker(
+                    id integer PRIMARY KEY autoincrement,
+                    url text,
+                    identify varchar(200),
+                    minute varchar(200),
+                    hour varchar(200),
+                    day varchar(200),
+                    month varchar(200),
+                    week varchar(200),
+                    next varchar(200),
+                    times integer
+                    )"
+        );
     }
 
     /**
@@ -41,7 +58,7 @@ class Tasker
     }
 
     public static function getTimes($id){
-        $data=Db::getInstance()->select("times")->table("extend_tasker")->where(["id"=>$id])->limit("1")->commit();
+        $data=self::getInstance()->select("times")->table("extend_tasker")->where(["id"=>$id])->limit("1")->commit();
         if(!empty($data)){
             return 1 - intval($data[0]["times"]);
         }
@@ -55,7 +72,7 @@ class Tasker
      * +----------------------------------------------------------
      */
     public static function clean(){
-        Db::getInstance()->emptyTable("extend_tasker");
+        self::getInstance()->emptyTable("extend_tasker");
     }
 
     /**
@@ -68,7 +85,7 @@ class Tasker
      * +----------------------------------------------------------
      */
     public static function del($id){
-        Db::getInstance()->delete()->table("extend_tasker")->where(["id"=>$id])->commit();
+        self::getInstance()->delete()->table("extend_tasker")->where(["id"=>$id])->commit();
     }
 
     /**
@@ -86,7 +103,7 @@ class Tasker
         if(sizeof($package)!=5)return false;
         $minute=$package[0];$hour=$package[1];$day=$package[2];$month=$package[3];$week=$package[4];
         $time=$this->getNext($minute,$hour,$day,$month,$week);
-        return Db::getInstance()->insert(SQL_INSERT_NORMAL)->table("extend_tasker")->keyValue(
+        return self::getInstance()->insert(SQL_INSERT_NORMAL)->table("extend_tasker")->keyValue(
             ["minute"=>$minute,
                 "hour"=>$hour,
                 "day"=>$day,
@@ -107,7 +124,7 @@ class Tasker
      * +----------------------------------------------------------
      */
     public function run(){
-        $db=Db::getInstance();
+        $db=self::getInstance();
         $data=$db->select()->table("extend_tasker")->commit();
         foreach ($data as $value){
             if(intval($value["times"])==0){

@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2021. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 /**
@@ -19,9 +19,9 @@
 namespace app\extend\net_ankio_tasker\core;
 
 use app\vendor\database\Sql;
-use app\vendor\web\Response;
+use app\vendor\mvc\Model;
 
-class Db extends Sql
+class Db extends Model
 {
 	private static $instance=null;
 
