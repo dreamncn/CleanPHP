@@ -66,7 +66,7 @@ class Ddos
 
             //如果仍在违规的阶段
             if(intval($data["times"])>=$this->query){
-                $record->update($session->Id(),["url"=>Response::getNowAddress()]);
+                $record->udp($session->Id(),["url"=>Response::getNowAddress()]);
                 $this->security($data);
             }
 
@@ -75,10 +75,10 @@ class Ddos
 
 
             if($sec<=1){
-                $record->update($session->Id(),["times = times + 1"]);
+                $record->udp($session->Id(),["times = times + 1"]);
                 if(intval($data["times"])+1>=$this->query){
                     //违规次数+1
-                    $record->update($session->Id(),
+                    $record->udp($session->Id(),
                         [
                             "count = count + 1",
                             "check_in"=>1,
@@ -91,7 +91,7 @@ class Ddos
 
                 }
             }
-            $record->update($session->Id(),["last_time"=>time()]);
+            $record->udp($session->Id(),["last_time"=>time()]);
         }
     }
 
@@ -137,14 +137,14 @@ class Ddos
         $ipData=BanIP::getInstance()->get();
         if($ipData==null&&intval($data["check_in"])===0){
             //封禁期已过
-            Record::getInstance()->update(Session::getInstance()->Id(),["times=0","count = 0"]);
+            Record::getInstance()->udp(Session::getInstance()->Id(),["times=0","count = 0"]);
 
             Response::location($data["url"],$this->timeout,false);
             exitApp("cc攻击封禁IP解封...","start",EXTEND_CC_DEFENSE."views",["time"=>$this->timeout]);
         }elseif(intval($data["check_in"])===1){
             Log::debug("clean","Ip封禁：".Request::getClientIP());
             //进行封禁
-            Record::getInstance()->update(Session::getInstance()->Id(),["check_in"=>0]);
+            Record::getInstance()->udp(Session::getInstance()->Id(),["check_in"=>0]);
 
             $count=intval($data["count"])==0?1:$data["count"];
             BanIP::getInstance()->add($this->expire*$count);
@@ -175,12 +175,12 @@ class Ddos
         }elseif($_SERVER['REQUEST_URI']==="/check"){
             if(Code::check()){
                 //检查通过
-                Record::getInstance()->update(Session::getInstance()->Id(),["times = 0","count = 0"]);
+                Record::getInstance()->udp(Session::getInstance()->Id(),["times = 0","count = 0"]);
 
                 Response::location($data["url"],$this->timeout,false);
                 exitApp("cc攻击封禁IP解封...","start",EXTEND_CC_DEFENSE."views",["time"=>$this->timeout]);
             }else{
-                Record::getInstance()->update(Session::getInstance()->Id(),["count = count + 1"]);
+                Record::getInstance()->udp(Session::getInstance()->Id(),["count = count + 1"]);
                 Response::location(Response::getAddress(),0,true);
             }
         }else{

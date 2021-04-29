@@ -19,19 +19,20 @@
 namespace app\extend\net_ankio_cc_defense\core;
 
 use app\vendor\database\Sql;
+use app\vendor\mvc\Model;
 use app\vendor\web\Response;
 
-class Record
+class Record extends Model
 {
 	private static $instance=null;
 
-	private $sql;
 
 	public function __construct() {
-		$this->sql=new Sql("session_record");
-		$this->sql->setDbLocation(EXTEND_CC_DEFENSE."data".DS, "db");
-		$this->sql->setDatabase("sqlite");
-        $this->sql->execute(
+        parent::__construct("session_record");
+
+		$this->setDbLocation(EXTEND_CC_DEFENSE."data".DS, "db");
+		$this->setDatabase("sqlite");
+        $this->execute(
             "CREATE TABLE  IF NOT EXISTS session_record(
                     id integer PRIMARY KEY autoincrement,
                     session varchar(200),
@@ -70,8 +71,7 @@ class Record
      */
 	public function add($id,$count,$times,$last_time){
 
-        $this->sql
-            ->insert(SQL_INSERT_NORMAL)
+        $this->insert(SQL_INSERT_NORMAL)
             ->keyValue(
                 ["session"=>$id,"count"=>$count,"times"=>$times,"last_time"=>$last_time,"url"=>Response::getNowAddress()]
             )->commit();
@@ -89,8 +89,8 @@ class Record
      * @return void
      * +----------------------------------------------------------
      */
-	public function update($id,$data){
-        $this->sql->update()->where(["session"=>$id])->set($data)->commit();
+	public function udp($id,$data){
+        $this->update()->where(["session"=>$id])->set($data)->commit();
 	}
 
     /**
@@ -103,7 +103,7 @@ class Record
      * +----------------------------------------------------------
      */
     public function get($session){
-        $data=$this->sql->select("*")
+        $data=$this->select("*")
             ->where(["session"=>$session])
             ->limit("1")
             ->commit();
@@ -118,6 +118,8 @@ class Record
      * +----------------------------------------------------------
      */
     public function clear(){
-        $this->sql->delete()->where(["last_time > :time",":time"=>time()+60*60*24])->commit();
+        $this->delete()->where(["last_time > :time",":time"=>time()+60*60*24])->commit();
     }
+
+
 }

@@ -51,7 +51,7 @@ class Sql
         if($tableName!=="")
             $this->tableName = $tableName;
     }
-    public function table($tableName){
+    protected function table($tableName){
         $this->tableName = $tableName;
         return $this;
     }
@@ -65,7 +65,7 @@ class Sql
      * @return Select
      * +----------------------------------------------------------
      */
-    public function select($field = "*")
+    protected function select($field = "*")
     {
         return $this->sqlInstance("Select")->select($field);
     }
@@ -114,7 +114,7 @@ class Sql
      * @return Delete
      * +----------------------------------------------------------
      */
-    public function delete()
+    protected function delete()
     {
         return $this->sqlInstance("Delete")->delete();
     }
@@ -128,7 +128,7 @@ class Sql
      * @return Insert
      * +----------------------------------------------------------
      */
-    public function insert($model)
+    protected function insert($model)
     {
         return $this->sqlInstance("Insert")->insert($model);
     }
@@ -140,7 +140,7 @@ class Sql
      * @return Update
      * +----------------------------------------------------------
      */
-    public function update()
+    protected function update()
     {
         return $this->sqlInstance("Update")->update();
     }
@@ -156,7 +156,7 @@ class Sql
      * @return array|false|int
      * +----------------------------------------------------------
      */
-    public function execute($sql, $params = [], $readonly = false)
+    protected function execute($sql, $params = [], $readonly = false)
     {
         return $this->sqlInstance()->execute($sql, $params, $readonly);
     }
@@ -178,7 +178,7 @@ class Sql
      * 事务开始
      * +----------------------------------------------------------
      */
-    public function beginTransaction()
+    protected function beginTransaction()
     {
         $this->sqlInstance()->execute("BEGIN");
     }
@@ -188,7 +188,7 @@ class Sql
      * 事务回滚
      * +----------------------------------------------------------
      */
-    public function rollBack()
+    protected function rollBack()
     {
         $this->sqlInstance()->execute("ROLLBACK");
     }
@@ -198,7 +198,7 @@ class Sql
      * 事务提交
      * +----------------------------------------------------------
      */
-    public function commit()
+    protected function commit()
     {
         $this->sqlInstance()->execute("COMMIT");
     }
@@ -213,7 +213,7 @@ class Sql
      * @return $this
      * +----------------------------------------------------------
      */
-    public function setDbLocation($path, $name)
+    protected function setDbLocation($path, $name)
     {
         $this->sql->setDbFile($path, $name);
         return $this;
@@ -228,7 +228,7 @@ class Sql
      * @return $this
      * +----------------------------------------------------------
      */
-    public function setDatabase($dbName)
+    protected function setDatabase($dbName)
     {
         $this->sql->setDatabase($dbName);
         $this->sqlIndex = $dbName;
@@ -242,8 +242,10 @@ class Sql
      * @param $table_name string 预清空的数据表
      * +----------------------------------------------------------
      */
-    public function emptyTable($table_name)
+    protected function emptyTable($table_name)
     {
         $this->sqlInstance()->emptyTable($table_name);
     }
+
+
 }

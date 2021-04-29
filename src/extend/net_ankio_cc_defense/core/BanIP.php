@@ -19,6 +19,7 @@
 namespace app\extend\net_ankio_cc_defense\core;
 
 use app\vendor\database\Sql;
+use app\vendor\mvc\Model;
 use app\vendor\web\Request;
 
 /**
@@ -33,20 +34,20 @@ use app\vendor\web\Request;
  * Desciption: IP封禁
  * +----------------------------------------------------------
  */
-class BanIP
+class BanIP extends Model
 {
 	private static $instance=null;
-
-	private $sql;
+	
 
     /**
      * BanIP constructor.
      */
 	public function __construct() {
-		$this->sql=new Sql("ban_ip");
-		$this->sql->setDbLocation(EXTEND_CC_DEFENSE."data".DS, "db");
-        $this->sql->setDatabase("sqlite");
-        $this->sql->execute(
+	    parent::__construct("ban_ip");
+		
+		$this->setDbLocation(EXTEND_CC_DEFENSE."data".DS, "db");
+        $this->setDatabase("sqlite");
+        $this->execute(
             "CREATE TABLE  IF NOT EXISTS ban_ip(
                     id integer PRIMARY KEY autoincrement,
                     ip varchar(200),
@@ -77,7 +78,7 @@ class BanIP
      * +----------------------------------------------------------
      */
 	public function add($time){
-        $this->sql->insert(SQL_INSERT_NORMAL)->keyValue(["ip"=>Request::getClientIP(),"expire"=>time()+$time])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(["ip"=>Request::getClientIP(),"expire"=>time()+$time])->commit();
 
 	}
 
@@ -90,7 +91,7 @@ class BanIP
      */
 	public function get(){
         $this->clear();
-        $data=$this->sql->select("*")
+        $data=$this->select("*")
             ->where(["ip"=>Request::getClientIP()])
             ->limit("1")
             ->commit();
@@ -106,6 +107,6 @@ class BanIP
      * +----------------------------------------------------------
      */
 	public function clear(){
-        $this->sql->delete()->where(["expire < :time",":time"=>time()])->commit();
+        $this->delete()->where(["expire < :time",":time"=>time()])->commit();
 	}
 }
