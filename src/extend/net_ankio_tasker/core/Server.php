@@ -88,6 +88,7 @@ class Server extends Model
      */
     public function start(){
         if(!$this->isLock()){//没有锁定，请求保持锁定
+            Log::debug("Tasker","定时任务没有锁定啊。所以我就发起锁定！");
             $bool=Async::request($this->taskerUrl."init","GET",[],[],"tasker_start");
             Log::debug("Tasker","定时任务服务启动。");
         }
@@ -114,8 +115,12 @@ class Server extends Model
      */
     private function init()
     {
+        sleep(10);
         $fp=fopen(EXTEND_TASKER."tasker_server.lock","w+");
-        if(!flock($fp,LOCK_EX|LOCK_NB))return;
+        if(!flock($fp,LOCK_EX)){
+            fclose($fp);
+            return;
+        }
         //通过文件指针锁定，避免重复拉起服务。
         $this->stop();
         fwrite($fp,time());
