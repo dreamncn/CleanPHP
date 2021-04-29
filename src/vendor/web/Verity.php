@@ -8,8 +8,8 @@ class Verity{
      * @var Verity
      */
     private static $instance = null;
-    private string $str = "";
-    private string $err = "";
+    private  $str = "";
+    private  $err = "";
     public static function get($str){
         if(self::$instance==null){
             self::$instance=new verity();

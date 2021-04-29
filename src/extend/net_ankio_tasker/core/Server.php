@@ -65,13 +65,18 @@ class Server extends Model
     {
         $splite=explode("/",$_SERVER['REQUEST_URI']);
 
+
+
         if(sizeof($splite)!==3)return;
+
         if($splite[1]!=="tasker_server")return;
 
         Async::response(0);
+
         switch ($splite[2]){
             case "init":$this->init();break;
         }
+
     }
 
     /**
@@ -128,6 +133,7 @@ class Server extends Model
         } while(true);
         flock($fp, LOCK_UN);
         fclose($fp);
+        exitApp("服务退出，框架退出");
     }
 
     /**

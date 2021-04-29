@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="1ocal">
+  <component name="PublishConfigData" autoUpload="Always" serverName="2">
     <serverData>
-      <paths name="1ocal">
+      <paths name="2">
         <serverdata>
           <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$/src" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/src/" />
           </mappings>
         </serverdata>
       </paths>

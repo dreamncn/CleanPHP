@@ -6,7 +6,7 @@
 namespace app\controller\index;
 
 use app\vendor\web\Response;
-use app\vendor\web\verity;
+use app\vendor\web\Verity;
 
 class Example extends BaseController
 {

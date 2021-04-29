@@ -56,7 +56,7 @@ class EventManager
      * @param  string  $listener 监听器名
      * +----------------------------------------------------------
      */
-    public static function attach(string $eventName, string $listener)
+    public static function attach( $eventName,  $listener)
     {
         //一个事件名绑定多个监听器
         self::$eventList[$eventName][] = $listener;
@@ -83,7 +83,7 @@ class EventManager
      * @param  null    $data       事件携带的数据
      * +----------------------------------------------------------
      */
-    public static function fire(string $eventName, $data=null)
+    public static function fire( $eventName, $data=null)
     {
         foreach (self::$eventList as $attachEventName => $listenerList) {
             //匹配监听列表
