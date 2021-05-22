@@ -2,12 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="d32468a9-a764-47db-97ef-f108ef82302f" name="2" url="http://192.168.188.130">
-        <fileTransfer host="192.168.188.130" port="21">
-          <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
-          </advancedOptions>
-        </fileTransfer>
+      <webServer id="3ce13829-63cb-486c-8b11-9807f8cdc73a" name="22" url="http://localhost">
+        <fileTransfer mountedRoot="$PROJECT_DIR$/../../../../hosts/a.com" accessType="MOUNT" port="0" />
       </webServer>
     </option>
   </component>

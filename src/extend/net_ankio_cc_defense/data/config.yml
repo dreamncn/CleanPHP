@@ -7,6 +7,6 @@ action: code > 2
 # 检测cc攻击后的操作：ban 封禁IP / code 验证码 / code > 3 验证码触发次数大于3封禁
 expire: 3600
 # ip封禁时长为3600秒
-use: false
+use: true
 # 是否启用
 

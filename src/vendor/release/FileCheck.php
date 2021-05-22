@@ -6,6 +6,7 @@
 namespace app\vendor\release;
 
 
+use app\vendor\debug\Log;
 use app\vendor\debug\StringUtil;
 
 class FileCheck

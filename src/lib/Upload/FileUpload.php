@@ -1,6 +1,8 @@
 <?php
 namespace app\lib\Upload;
+use app\vendor\debug\Log;
 use app\vendor\debug\StringUtil;
+use app\vendor\release\File;
 
 /**
  *
@@ -70,6 +72,19 @@ class FileUpload {
 
     }
 
+    public function checkVirus($path){
+        if(file_exists($path)){
+            $data=file_get_contents($path);
+            if(StringUtil::get(strtolower($data))->contains("<?php")){
+                File::delFile($path);
+                file_put_contents($this->path.DS.md5($path).".virus",base64_encode($data));
+                Log::info("virus","发现病毒文件：".$path.".virus");
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getFile($fileName){
        $strUtil=StringUtil::get($fileName);
        $str=$strUtil->findEnd("/");
@@ -77,6 +92,9 @@ class FileUpload {
         if(file_exists($path)){
             $data=file_get_contents($path);
             if(StringUtil::get(strtolower($data))->contains("<?php")){
+                File::delFile($path);
+                file_put_contents($path.".virus",base64_encode($data));
+                Log::info("virus","发现病毒文件：".$path.".virus");
                 return "";
             }
             return $data;
@@ -326,6 +344,8 @@ class FileUpload {
 
             case -5: $str .= "必须指定上传文件的路径"; break;
 
+            case -6: $str .= "发现病毒！";break;
+
             default: $str .= "未知错误";
 
         }
@@ -482,7 +502,10 @@ class FileUpload {
             $path = rtrim($this->path, '/').'/';
 
             $path .= $this->new_file_name;
-
+            if($this->checkVirus($this->tmp_file_name)){
+                $this->setOption('error_num', -6);
+                return false;
+            }
             if (@move_uploaded_file($this->tmp_file_name, $path)) {
 
                 return true;
