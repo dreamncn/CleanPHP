@@ -15,7 +15,7 @@ class Code
         $largeur = 120;
         $hauteur = 40;
         $longueur = 6;
-        $liste = '134679ACEFGHIJLMNPRTUVWXY@%$&';
+        $liste = '134679ACEFGHIJLMNPRTUVWXY';
         $code = '';
         $image = @imagecreate($largeur, $hauteur) or die('Impossible d\'initializer GD');
         for ($i = 0; $i < 10; $i++) {
@@ -50,6 +50,6 @@ class Code
         $code=strval(arg("code"));
         $session_code=Session::getInstance()->get("code");
         Session::getInstance()->delete("code");
-        return $code===$session_code;
+        return strtolower($code)===strtolower($session_code);
     }
 }

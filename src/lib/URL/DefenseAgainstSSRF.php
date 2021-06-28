@@ -19,7 +19,7 @@ class DefenseAgainstSSRF
      * @var int
      */
     private $limit;
-    private string $err="";
+    private $err="";
 
     /**
      * DefenseAgainstSSRF constructor.
