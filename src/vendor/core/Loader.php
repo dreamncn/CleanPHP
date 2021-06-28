@@ -34,7 +34,7 @@ class Loader
         //注册第三方库的自动加载
         $data = scandir(APP_LIB);
         foreach ($data as $value) {
-            if ($value != '.' && $value != '..') {
+            if ($value != '.' && $value != '..' && $value!=".DS_Store") {
                 $file = APP_LIB .  $value . DS . 'autoload.php';
                 if (file_exists($file)) include $file;
             }

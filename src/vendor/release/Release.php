@@ -145,7 +145,7 @@ class Release
         $zip=new Zip();
         $zip->Zip("../release/temp",$fileName);
         echo "\n[项目打包程序]php程序已打包至$fileName";
-        //File::del($new);
+        File::del($new);
     }
 
     public static function clean()

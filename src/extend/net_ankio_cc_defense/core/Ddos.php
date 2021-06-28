@@ -11,7 +11,7 @@ use app\vendor\web\Session;
 
 class Ddos
 {
-    private Config $config;
+    private $config;
     private $timeout;
     private $query;
     private $action;
