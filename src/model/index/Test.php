@@ -52,8 +52,7 @@ class Test extends Model{
         $data = $this->select()->commit();
         dump("删除id为1的数据，当前数据库数据");
         dump($data);
-        $this->update()->where(['id' => 2])->set(["urls" => "213131213"])
-            ->commit();
+        $this->update()->where(['id' => 2])->set(["urls" => "213131213"])->commit();
         $data = $this->select()->commit();
         dump("更新id为2的数据，当前数据库数据");
         dump($data);
