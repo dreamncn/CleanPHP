@@ -7,7 +7,7 @@ namespace app\controller\index;
 
 
 use app\extend\net_ankio_tasker\core\Async;
-use app\vendor\debug\Log;
+use app\core\debug\Log;
 
 class Tasker extends BaseController
 {

@@ -6,8 +6,8 @@
 namespace app\extend\net_ankio_cc_defense\core;
 
 
-use app\vendor\debug\Log;
-use app\vendor\web\Session;
+use app\core\debug\Log;
+use app\core\web\Session;
 
 class Code
 {

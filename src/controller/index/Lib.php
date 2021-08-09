@@ -10,7 +10,7 @@ use app\lib\Encryption\AESEncryptHelper;
 use app\lib\Encryption\RSAEncryptHelper;
 use app\lib\URL\DefenseAgainstCSRF;
 use app\lib\URL\DefenseAgainstSSRF;
-use app\vendor\mvc\Controller;
+use app\core\mvc\Controller;
 
 class Lib extends Controller
 {

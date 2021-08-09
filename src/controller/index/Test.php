@@ -9,10 +9,10 @@ namespace app\controller\index;
 use app\lib\Upload\FileUpload;
 use app\lib\URL\DefenseAgainstCSRF;
 use app\lib\URL\DefenseAgainstSSRF;
-use app\vendor\web\Cookie;
-use app\vendor\web\Request;
-use app\vendor\web\Response;
-use app\vendor\web\Session;
+use app\core\web\Cookie;
+use app\core\web\Request;
+use app\core\web\Response;
+use app\core\web\Session;
 
 class Test extends BaseController
 {

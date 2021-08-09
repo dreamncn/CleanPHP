@@ -1,8 +1,8 @@
 <?php
 namespace app\lib\Upload;
-use app\vendor\debug\Log;
-use app\vendor\debug\StringUtil;
-use app\vendor\release\File;
+use app\core\debug\Log;
+use app\core\debug\StringUtil;
+use app\core\release\File;
 
 /**
  *

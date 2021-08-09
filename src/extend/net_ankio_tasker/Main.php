@@ -6,7 +6,7 @@
 namespace app\extend\net_ankio_tasker;
 
 use app\extend\net_ankio_tasker\core\Server;
-use app\vendor\event\EventListener;
+use app\core\event\EventListener;
 
 define("EXTEND_TASKER",APP_EXTEND."net_ankio_tasker".DS);
 

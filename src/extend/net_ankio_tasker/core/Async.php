@@ -4,10 +4,10 @@
  ******************************************************************************/
 
 namespace app\extend\net_ankio_tasker\core;
-use app\vendor\debug\Log;
-use app\vendor\mvc\Model;
-use app\vendor\web\Request;
-use app\vendor\web\Response;
+use app\core\debug\Log;
+use app\core\mvc\Model;
+use app\core\web\Request;
+use app\core\web\Response;
 
 /**
  * +----------------------------------------------------------

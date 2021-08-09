@@ -3,11 +3,11 @@
  * Copyright (c) 2020. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 namespace app\extend\net_ankio_cc_defense\core;
-use app\vendor\config\Config;
-use app\vendor\debug\Log;
-use app\vendor\web\Request;
-use app\vendor\web\Response;
-use app\vendor\web\Session;
+use app\core\config\Config;
+use app\core\debug\Log;
+use app\core\web\Request;
+use app\core\web\Response;
+use app\core\web\Session;
 
 class Ddos
 {

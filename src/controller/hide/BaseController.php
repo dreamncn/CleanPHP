@@ -5,8 +5,8 @@
 
 namespace app\controller\hide;
 
-use app\vendor\mvc\Controller;
-use app\vendor\web\Response;
+use app\core\mvc\Controller;
+use app\core\web\Response;
 
 class BaseController extends Controller
 {

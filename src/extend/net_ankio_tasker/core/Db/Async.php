@@ -18,8 +18,8 @@
 
 namespace app\extend\net_ankio_tasker\core;
 
-use app\vendor\database\Sql;
-use app\vendor\mvc\Model;
+use app\core\database\Sql;
+use app\core\mvc\Model;
 
 class Db extends Model
 {

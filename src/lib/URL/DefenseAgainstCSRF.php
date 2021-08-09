@@ -3,10 +3,10 @@
 
 namespace app\lib\URL;
 
-use app\vendor\web\Cookie;
-use app\vendor\web\Request;
-use app\vendor\web\Response;
-use app\vendor\web\Session;
+use app\core\web\Cookie;
+use app\core\web\Request;
+use app\core\web\Response;
+use app\core\web\Session;
 use http\Header;
 
 /**

@@ -5,7 +5,7 @@
 
 
 namespace app\model\index;
-use app\vendor\mvc\Model;
+use app\core\mvc\Model;
 
 class Test extends Model{
 

@@ -18,7 +18,7 @@
 
 namespace app\extend\net_ankio_tasker\core\Db;
 
-use app\vendor\mvc\Model;
+use app\core\mvc\Model;
 
 class Tasker extends Model
 {

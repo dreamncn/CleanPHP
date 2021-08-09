@@ -18,9 +18,9 @@
 
 namespace app\extend\net_ankio_cc_defense\core;
 
-use app\vendor\database\Sql;
-use app\vendor\mvc\Model;
-use app\vendor\web\Request;
+use app\core\database\Sql;
+use app\core\mvc\Model;
+use app\core\web\Request;
 
 /**
  * +----------------------------------------------------------

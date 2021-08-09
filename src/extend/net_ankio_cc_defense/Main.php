@@ -6,9 +6,9 @@
 namespace app\extend\net_ankio_cc_defense;
 
 use app\extend\net_ankio_cc_defense\core\Ddos;
-use app\vendor\config\Config;
-use app\vendor\debug\Log;
-use app\vendor\event\EventListener;
+use app\core\config\Config;
+use app\core\debug\Log;
+use app\core\event\EventListener;
 define("EXTEND_CC_DEFENSE",APP_EXTEND."net_ankio_cc_defense".DS);
 
 class Main implements EventListener

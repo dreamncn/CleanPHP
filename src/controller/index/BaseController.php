@@ -5,7 +5,7 @@
 
 namespace app\controller\index;
 
-use app\vendor\mvc\Controller;
+use app\core\mvc\Controller;
 
 class BaseController extends Controller
 {
