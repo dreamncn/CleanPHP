@@ -1,6 +1,0 @@
-[2021-03-05 16:51:55][warn] WARNING: unlink(/Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/release/temp/extend.DS_Store): No such file or directory in /Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/src/vendor/release/File.php on line 55
-[2021-03-05 17:00:26][warn] WARNING: mkdir(): File exists in /Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/src/vendor/release/Release.php on line 132
-[2021-03-05 21:44:31][warn] ArgumentCountError: Too few arguments to function app\vendor\release\FileCheck::getMd5(), 1 passed in /Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/src/vendor/release/FileCheck.php on line 174 and exactly 2 expected in /Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/src/vendor/release/FileCheck.php:146
-
-[2021-03-05 22:14:33][warn] WARNING: opendir(../../../release/temp): failed to open dir: No such file or directory in /Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/src/vendor/release/Zip.php on line 38
-[2021-03-05 22:16:26][warn] WARNING: opendir(../../../../release/temp): failed to open dir: No such file or directory in /Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/src/vendor/release/Zip.php on line 38

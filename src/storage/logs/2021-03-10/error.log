@@ -1,3 +1,0 @@
-[2021-03-10 10:44:41][warn] WARNING: fsockopen(): unable to connect to localhost:80 (Connection refused) in /Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/src/extend/net_ankio_tasker/core/Async.php on line 58
-[2021-03-10 10:45:11][warn] WARNING: fsockopen(): unable to connect to localhost:80 (Connection refused) in /Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/src/extend/net_ankio_tasker/core/Async.php on line 58
-[2021-03-10 10:46:04][warn] WARNING: fsockopen(): unable to connect to localhost:80 (Connection refused) in /Users/ankio/Documents/Sync/SourceCode/PHP/ClearPHP2.0/src/extend/net_ankio_tasker/core/Async.php on line 59

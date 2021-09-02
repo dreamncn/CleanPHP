@@ -102,7 +102,7 @@ class View
         $template_data = $this->_compile_struct($template_data);
 
         $template_data = $this->_compile_function($template_data);
-        $template_data = '<?php use app\core\mvc; if(!class_exists("app\\\\vendor\\\\mvc\\\\View", false)) exit("模板文件禁止被直接访问.");?>' . $template_data;
+        $template_data = '<?php use app\core\mvc; if(!class_exists("app\\\\core\\\\mvc\\\\View", false)) exit("模板文件禁止被直接访问.");?>' . $template_data;
         $template_data = $this->_complie_script_get($template_data);
         $template_data = $this->_complie_script_put($template_data);
         $template_data = $this->cleanRemark($template_data);
