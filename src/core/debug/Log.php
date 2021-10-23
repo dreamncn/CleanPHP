@@ -172,10 +172,9 @@ private  $file = null;
 		$dir_name = dirname($file);
 		//目录不存在就创建
 		if ( ! file_exists($dir_name)) {
-			$this->mkdirs($dir_name);
+			self::mkdirs($dir_name);
 		}
 		$this->handler = fopen($file, 'a');
-
 
 		return $this;
 	}
@@ -187,12 +186,12 @@ private  $file = null;
 	 * @param $dir
 	 * +----------------------------------------------------------
 	 */
-	public function mkdirs($dir)
+	public static function mkdirs($dir)
 	{
 		if (is_dir(dirname($dir))) {
 			mkdir($dir);
 		} else {
-			$this->mkdirs(dirname($dir));
+			self::mkdirs(dirname($dir));
 		}
 	}
 

@@ -2,8 +2,12 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="3ce13829-63cb-486c-8b11-9807f8cdc73a" name="22" url="http://localhost">
-        <fileTransfer mountedRoot="$PROJECT_DIR$/../../../../hosts/a.com" accessType="MOUNT" port="0" />
+      <webServer id="793d7385-b0b8-4479-a061-2b7ea3d0724f" name="cleanphp_ankio_net" url="http://103.150.181.43">
+        <fileTransfer host="103.150.181.43" port="2121">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
       </webServer>
     </option>
   </component>

@@ -40,25 +40,22 @@ class Clean
     {
         //框架开始类
         self::Init();
-        Route::rewrite();
-        self::createObj();
-
+        if(!self::isConsole()){
+            Route::rewrite();
+            self::createObj();
+        }
     }
 
+    public static function isConsole(){
+        return isset($_SERVER['CLEAN_CONSOLE'])&&$_SERVER['CLEAN_CONSOLE'];
+    }
     static private function Console(){
-        if(isset($_SERVER['CLEAN_CONSOLE'])&&$_SERVER['CLEAN_CONSOLE']){
-            if ($_SERVER["REQUEST_URI"] == "clean_check") {
-                FileCheck::run();
-                exitApp("命令行执行完毕");
-            } else if ($_SERVER["REQUEST_URI"] == "clean_release") {
-                Release::run();
-                exitApp("命令行执行完毕");
-            } else if ($_SERVER["REQUEST_URI"] == "clean_clean") {
-                Release::clean();
-                exitApp("命令行执行完毕");
-            }
-
-
+        if ($_SERVER["REQUEST_URI"] == "clean_check") {
+            FileCheck::run();
+        } else if ($_SERVER["REQUEST_URI"] == "clean_release") {
+            Release::run();
+        } else if ($_SERVER["REQUEST_URI"] == "clean_clean") {
+            Release::clean();
         }
     }
     /**
@@ -87,17 +84,21 @@ class Clean
             header('Access-Control-Allow-Origin:' . $origin);
         }
 
-        self::Console();//命令行执行
+        if(self::isConsole()){
+            self::Console();//命令行执行
+        }else{
+            EventManager::fire("afterFrameInit", null);
 
-        EventManager::fire("afterFrameInit", null);
+            //完整性校验
+            if(!isDebug()&&Config::getInstance("frame")->setLocation(APP_CONF)->getOne("check")){
 
-        //完整性校验
-        if(!isDebug()&&Config::getInstance("frame")->setLocation(APP_CONF)->getOne("check")){
-
-            if(!FileCheck::checkMd5(APP_DIR,Config::getInstance("frame")->setLocation(APP_CONF)->getOne("md5"))){
-                exitApp("应用程序完整性检查校验未通过。");
+                if(!FileCheck::checkMd5(APP_DIR,Config::getInstance("frame")->setLocation(APP_CONF)->getOne("md5"))){
+                    exitApp("应用程序完整性检查校验未通过。");
+                }
             }
         }
+
+
 
     }
 

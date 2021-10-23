@@ -9,6 +9,7 @@ namespace app\extend\net_ankio_tasker\core;
 use app\core\debug\Log;
 use app\core\mvc\Model;
 use app\core\web\Response;
+use app\lib\Async\Async;
 
 /**
  * +----------------------------------------------------------
@@ -71,7 +72,7 @@ class Server extends Model
 
         if($splite[1]!=="tasker_server")return;
 
-        Async::response(0);
+        Async::getInstance()->response(0);
 
         switch ($splite[2]){
             case "init":$this->init();break;
@@ -89,7 +90,7 @@ class Server extends Model
     public function start(){
         if(!$this->isLock()){//没有锁定，请求保持锁定
             Log::debug("Tasker","定时任务好久没有访问了。所以我就尝试发起锁定！");
-            $bool=Async::request($this->taskerUrl."init","GET",[],[],"tasker_start");
+            $bool=Async::getInstance()->request($this->taskerUrl."init","GET",[],[],"tasker_start");
             Log::debug("Tasker","定时任务服务启动。");
         }
     }

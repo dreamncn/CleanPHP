@@ -3,9 +3,9 @@
  * Copyright (c) 2020. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\extend\net_ankio_tasker\core;
+namespace app\lib\Async;
+use app\core\cache\Cache;
 use app\core\debug\Log;
-use app\core\mvc\Model;
 use app\core\web\Request;
 use app\core\web\Response;
 
@@ -21,30 +21,20 @@ use app\core\web\Response;
  * Desciption:异步处理，多用于后台与多线程
  * +----------------------------------------------------------
  */
-class Async extends Model
+class Async
 {
-    static private $err = '';
+    private $err = '';
     private static $instance=null;
-    public static function err()
-    {
-        return self::$err;
-    }
 
+    public function err()
+    {
+        return $this->err;
+    }
 
 
     public function __construct()
     {
-        parent::__construct("extend_async");
-        $this->setDbLocation(EXTEND_TASKER."data".DS, "db");
-        $this->setDatabase("sqlite");
-        $this->execute(
-            "CREATE TABLE  IF NOT EXISTS extend_async(
-                    id integer PRIMARY KEY autoincrement,
-                    identify varchar(200),
-                    timeout varchar(200),
-                    token varchar(200)
-                    )"
-        );
+        Cache::init(300,APP_CACHE."task/");
     }
 
     /**
@@ -66,7 +56,7 @@ class Async extends Model
      * @return bool
      * +----------------------------------------------------------
      */
-    public static function request($url, $method = 'GET', $data = [], $cookie = [], $identify = 'clean')
+    public function request($url, $method = 'GET', $data = [], $cookie = [], $identify = 'clean')
     {
 
         Log::debug("Async","异步发起中：".$url);
@@ -77,18 +67,20 @@ class Async extends Model
         if($data==[]&&isset($url_array["query"]))
             parse_str($url_array["query"], $data);
 
-        Log::debug("Async",print_r($data,true));
         $port = $url_array['scheme'] == 'http' ? 80 : 443;
+        if(isset($url_array["port"])){
+            $port = $url_array["port"];
+        }
        try{
            $fp = fsockopen(($url_array['scheme'] == 'http' ? "" : 'ssl://') . $url_array['host'], $port, $errno, $errstr, 30);
        }catch (\Exception $e){
-           self::$err = '无法向该URL发起请求' . $errstr;
-           Log::debug("Async","异步发起失败，原因：".self::$err);
+           $this->err = '无法向该URL发起请求' . $errstr;
+           Log::debug("Async","异步发起失败，原因：".$this->err);
            return false;
        }
         if (!$fp) {
-            self::$err = '无法向该URL发起请求' . $errstr;
-            Log::debug("Async","异步发起失败，原因：".self::$err);
+            $this->err = '无法向该URL发起请求' . $errstr;
+            Log::debug("Async","异步发起失败，原因：".$this->err);
             return false;
         }
 
@@ -99,12 +91,12 @@ class Async extends Model
 
         $header = $method . " " . $getPath;
         $header .= " HTTP/1.1" . PHP_EOL;
-        $header .= "Host: " . $url_array['host'] . "" . PHP_EOL; //HTTP 1.1 Host域不能省略
+        $header .= "Host: " . $url_array['host'] ./*":".$port .*/ PHP_EOL; //HTTP 1.1 Host域不能省略
         $token = getRandom(128);
 
         $identify=md5($token . $identify);
-        
-        self::getInstance()->insert(SQL_INSERT_NORMAL)->table("extend_async")->keyValue(['identify'=>$identify,'token' => $token, 'timeout' => time() + 60])->commit();
+
+        Cache::set($identify,['token' => $token, 'timeout' => time() + 60]);
 
         $header .= "Token: " . md5($token) . PHP_EOL;
         $header .= "Identify: $identify" . PHP_EOL;
@@ -144,11 +136,11 @@ class Async extends Model
      * @return void
      * +----------------------------------------------------------
      */
-    public static function response($time = 0)
+    public function response($time = 0)
     {
         Log::debug('Async_Res', '异步响应中...' );
-        if (!self::checkToken()) {
-            Log::debug('Async_Res', '异步响应失败，原因：' . self::$err);
+        if (!$this->checkToken()) {
+            Log::debug('Async_Res', '异步响应失败，原因：' . $this->err);
             Response::msg(true,403,"禁止访问","您无权访问该资源。",0,Response::getAddress(),"立即跳转");
         }
         ignore_user_abort(true); // 后台运行，不受前端断开连接影响
@@ -176,34 +168,36 @@ class Async extends Model
      * @return bool
      * +----------------------------------------------------------
      */
-    private static function checkToken()
+    private function checkToken()
     {
         $header = Request::getHeader();
         if (isset($header['Token']) && isset($header['Identify'])) {
 
-            $data = self::getInstance()->select()->table("extend_async")->where(['identify'=>$header['Identify']])->limit(1)->commit();
+
+            $data  =   Cache::get($header['Identify']);
 
             if (empty($data)) {
-                self::$err = 'token缺失';
+                $this->err = 'token缺失';
                 return false;
             }
-            self::getInstance()->delete()->table("extend_async")->where(['identify'=>$header['Identify']])->commit();
 
-            $token = $data[0];
+            Cache::del($header['Identify']);
+
+            $token = $data;
 
             if ($token && isset($token['timeout']) && isset($token['token'])) {
                 if (intval($token['timeout']) < time()) {
-                    self::$err = '响应超时';
+                    $this->err = '响应超时';
                     return false;
                 }
                 if ($header['Token'] !== md5($token['token'])) {
-                    self::$err = 'token校验失败';
+                    $this->err = 'token校验失败';
                     return false;
                 }
                 return true;
             }
         }
-        self::$err = '任务不存在';
+        $this->err = '任务不存在';
         return false;
     }
 }

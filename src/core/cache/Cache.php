@@ -13,6 +13,8 @@
 
 namespace app\core\cache;
 
+use app\core\debug\Log;
+
 /**
  * +----------------------------------------------------------
  * Class Cache
@@ -45,6 +47,10 @@ class Cache
     {
         self::$cache_expire = $exp_time;
         self::$cache_path = $path;
+        Log::debug("cache","缓存信息：$path");
+        if(!is_dir($path)){
+           Log::mkdirs($path);
+        }
         self::$cache_security=$security;
     }
 
@@ -137,13 +143,19 @@ class Cache
 
                 flock($file, LOCK_SH);
                 $data = fread($file, filesize($filename));
+                Log::info("cache","读取数据".$data);
                 flock($file, LOCK_UN);
                 fclose($file);
-                return unserialize($data);
+               try{
+                   return unserialize($data);
+               }catch (\Throwable $e){
+                   return null;
+               }
             } else return null;
         } else {
             self::del($key);
             return null;
         }
     }
+
 }

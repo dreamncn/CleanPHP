@@ -7,6 +7,7 @@ namespace app\extend\net_ankio_tasker\core;
 
 use app\core\debug\Log;
 use app\core\mvc\Model;
+use app\lib\Async\Async;
 
 /**
  * +----------------------------------------------------------

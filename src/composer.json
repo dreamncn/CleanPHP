@@ -5,5 +5,11 @@
             "email": "dream@dreamn.cn"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "eaglewu/swoole-ide-helper": "dev-master"
+    },
+    "require": {
+        "ext-sockets": "*",
+      "ext-json": "*"
+    }
 }

@@ -1,10 +1,12 @@
 ---
 host :
   # 绑定域名
-  - "a.com"
   - "localhost"
+  - "cleanphp.ankio.net"
   - "127.0.0.1"
 #是否为调试模式,发布前请关闭调试模式
+websocket_port : 9001
+
 debug : true
 # 使用伪静态
 rewrite: true
