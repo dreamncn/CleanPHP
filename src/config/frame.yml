@@ -2,7 +2,7 @@
 host :
   # 绑定域名
   - "localhost"
-  - "cleanphp.ankio.net"
+  - "cleanphp.com"
   - "127.0.0.1"
 #是否为调试模式,发布前请关闭调试模式
 

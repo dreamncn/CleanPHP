@@ -11,29 +11,30 @@ class Test extends Model{
 
     public function __construct()
     {
+
         parent::__construct("log");
+        $this->setDatabase("sqlite_demo");
         $this->execute(
             "create table if not exists log(
-    id int primary key auto_increment ,
+    id int primary key autoincrement ,
     name varchar(32), 
     urls varchar(200),
     ip varchar(200)) ");
-        $this->insert(SQL_INSERT_IGNORE)->keyValue(['name'=>"wang"])->commit();
-        $this->insert(SQL_INSERT_IGNORE)->keyValue(['name'=>"hi"])->commit();
-        $this->insert(SQL_INSERT_IGNORE)->keyValue(['name'=>"111"])->commit();
-        $this->insert(SQL_INSERT_IGNORE)->keyValue(['name'=>"limi"])->commit();
-        $this->insert(SQL_INSERT_IGNORE)->keyValue(['name'=>"whar"])->commit();
-        $this->insert(SQL_INSERT_IGNORE)->keyValue(['name'=>"iisisis"])->commit();
-        $this->insert(SQL_INSERT_IGNORE)->keyValue(['name'=>"nonon"])->commit();
-        $this->insert(SQL_INSERT_IGNORE)->keyValue(['name'=>"000999"])->commit();
-        $this->insert(SQL_INSERT_IGNORE)->keyValue(['name'=>"789090"])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(['urls'=>"wang"])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(['name'=>"hi"])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(['ip'=>"111"])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(['name'=>"limi"])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(['name'=>"whar"])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(['name'=>"iisisis"])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(['name'=>"nonon"])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(['name'=>"000999"])->commit();
+        $this->insert(SQL_INSERT_NORMAL)->keyValue(['name'=>"789090"])->commit();
     }
     public function get($id){
         return $this->select()->where(['id'=>$id])->commit();
     }
     
     public function testInit(){
-        dump("该操作应该继承model类，在model/index中执行，此处写法仅用于演示。");
 
         $data = $this->select()->commit();
         dump("当前数据库数据");

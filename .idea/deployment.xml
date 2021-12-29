@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="cleanphp_ankio_net">
+  <component name="PublishConfigData" autoUpload="Always" serverName="local">
     <serverData>
       <paths name="cleanphp_ankio_net">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$/src" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="local">
         <serverdata>
           <mappings>
             <mapping deploy="/" local="$PROJECT_DIR$/src" web="/" />

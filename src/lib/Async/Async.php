@@ -136,7 +136,7 @@ class Async
      * @return void
      * +----------------------------------------------------------
      */
-    public function response($time = 0)
+    public function response(int $time = 0)
     {
         Log::debug('Async_Res', '异步响应中...' );
         if (!$this->checkToken()) {

@@ -84,7 +84,7 @@ class Error
 	 */
 	public static function err($msg, $errinfo = [])
 	{
-		$msg    = htmlspecialchars($msg);
+		$msg   = htmlspecialchars($msg);
 		$traces = sizeof($errinfo) === 0 ? debug_backtrace() : $errinfo;
 		if (ob_get_contents()) {
 			ob_end_clean();
@@ -234,14 +234,19 @@ class Error
 
         #oneborder #current {
             background: #CFF0F3;
-        }</style>
+        }
+        pre{
+          word-break: break-all;
+        }
+        </style>
 </head>
 <body>
 <div id="main">
-    <div id="contents"><h2>{$msg}</h2>
+    <div id="contents"><h2><pre>{$msg}</pre></h2>
 EOF;
-
+        $index = 0;
 		foreach ($traces as $trace) {
+            if(++$index==1)continue;
 			if (is_array($trace) && ! empty($trace["file"])) {
 				$souceline = self::_err_getsource($trace["file"],
 					$trace["line"]);

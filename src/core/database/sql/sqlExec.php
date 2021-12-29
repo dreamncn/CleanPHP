@@ -15,8 +15,10 @@
 namespace app\core\database\sql;
 
 use app\core\config\Config;
+use app\core\database\exception\SqlCheckExceptionn;
 use app\core\debug\Error;
 use app\core\debug\Log;
+use Exception;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -141,9 +143,9 @@ class sqlExec
      * @param array $params
      * @param false $readonly
      * +----------------------------------------------------------
-     * @return array|false|int
+     * @return array|int
      * +----------------------------------------------------------
-     * @throws \Exception
+     * @throws Exception
      */
 	public function execute($sql, $params = [], $readonly = false)
     {
@@ -152,10 +154,14 @@ class sqlExec
         /**
          * @var $sth PDOStatement
          */
+        $instance =  $this->dbInstance($this->getDbData()[$this->sqlIndex]);
+        $sth = $instance->prepare($sql);
 
-        $sth = $this->dbInstance($this->getDbData()[$this->sqlIndex])->prepare($sql);
-        if ($sth == false)
-            throw new \Exception('SQL语句错误: "' . $sql . '", 无法进行预编译! ');
+        if ($sth == false){
+            $errorInfo = $instance->errorInfo();
+            throw new SqlCheckExceptionn($sql,$errorInfo);
+        }
+
         if (is_array($params) && !empty($params)) foreach ($params as $k => $v) {
             if (is_int($v)) {
                 $data_type = PDO::PARAM_INT;
@@ -186,8 +192,7 @@ class sqlExec
 
         }
         $err = $sth->errorInfo();
-        Log::debug("sqlErr",'SQL语句错误: "' . $sql . '", 错误信息: ' . $err[2]);
-        throw new \Exception('SQL语句错误: "' . $sql . '", 错误信息: ' . $err[2]);
+        throw new SqlCheckExceptionn($sql,$err);
 
     }
 
@@ -199,7 +204,7 @@ class sqlExec
      * +----------------------------------------------------------
      * @return PDO|null
      * +----------------------------------------------------------
-     * @throws \Exception
+     * @throws Exception
      */
 	public function dbInstance($db_config)
     {
@@ -215,7 +220,7 @@ class sqlExec
 
         try {
             if (!isset($dsn[$this->sqlType]))
-                throw new \Exception("数据库错误: 我们不支持该类型数据库.({$this->sqlType})");
+                throw new Exception("数据库错误: 我们不支持该类型数据库.({$this->sqlType})");
             $connectData = $dsn[$this->sqlType];
             Log::debug("clean",". 当前数据库信息：  {$connectData}");
             $key=md5($connectData);
@@ -231,7 +236,7 @@ class sqlExec
                 ]);
 	        return self::$instances[$key];
         } catch (PDOException $e) {
-            throw new \Exception('数据库错误: ' . $e->getMessage() . ". 数据库信息：  {$connectData}");
+            throw new Exception('数据库错误: ' . $e->getMessage() . ". 数据库信息：  {$connectData}");
         }
     }
 

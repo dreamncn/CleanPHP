@@ -9,6 +9,9 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="05ec1bce-f1b4-4a5b-9b31-a766853d848a" name="local" url="http://cleanphp.com">
+        <fileTransfer mountedRoot="$PROJECT_DIR$/../../../Hosts/cleanphp.com" accessType="MOUNT" port="0" />
+      </webServer>
     </option>
   </component>
 </project>

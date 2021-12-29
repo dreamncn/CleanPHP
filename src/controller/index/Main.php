@@ -5,7 +5,7 @@
 
 namespace app\controller\index;
 
-use app\extend\net_ankio_tasker\core\Tasker;
+use app\extend\ankioTask\core\Tasker;
 use app\core\config\Config;
 use app\core\debug\Log;
 use app\core\mvc\Model;
@@ -42,9 +42,6 @@ class Main extends BaseController
         $id=$tasker->add($tasker->cycleNMinute(1),url('index','tasker','tasker_start_2',["info"=>"ankio 2333"]),"write_1_-1");
         dump("定时任务3,每隔2分钟执行,执行3次");
         $tasker->add($tasker->cycleNMinute(2),url('index','tasker','tasker_start_3',["id"=>$id]),"write_2_3",3);
-
-
-
         dump("定时任务添加完成，请打开日志文件（storage/logs/今天日期/tasker.log）查看定时任务执行情况");
     }
 
