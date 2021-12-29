@@ -115,14 +115,6 @@ class Server extends Model
     private function init()
     {
 
-        $fp=fopen(EXTEND_TASKER."tasker_server.lock","w+");
-        if(!flock($fp,LOCK_EX)){
-            Log::debug("Tasker","无法锁定...");
-            fclose($fp);
-            return;
-        }
-        Log::debug("Tasker","文件已经锁定...");
-        //通过文件指针锁定，避免重复拉起服务。
      //   $this->stop();
         do {
             $this->lock(time());//更新锁定时间
@@ -130,17 +122,12 @@ class Server extends Model
             Tasker::getInstance()->run();
             Log::debug("Tasker","循环扫描中...");
             sleep(10);
-            if(!$this->isTimeOut()){
-                sleep(10);
-            }
-
             if($this->isStop()){//间歇10秒后如果发现停止
                 Log::debug("Tasker","进程退出...");
                 break;
             }
         } while(true);
-        flock($fp, LOCK_UN);
-        fclose($fp);
+
         exitApp("服务退出，框架退出");
     }
 
@@ -154,7 +141,11 @@ class Server extends Model
      * +----------------------------------------------------------
      */
     private function lock($time){
-        self::getInstance()->update()->set(["lock_time"=>$time])->table("extend_lock")->commit();
+       // Log::debug("time_",print_r($time,true));
+        $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
+        if(empty($data)){
+            self::getInstance()->insert(SQL_INSERT_NORMAL)->keyValue(["lock_time"=>$time])->table("extend_lock")->commit();
+        }else self::getInstance()->update()->set(["lock_time"=>$time])->table("extend_lock")->commit();
     }
 
     /**
@@ -169,11 +160,7 @@ class Server extends Model
         if(empty($data))return false;
         return (time()-intval($data[0]['lock_time'])>20);
     }
-    private function isTimeOut(){
-        $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
-        if(empty($data))return true;
-        return (time()-intval($data[0]['lock_time'])>10);
-    }
+
 
     /**
      * +----------------------------------------------------------
@@ -184,6 +171,7 @@ class Server extends Model
      */
     private function isLock(){
         $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
+       // Log::debug("time",print_r($data,true));
         if(empty($data))return false;
         return (time()-intval($data[0]['lock_time'])<15);
     }

@@ -21,4 +21,4 @@
     <legend>功能演示</legend>
 </fieldset>
 
-<blockquote class="layui-elem-quote"><a href="<{url('index','main','tasker')}>">访问此页面以添加定时任务</a> </blockquote>
+<blockquote class="layui-elem-quote"><a class="layui-btn" href="<{url('index','main','tasker')}>">访问此页面以添加定时任务</a> </blockquote>
