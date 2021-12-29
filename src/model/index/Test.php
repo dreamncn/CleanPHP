@@ -14,10 +14,11 @@ class Test extends Model{
 
         parent::__construct("log");
         $this->setDatabase("sqlite_demo");
+        $this->execute("drop table if exists log;");
         $this->execute(
-            "create table if not exists log(
-    id int primary key autoincrement ,
-    name varchar(32), 
+            "create table log(
+    id INTEGER primary key autoincrement ,
+    name varchar(200), 
     urls varchar(200),
     ip varchar(200)) ");
         $this->insert(SQL_INSERT_NORMAL)->keyValue(['urls'=>"wang"])->commit();

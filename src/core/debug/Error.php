@@ -236,7 +236,8 @@ class Error
             background: #CFF0F3;
         }
         pre{
-          word-break: break-all;
+         
+           white-space: pre-wrap;
         }
         </style>
 </head>
