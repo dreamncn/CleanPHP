@@ -235,4 +235,34 @@ class Select extends sqlBase
     }
 
 
+    /**
+     * 统计查出来的数据的总数
+     * @param array|string $conditions
+     * @return int|mixed
+     */
+    public function count($conditions)
+    {
+        $this->where($conditions);
+        $sql= "SELECT COUNT(*) AS M_COUNTER FROM " . $this->tableName." where " . $this->opt['where'];
+
+        $count = $this->sql->execute($sql, $this->bindParam, true);
+        return isset($count[0]['M_COUNTER']) && $count[0]['M_COUNTER'] ? $count[0]['M_COUNTER'] : 0;
+    }
+
+    /**
+     * 对某个字段进行求和
+     * @param array|string $conditions
+     * @param string $param
+     * @return int|mixed
+     */
+    public function sum($conditions, $param)
+    {
+        $this->where($conditions);
+        $sql= "SELECT SUM($param) AS M_COUNTER FROM " . $this->tableName." where "  . $this->opt['where'];
+        $count = $this->sql->execute($sql, $this->bindParam, true);
+        return isset($count[0]['M_COUNTER']) && $count[0]['M_COUNTER'] ? $count[0]['M_COUNTER'] : 0;
+    }
+
+
+
 }

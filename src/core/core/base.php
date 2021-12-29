@@ -45,7 +45,7 @@ define('APP_PUBLIC', APP_DIR.DS.'public'.DS);
 //静态视图文件（可以被直接访问）
 define('APP_UI', APP_DIR.DS.'public'.DS.'ui'.DS.'view'.DS);
 //静态资源文件（可以被直接访问）
-define('APP_I', APP_DIR.DS.'public'.DS.'ui'.DS.'static'.DS);
+define('APP_IMG', APP_DIR.DS.'public'.DS.'ui'.DS.'img'.DS);
 //appComposer
 define('APP_COMPOSER', APP_DIR.DS.'vendor'.DS);
 ////vendor/autoload.php

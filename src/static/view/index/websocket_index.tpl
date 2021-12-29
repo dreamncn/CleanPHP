@@ -1,10 +1,16 @@
 <!--****************************************************************************
   * Copyright (c) 2021. CleanPHP. All Rights Reserved.
   ***************************************************************************-->
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+    <legend>WebSocket支持</legend>
+</fieldset>
+<blockquote class="layui-elem-quote"> 此处只演示了最简单的websokcet实现 </blockquote>
+
 <form class="layui-form" action="">
     <div class="layui-form-item">
         <label class="layui-form-label">账户</label>
-        <div class="layui-input-block">
+        <div class="layui-input-inline">
             <input type="text" name="name" required  lay-verify="required" placeholder="请输入账户" autocomplete="off" class="layui-input">
         </div>
     </div>
@@ -19,14 +25,14 @@
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <button class="layui-btn" lay-submit lay-filter="formDemo">登录</button>
+            <button type="button" id="logout" class="layui-btn layui-btn-primary">退出登录</button>
         </div>
     </div>
 </form>
 <div class="layui-form-item">
     <div class="layui-input-block">
-        <button class="layui-btn" id="read">读取用户信息</button>
+        <button class="layui-btn" id="read">读取用户信息（只有登录成功才行）</button>
     </div>
 </div>
 
@@ -48,7 +54,7 @@
         const layer = layui.layer;
         const form = layui.form;
        // cleanLine();
-        ws.createSocket('ws://cleanphp.ankio.net/ws/');
+        ws.createSocket('wss://cleanphp.ankio.net/ws/');
         ws.eventClose=function () {
             console.log("链接断开");//后台不间断发送数据，持续接收。
         }
@@ -111,6 +117,10 @@
         layui.$("#read").on("click",function (e) {
             send("index","main","getList",null)
             addLine("请求用户数据中...")
+        })
+        layui.$("#logout").on("click",function (e) {
+            send("index","main","logout",null)
+            addLine("正在请求退出登录...")
         })
         form.on('submit(formDemo)', function(data){
             send("index","main","login",data.field)
