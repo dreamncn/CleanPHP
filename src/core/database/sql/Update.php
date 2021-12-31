@@ -10,7 +10,7 @@ namespace app\core\database\sql;
  * @package app\core\database\sql
  * Date: 2020/11/22 10:55 下午
  * Author: ankio
- * Desciption: 更新
+ * Description: 更新
  */
 class Update extends sqlBase
 {

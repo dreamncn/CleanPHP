@@ -14,7 +14,7 @@ use app\core\database\Sql;
  * @package app\core\mvc
  * Date: 2020/12/3 12:21 上午
  * Author: ankio
- * Desciption: 模型类
+ * Description: 模型类
  */
 class Model extends Sql
 {

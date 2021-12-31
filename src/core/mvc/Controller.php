@@ -13,7 +13,7 @@ use app\core\debug\Log;
  * @package app\core\mvc
  * Date: 2020/12/3 10:52 下午
  * Author: ankio
- * Desciption:控制器
+ * Description:控制器
  */
 class Controller
 {

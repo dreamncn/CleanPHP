@@ -20,7 +20,7 @@ use app\core\debug\Log;
  * @package app\core\cache
  * Date: 2020/11/21 11:33 下午
  * Author: ankio
- * Desciption: 缓存类
+ * Description: 缓存类
  */
 class Cache
 {

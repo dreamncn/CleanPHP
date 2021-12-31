@@ -17,7 +17,7 @@ use app\core\debug\StringUtil;
  * @package app\core\event
  * Date: 2020/11/20 12:13 上午
  * Author: ankio
- * Desciption: 事件管理器
+ * Description: 事件管理器
  */
 class EventManager
 {

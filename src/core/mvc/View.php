@@ -15,7 +15,7 @@ use app\core\debug\StringUtil;
  * @package app\core\mvc
  * Date: 2020/11/30 11:42 下午
  * Author: ankio
- * Desciption:视图渲染
+ * Description:视图渲染
  */
 class View
 {

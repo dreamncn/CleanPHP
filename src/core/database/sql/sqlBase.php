@@ -9,7 +9,7 @@
  * @package app\core\sql\sql
  * Date: 2020/10/18 12:28 下午
  * Author: ankio
- * Desciption:
+ * Description:
  */
 
 namespace app\core\database\sql;
@@ -23,7 +23,7 @@ use PDO;
  * @package app\core\database\sql
  * Date: 2020/11/20 11:32 下午
  * Author: ankio
- * Desciption:sql数据对象构成的基类
+ * Description:sql数据对象构成的基类
  */
 class sqlBase
 {

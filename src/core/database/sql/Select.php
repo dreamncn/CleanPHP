@@ -10,7 +10,7 @@ namespace app\core\database\sql;
  * @package app\core\database\sql
  * Date: 2020/11/22 10:52 下午
  * Author: ankio
- * Desciption:查询语句封装
+ * Description:查询语句封装
  */
 class Select extends sqlBase
 {

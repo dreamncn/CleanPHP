@@ -20,7 +20,7 @@ use app\core\web\Route;
  * @package app\core\core
  * Date: 2020/11/21 11:01 下午
  * Author: ankio
- * Desciption:框架启动
+ * Description:框架启动
  */
 class Clean
 {

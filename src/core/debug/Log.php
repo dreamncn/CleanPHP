@@ -13,7 +13,7 @@ use app\core\release\File;
  * @package app\core\debug
  * Date: 2020/11/20 12:16 上午
  * Author: ankio
- * Desciption:日志类
+ * Description:日志类
  */
 class Log
 {

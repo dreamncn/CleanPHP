@@ -11,7 +11,7 @@ namespace app\core\web;
  * @package app\core\web
  * Date: 2020/11/19 12:24 上午
  * Author: ankio
- * Desciption:Cookie操作类
+ * Description:Cookie操作类
  */
 class Cookie
 {

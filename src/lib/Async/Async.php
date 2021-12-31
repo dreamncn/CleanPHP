@@ -14,7 +14,7 @@ use app\core\web\Response;
  * @package app\extend\net_ankio_tasker
  * Date: 2020/12/20 23:04
  * Author: ankio
- * Desciption:异步处理，多用于后台与多线程
+ * Description:异步处理，多用于后台与多线程
  */
 class Async
 {

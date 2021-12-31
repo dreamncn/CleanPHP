@@ -8,7 +8,7 @@
  * @package app\extend\net_ankio_cc_defense
  * Date: 2020/12/4 12:04 上午
  * Author: ankio
- * Desciption: 本地数据库操作
+ * Description: 本地数据库操作
  */
 
 namespace app\extend\net_ankio_cc_defense\core;
@@ -22,7 +22,7 @@ use app\core\web\Request;
  * @package app\extend\net_ankio_cc_defense
  * Date: 2020/12/18 23:06
  * Author: ankio
- * Desciption: IP封禁
+ * Description: IP封禁
  */
 class BanIP extends Model
 {

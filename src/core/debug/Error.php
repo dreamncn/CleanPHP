@@ -13,7 +13,7 @@ use app\core\web\Response;
  * @package app\core\debug
  * Date: 2020/11/20 12:09 上午
  * Author: ankio
- * Desciption:框架错误处理
+ * Description:框架错误处理
  */
 class Error
 {

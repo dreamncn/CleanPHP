@@ -18,7 +18,7 @@ use app\core\database\sql\Update;
  * @package app\core\database
  * Date: 2020/11/22 11:05 下午
  * Author: ankio
- * Desciption:sql的集合类
+ * Description:sql的集合类
  */
 class Sql
 {

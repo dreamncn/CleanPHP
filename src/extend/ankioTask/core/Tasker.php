@@ -13,7 +13,7 @@ use app\lib\Async\Async;
  * @package app\extend\net_ankio_tasker\core
  * Date: 2020/12/23 23:46
  * Author: ankio
- * Desciption: 定时任务管理器
+ * Description: 定时任务管理器
  */
 
 class Tasker extends Model

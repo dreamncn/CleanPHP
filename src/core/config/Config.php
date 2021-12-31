@@ -12,7 +12,7 @@ use Exception;
  * @package app\core\config
  * Date: 2020/11/19 12:22 上午
  * Author: ankio
- * Desciption:配置管理器
+ * Description:配置管理器
  */
 class Config
 {

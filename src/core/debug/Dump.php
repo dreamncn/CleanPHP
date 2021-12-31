@@ -13,7 +13,7 @@ use ReflectionException;
  * @package app\core\debug
  * Date: 2020/11/20 11:24 下午
  * Author: ankio
- * Desciption: 调试输出类
+ * Description: 调试输出类
  */
 class Dump
 {

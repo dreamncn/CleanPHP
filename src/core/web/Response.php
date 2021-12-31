@@ -20,7 +20,7 @@ use app\core\mvc\Controller;
  * @package app\core\web
  * Date: 2020/11/22 11:21 下午
  * Author: ankio
- * Desciption:客户端响应类
+ * Description:客户端响应类
  */
 class Response
 {

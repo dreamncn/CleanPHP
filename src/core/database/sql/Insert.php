@@ -9,7 +9,7 @@
  * @package app\core\sql
  * Date: 2020/10/14 11:31 下午
  * Author: ankio
- * Desciption:
+ * Description:
  */
 
 namespace app\core\database\sql;
@@ -22,7 +22,7 @@ use app\core\debug\Error;
  * @package app\core\database\sql
  * Date: 2020/11/21 12:40 下午
  * Author: ankio
- * Desciption:插入语句的语法糖包装
+ * Description:插入语句的语法糖包装
  */
 class Insert extends sqlBase
 {

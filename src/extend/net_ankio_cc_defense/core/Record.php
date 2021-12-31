@@ -8,7 +8,7 @@
  * @package app\extend\net_ankio_cc_defense
  * Date: 2020/12/4 12:04 上午
  * Author: ankio
- * Desciption: 本地数据库操作
+ * Description: 本地数据库操作
  */
 
 namespace app\extend\net_ankio_cc_defense\core;

@@ -11,7 +11,7 @@ namespace app\core\web;
  * @package app\core\web
  * Date: 2020/11/29 12:24 上午
  * Author: ankio
- * Desciption:Session操作类
+ * Description:Session操作类
  */
 class Session
 {

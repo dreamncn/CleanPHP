@@ -9,7 +9,7 @@
  * @package app\core\sql
  * Date: 2020/10/14 11:20 下午
  * Author: ankio
- * Desciption:delete SQL
+ * Description:delete SQL
  */
 
 namespace app\core\database\sql;
@@ -20,7 +20,7 @@ namespace app\core\database\sql;
  * @package app\core\database\sql
  * Date: 2020/11/22 10:51 下午
  * Author: ankio
- * Desciption:删除封装
+ * Description:删除封装
  */
 class Delete extends sqlBase
 {

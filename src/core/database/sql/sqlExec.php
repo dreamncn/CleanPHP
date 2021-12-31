@@ -9,7 +9,7 @@
  * @package app\core\sql
  * Date: 2020/10/14 1:50 下午
  * Author: ankio
- * Desciption:sql sql的封装
+ * Description:sql sql的封装
  */
 
 namespace app\core\database\sql;
@@ -28,7 +28,7 @@ use PDOStatement;
  * @package app\core\database\sql
  * Date: 2020/11/20 11:35 下午
  * Author: ankio
- * Desciption:数据库执行基类
+ * Description:数据库执行基类
  */
 class sqlExec
 {

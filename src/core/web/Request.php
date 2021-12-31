@@ -12,7 +12,7 @@ use app\core\debug\StringUtil;
  * @package app\core\web
  * Date: 2020/11/22 11:18 下午
  * Author: ankio
- * Desciption:客户端请求处理
+ * Description:客户端请求处理
  */
 class Request
 {

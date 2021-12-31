@@ -16,7 +16,7 @@ use app\lib\Async\Async;
  * @package app\extend\net_ankio_tasker\core
  * Date: 2020/12/31 09:57
  * Author: ankio
- * Desciption:Tasker服务
+ * Description:Tasker服务
  */
 class Server extends Model
 {

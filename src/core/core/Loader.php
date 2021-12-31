@@ -14,7 +14,7 @@ use app\core\debug\Log;
  * @package app\core\core
  * Date: 2020/11/19 11:47 下午
  * Author: ankio
- * Desciption:自动加载类
+ * Description:自动加载类
  */
 class Loader
 {

@@ -17,7 +17,7 @@ use app\core\event\EventManager;
  * @package app\core\web
  * Date: 2020/11/22 11:24 下午
  * Author: ankio
- * Desciption:路由类
+ * Description:路由类
  */
 class Route
 {
