@@ -16,16 +16,13 @@ define('SQL_INSERT_DUPLICATE', 2);
 
 
 /**
- * +----------------------------------------------------------
  * 生成符合路由规则的URL
- * +----------------------------------------------------------
  * @param  string  $m      模块名
  * @param  string  $c      控制器名
  * @param  string  $a      方法
  * @param  array   $param  参数数组
- * +----------------------------------------------------------
+ *
  * @return mixed|string
- * +----------------------------------------------------------
  */
 function url($m = 'index', $c = 'main', $a = 'index', $param = [])
 {
@@ -34,18 +31,15 @@ function url($m = 'index', $c = 'main', $a = 'index', $param = [])
 
 
 /**
- * +----------------------------------------------------------
  * 输出变量内容
- * +----------------------------------------------------------
  * @param  null   $var   预输出的变量名
- * @param  false  $exit  输出变量后是否退出进程
- * +----------------------------------------------------------
+ * @param false $exit  输出变量后是否退出进程
  */
-function dump($var, $exit = false)
+function dump($var, bool $exit = false)
 {
-	if (isConsole()) {
-		$line = debug_backtrace()[0]['file'].':'.debug_backtrace()[0]['line'];
-		echo $line."\n";
+    $line = debug_backtrace()[0]['file'].':'.debug_backtrace()[0]['line'];
+    if (isConsole()) {
+        echo $line."\n";
 		var_dump($var);
 		if ($exit) {
 			Log::debug('Clean', 'Dump函数执行退出。' );
@@ -54,8 +48,7 @@ function dump($var, $exit = false)
 
 		return;
 	}
-	$line = debug_backtrace()[0]['file'].':'.debug_backtrace()[0]['line'];
-	echo <<<EOF
+    echo <<<EOF
 <style>pre {display: block;padding: 9.5px;margin: 0 0 10px;font-size: 13px;line-height: 1.42857143;color: #333;word-break: break-all;word-wrap: break-word;background-color:#f5f5f5;border: 1px solid #ccc;border-radius: 4px;}</style><div style="text-align: left">
 <pre class="xdebug-var-dump" dir="ltr"><small>{$line}</small>\r\n
 EOF;
@@ -74,18 +67,14 @@ EOF;
 
 
 /**
- * +----------------------------------------------------------
  * 获取前端传来的POST或GET参数
- * +----------------------------------------------------------
  * @param  null  $name     参数名
  * @param  null  $default  默认参数值
- * @param  bool  $trim     是否去除空白
+ * @param bool $trim     是否去除空白
  * @param string $type     类型(str,bool,float,double,int),当返回所有数据时该校验无效。
- * +----------------------------------------------------------
  * @return array|mixed|string|null
- * +----------------------------------------------------------
  */
-function arg($name = null, $default = null, $trim = true,$type="str")
+function arg($name = null, $default = null, bool $trim = true, string $type="str")
 {
 	if ($name) {
 		if ( ! isset($_REQUEST[$name])) {
@@ -117,11 +106,8 @@ function arg($name = null, $default = null, $trim = true,$type="str")
 
 
 /**
- * +----------------------------------------------------------
  * 是否为调试模式
- * +----------------------------------------------------------
  * @return bool
- * +----------------------------------------------------------
  */
 function isDebug()
 {
@@ -130,11 +116,8 @@ function isDebug()
 
 
 /**
- * +----------------------------------------------------------
  * 是否为命令行模式
- * +----------------------------------------------------------
  * @return bool
- * +----------------------------------------------------------
  */
 function isConsole()
 {
@@ -142,9 +125,7 @@ function isConsole()
 }
 
 /**
- * +----------------------------------------------------------
  * 退出框架运行
- * +----------------------------------------------------------
  * @param $msg
  * @param null $tpl 退出模板文件名
  * @param string $path 模板文件路径
@@ -169,16 +150,12 @@ function exitApp($msg,$tpl=null,$path='',$data=[])
 
 
 /**
- * +----------------------------------------------------------
  *  获取随机字符串
- * +----------------------------------------------------------
  * @param  int   $length  字符串长度
  * @param  bool  $upper   是否包含大写字母
  * @param  bool  $lower   是否包含小写字母
  * @param  bool  $number  是否包含数字
- * +----------------------------------------------------------
  * @return string
- * +----------------------------------------------------------
  */
 function getRandom($length = 8, $upper = true, $lower = true, $number = true)
 {
@@ -209,13 +186,9 @@ function getRandom($length = 8, $upper = true, $lower = true, $number = true)
 }
 
 /**
- * +----------------------------------------------------------
  * 检查编码并转换成UTF-8
- * +----------------------------------------------------------
  * @param $string
- * +----------------------------------------------------------
  * @return string
- * +----------------------------------------------------------
  */
 function chkCode($string)
 {

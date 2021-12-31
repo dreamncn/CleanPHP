@@ -16,27 +16,19 @@ use app\core\debug\Log;
 use app\core\mvc\Controller;
 
 /**
- * +----------------------------------------------------------
  * Class Response
- * +----------------------------------------------------------
  * @package app\core\web
- * +----------------------------------------------------------
  * Date: 2020/11/22 11:21 下午
  * Author: ankio
- * +----------------------------------------------------------
  * Desciption:客户端响应类
- * +----------------------------------------------------------
  */
 class Response
 {
 
 	/**
-	 * +----------------------------------------------------------
-	 * 获取当前访问的URL域名
-	 * +----------------------------------------------------------
-	 * @return string
-	 * +----------------------------------------------------------
-	 */
+		 * 获取当前访问的URL域名
+		 * @return string
+		 */
 	public static function getAddress()
     {
         return $GLOBALS['http_scheme'] . $_SERVER["HTTP_HOST"];
@@ -64,22 +56,17 @@ class Response
 	    return $_SERVER["HTTP_HOST"];
     }
 	/**
-	 * +----------------------------------------------------------
-	 * 获取当前访问的地址
-	 * +----------------------------------------------------------
-	 * @return string
-	 * +----------------------------------------------------------
-	 */
+		 * 获取当前访问的地址
+		 * @return string
+		 */
 	public static function getNowAddress()
     {
         return $GLOBALS['http_scheme'] . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'];
     }
 
 	/**
-	 * +----------------------------------------------------------
-	 * 获取当前服务器IP
-	 * +----------------------------------------------------------
-	 */
+		 * 获取当前服务器IP
+		 */
     public static function getMyIp()
     {
         return gethostbyname(gethostname());
@@ -87,18 +74,15 @@ class Response
 
 
 	/**
-	 * +----------------------------------------------------------
-	 * 跳转提示类
-	 * +----------------------------------------------------------
-	 * @param  false   $err 是否错误
+		 * 跳转提示类
+		 * @param  false   $err 是否错误
 	 * @param  int     $code 错误代码（200、403、404等）
 	 * @param  string  $title 错误标题
 	 * @param  string  $msg 错误信息
 	 * @param  int     $time 跳转时间
 	 * @param  string  $url 跳转URL
 	 * @param  string  $desc 跳转描述
-	 * +----------------------------------------------------------
-	 */
+		 */
 	public static function msg($err = false, $code = 404, $title = "", $msg = "", $time = 3, $url = '', $desc = "立即跳转")
     {
         global $__module;
@@ -123,13 +107,10 @@ class Response
     }
 
     /**
-     * +----------------------------------------------------------
      * 直接跳转
-     * +----------------------------------------------------------
      * @param $url
      * @param int $timeout 延时跳转
      * @param bool $exit 发生跳转是否直接退出
-     * +----------------------------------------------------------
      */
 	public static function location($url,$timeout=0,$exit=true)
     {
