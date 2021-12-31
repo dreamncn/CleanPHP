@@ -201,16 +201,11 @@ class Request
      */
     public static function getClientIP()
     {
-        if (getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "127.0.0.1"))
-            $ip = getenv("HTTP_CLIENT_IP");
-        elseif (getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "127.0.0.1"))
-            $ip = getenv("HTTP_X_FORWARDED_FOR");
-        elseif (getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "127.0.0.1"))
-            $ip = getenv("REMOTE_ADDR");
-        elseif (isset($_SERVER["REMOTE_ADDR"]) && $_SERVER["REMOTE_ADDR"] && strcasecmp($_SERVER["REMOTE_ADDR"], "unknown"))
-            $ip = $_SERVER["REMOTE_ADDR"];
-        else
-            $ip = "127.0.0.1";
+        $ip =  $_SERVER["REMOTE_ADDR"];
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $ip = trim(current($ip));
+        }
         return $ip;
     }
 

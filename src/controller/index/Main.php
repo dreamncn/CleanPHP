@@ -5,6 +5,7 @@
 
 namespace app\controller\index;
 
+use app\core\web\Request;
 use app\extend\ankioTask\core\Tasker;
 use app\core\config\Config;
 use app\core\debug\Log;
@@ -16,7 +17,12 @@ class Main extends BaseController
 	public function index()
 	{
 
-	}
+    }
+
+    public function ip(){
+        Response::msg(true, 200, "混淆视听3", "收到参数 ip=".Request::getClientIP(), -1, '/', '回到首页');
+
+    }
 
 	public function admin()
 	{
