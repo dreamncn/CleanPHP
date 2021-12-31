@@ -5,6 +5,8 @@
 
 namespace app\core\web;
 
+use app\core\debug\StringUtil;
+
 /**
  * +----------------------------------------------------------
  * Class Request
@@ -201,12 +203,13 @@ class Request
      */
     public static function getClientIP()
     {
-        $ip =  $_SERVER["REMOTE_ADDR"];
+        $REMOTE_ADDR =  $_SERVER["REMOTE_ADDR"];
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $ip = trim(current($ip));
+            if(StringUtil::get($_SERVER['HTTP_X_FORWARDED_FOR'])->contains($REMOTE_ADDR))
+                $REMOTE_ADDR = trim(current($ip));
         }
-        return $ip;
+        return $REMOTE_ADDR;
     }
 
 
