@@ -3,9 +3,9 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
+use app\core\debug\Debug;
 use app\core\debug\Dump;
 use app\core\mvc\Controller;
-use app\core\debug\Log;
 use app\core\web\Route;
 
 /*数据库常量*/
@@ -34,32 +34,40 @@ function url(string $m = 'index', string $c = 'main', string $a = 'index', array
  * @param  null   $var   预输出的变量名
  * @param false $exit  输出变量后是否退出进程
  */
-function dump($var, bool $exit = false)
+function dump($var, bool $exit = false,bool $noTitle=false)
 {
-    $line = debug_backtrace()[0]['file'].':'.debug_backtrace()[0]['line'];
+    if($noTitle){
+        $line = "";
+    }else{
+        $line = debug_backtrace()[0]['file'].':'.debug_backtrace()[0]['line']."\n";
+    }
+
     if (isConsole()) {
-        echo $line."\n";
+        echo $line;
 		var_dump($var);
 		if ($exit) {
-			Log::debug('clean', '[Clean]Dump函数执行退出。' );
-			Log::debug('clean', '[Clean]退出框架，总耗时: ' . (microtime(true) - $GLOBALS['frame_start']) * 1000 . 'ms');
-			exit;
+            exitApp("Dump函数执行退出.");
         }
 
 		return;
 	}
-    echo <<<EOF
+    if(!$noTitle){
+        echo <<<EOF
 <style>pre {display: block;padding: 9.5px;margin: 0 0 10px;font-size: 13px;line-height: 1.42857143;color: #333;word-break: break-all;word-wrap: break-word;background-color:#f5f5f5;border: 1px solid #ccc;border-radius: 4px;}</style><div style="text-align: left">
 <pre class="xdebug-var-dump" dir="ltr"><small>{$line}</small>\r\n
 EOF;
+    }else{
+        echo <<<EOF
+<style>pre {display: block;padding: 9.5px;margin: 0 0 10px;font-size: 13px;line-height: 1.42857143;color: #333;word-break: break-all;word-wrap: break-word;background-color:#f5f5f5;border: 1px solid #ccc;border-radius: 4px;}</style><div style="text-align: left"><pre class="xdebug-var-dump" dir="ltr">
+EOF;
+    }
+
 
 	$dump = new Dump();
 	$dump->dumpType($var);
 	echo '</pre></div>';
 	if ($exit) {
-		Log::debug('Clean', 'Dump函数执行退出。' );
-		Log::debug('Clean', '退出框架，总耗时: ' . (microtime(true) - $GLOBALS['frame_start']) * 1000 . 'ms');
-		exit;
+        exitApp("Dump函数执行退出.");
 	}
 }
 
@@ -140,7 +148,11 @@ function exitApp(string $msg, string $tpl=null, string $path='', array $data=[])
         else
           echo "";
     }
-   exit();
+    if(isDebug()){
+        $GLOBALS["frame"]["clean"][] = $msg;
+        $GLOBALS["frame"]["time"]["resp_time"]=(microtime(true)-$GLOBALS['frame_start']);
+    }
+    exit();
 }
 
 

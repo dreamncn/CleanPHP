@@ -16,18 +16,20 @@ use app\core\error\AppError;
  */
 class Config
 {
-    private static $instance = null;//配置文件数据
+    private static ?Config $instance = null;//配置文件数据
     private $fileData;//配置文件名
     private $fileName;//配置路径
-    private $path = APP_CONF;//实例
+    private string $path = APP_CONF;//实例
 
     /**
      * 注册配置信息
      */
     static public function register()
     {
+
         $conf = self::getInstance("frame")->setLocation(APP_CONF)->get();
         $GLOBALS["frame"] = $conf;
+        if(isDebug())  $GLOBALS["frame"]["clean"][]="配置文件读取注册";
         if (!in_array($_SERVER["HTTP_HOST"], $conf['host'])) {
             new AppError("您的域名绑定错误，当前域名为：{$_SERVER["HTTP_HOST"]} , 请在 /config/frame.yml 第2行添加该域名。", APP_CONF . "frame.yml", $conf['host'][0]);
         }

@@ -7,7 +7,6 @@ namespace app\core\core;
 use app\core\config\Config;
 use app\core\error\Error;
 use app\core\event\EventManager;
-use app\core\debug\Log;
 
 // 全局变量清空
 $GLOBALS          = [];
@@ -64,9 +63,12 @@ Config::register();
 EventManager::register();
 
 EventManager::fire("beforeRunFrame", null);
-Log::debug("clean",
-	'----------------------------------------------------------------------------------------------');
-Log::debug("clean", '[Clean]框架启动.');
+
+if(isDebug()) {
+    $GLOBALS["frame"]["time"]["time"]=date("Y-m-d H:i:s");
+    $GLOBALS["frame"]["time"]["tpl_time"]=0;
+    $GLOBALS["frame"]["clean"][]="框架启动";
+}
 
 
 

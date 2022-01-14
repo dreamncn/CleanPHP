@@ -113,7 +113,7 @@ class sqlExec
      */
 	public function execute(string $sql, array $params = [], bool $readonly = false)
     {
-
+        if(isDebug())  $GLOBALS["frame"]["sql"][]="要执行的sql语句：".$sql;
         $start = microtime(true);
         /**
          * @var $sth PDOStatement
@@ -178,6 +178,7 @@ class sqlExec
             if (!isset($dsn[$this->sqlType]))
                  new AppError("数据库错误: 我们不支持该类型数据库.({$this->sqlType})",$this->db,"type");
             $connectData = $dsn[$this->sqlType];
+            if(isDebug())  $GLOBALS["frame"]["sql"][]="数据库信息：".$connectData;
             $key=md5($connectData);
            if(isset(self::$instances[$key]))return self::$instances[$key];
 

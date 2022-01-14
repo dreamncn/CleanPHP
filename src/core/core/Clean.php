@@ -5,12 +5,15 @@
 
 namespace app\core\core;
 
-use app\core\debug\Log;
+use app\core\debug\Debug;
+
 use app\core\error\RouteError;
 use app\core\event\EventManager;
 use app\core\mvc\Controller;
 use app\core\release\FileCheck;
 use app\core\release\Release;
+use app\core\web\Request;
+use app\core\web\Response;
 use app\core\web\Route;
 
 
@@ -32,8 +35,10 @@ class Clean
     {
         //框架开始类
         self::Init();
+        if(isDebug())  $GLOBALS["frame"]["clean"][]="框架初始化完毕";
         if(!self::isConsole()){
             Route::rewrite();
+            if(isDebug())  $GLOBALS["frame"]["clean"][]="路由完毕";
             self::createObj();
         }
     }
@@ -63,6 +68,7 @@ class Clean
             error_reporting(E_ALL & ~(E_STRICT | E_NOTICE));
             ini_set("display_errors", "Off");
         }
+        if(isDebug())  $GLOBALS["frame"]["clean"][]="已开启错误告警";
         //识别ssl
         if ((!empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == "https") || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") || (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
             $GLOBALS['http_scheme'] = 'https://';
@@ -93,7 +99,7 @@ class Clean
 
         $controller_name = ucfirst($__controller);
         $action_name = $__action;
-
+        if(isDebug())  $GLOBALS["frame"]["clean"][]="响应controller：$__module/$__controller/$__action";
 
         if (!self::isAvailableClassname($__module)) new RouteError("错误: 模块 '$__module' 命名不符合规范!");
 
@@ -102,6 +108,7 @@ class Clean
 
         $controller_name = 'app\\controller\\' . $__module . '\\' . $controller_name;
 
+        if(isDebug())  $GLOBALS["frame"]["clean"][]="创建controller对象：".$controller_name;
 
         if (!self::isAvailableClassname($__controller))
             new RouteError("错误: 控制器 '$controller_name' 命名不符合规范!");
@@ -154,14 +161,35 @@ class Clean
             }else if($controller_obj->isEncode()){
                 echo htmlspecialchars($result,ENT_QUOTES,"UTF-8",true);
             }else{
-                echo $result.file_get_contents(APP_INNER."tip".DS.'float.tpl');
+
+                if(isDebug())  {
+                    $GLOBALS["frame"]["time"]["resp_time"]=(microtime(true)-$GLOBALS['frame_start']);
+                    $GLOBALS["frame"]["clean"][]="执行完毕";
+                    $g = $GLOBALS;
+                    unset($g["frame"]);
+                    $GLOBALS["frame"]["response"]["method"]=$_SERVER['REQUEST_METHOD'] ;
+                    $GLOBALS["frame"]["response"]["headers"]=Request::getHeader();
+                    $GLOBALS["frame"]["response"]["globals"]=$g;
+                    $GLOBALS["frame"]["response"]["param"]=arg();
+                    $controller_obj2 = new Controller();
+                    $controller_obj2->setAutoPathDir(APP_INNER."tip");
+                    $controller_obj2->setEncode(false);
+                    $__module = "";
+                    $controller_obj2->setArray($GLOBALS["frame"]);
+                    //dump($GLOBALS["frame"],true);
+                    echo $result.$controller_obj2->display("float");
+                }else{
+                    echo $result;
+                }
+
+
+
+
             }
         }
+        exitApp("框架执行完毕，退出。");
         //输出html
-
     }
-
-
     /**
      * 判断是否为标准class
      * @param string $name

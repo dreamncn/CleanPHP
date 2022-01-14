@@ -12,6 +12,7 @@
 
 namespace app\core\web;
 
+use app\core\debug\Log;
 use app\core\mvc\Controller;
 
 /**

@@ -14,3 +14,5 @@ const APP_CORE = APP_DIR . DS . 'core' . DS;
 require_once(APP_CORE."core".DS."base.php");
 //框架启动
 Clean::Run();
+
+

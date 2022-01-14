@@ -34,7 +34,7 @@ class Example extends BaseController
 
     public function inner(){
 
-	    Response::msg(false,"200","内置拦截","hi，这是内置拦截。 内置拦截器的可以有很多写法，比如时间为0，就直接跳转。时间为-1，就不跳转。你还可以在static/innerView/tip文件夹下建立200.tpl、404.tpl来使用不同的状态代码模板进行输出 ",60,url("index","main","index"),"返回主页");
+	    Response::msg(false,200,"内置拦截","hi，这是内置拦截。 内置拦截器的可以有很多写法，比如时间为0，就直接跳转。时间为-1，就不跳转。你还可以在static/innerView/tip文件夹下建立200.tpl、404.tpl来使用不同的状态代码模板进行输出 ",60,url("index","main","index"),"返回主页");
     }
 
 	public function out_define(){
@@ -53,9 +53,6 @@ class Example extends BaseController
         $qq=arg("qq","",true,"str");
 
         dump("qq $qq is $bool id $id");
-        /**
-         * @var Verity $verity
-         */
         $verity=Verity::get($qq);
         $verity->check(8,0);
         dump("qq校验结果：".$verity->getErr());

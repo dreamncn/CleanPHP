@@ -5,7 +5,6 @@
 
 namespace app\controller\index;
 
-use app\core\debug\Log;
 use app\core\web\Request;
 use app\core\web\Response;
 use app\extend\ankioTask\core\Tasker;
