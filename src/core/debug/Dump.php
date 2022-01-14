@@ -1,10 +1,11 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\debug;
 
+use app\core\utils\StringUtil;
 use ReflectionClass;
 use ReflectionException;
 
@@ -18,12 +19,12 @@ use ReflectionException;
 class Dump
 {
 
-	/**
-		 * 输出对象
-		 * @param       $param
-	 * @param  int  $i
-		 */
-	private function dumpObj($param, $i = 0)
+    /**
+     * 输出对象
+     * @param       $param
+     * @param int $i
+     */
+	private function dumpObj($param, int $i = 0)
     {
         $className = get_class($param);
         if ($className == 'stdClass' && $result = json_encode($param)) {
@@ -37,36 +38,34 @@ class Dump
 
     }
 
-	/**
-		 * 输出数组
-		 * @param       $param
-	 * @param  int  $i
-		 */
-	private function dumpArr($param, $i = 0)
+    /**
+     * 输出数组
+     * @param       $param
+     * @param int $i
+     */
+	private function dumpArr($param, int $i = 0)
     {
 
         $len = count($param);
-        $space = '';
-        for ($m = 0; $m < $i; $m++)
-            $space .= "    ";
+        $space = str_repeat("    ", $i);
         $i++;
         echo "<b style='color: #333;'>array</b> <i style='color: #333;'>(size=$len)</i> \r\n";
         if ($len === 0)
             echo $space . "  <i  style='color: #888a85;'>empty</i> \r\n";
         foreach ($param as $key => $val) {
-            $str = htmlspecialchars(chkCode($key), strlen($key));
+            $str = htmlspecialchars(StringUtil::get($key)->chkCode(), strlen($key));
             echo $space . sprintf("<i style='color: #333;'> %s </i><i  style='color: #888a85;'>=&gt;", $str);
             $this->dumpType($val, $i);
             echo "</i> \r\n";
         }
     }
 
-	/**
-		 * 自动选择类型输出
-		 * @param       $param
-	 * @param  int  $i
-		 */
-	public function dumpType($param, $i = 0)
+    /**
+     * 自动选择类型输出
+     * @param       $param
+     * @param int $i
+     */
+	public function dumpType($param, int $i = 0)
     {
 
         switch (gettype($param)) {
@@ -95,28 +94,28 @@ class Dump
                 echo '<i style=\'color:#3465a4\'>resource</i>';
                 break;
             default :
-                echo '<i style=\'color:#3465a4\'>unknow type</i>';
+                echo '<i style=\'color:#3465a4\'>unknown type</i>';
                 break;
         }
     }
 
-	/**
-		 * 输出文本
-		 * @param $param
-		 */
+    /**
+     * 输出文本
+     * @param $param
+     */
 	private function dumpString($param)
     {
 
-        $str = sprintf("<small style='color: #333;font-weight: bold'>string</small> <i style='color:#cc0000'>'%s'</i> <i>(length=%d)</i>", htmlspecialchars(chkCode($param)), strlen($param));
+        $str = sprintf("<small style='color: #333;font-weight: bold'>string</small> <i style='color:#cc0000'>'%s'</i> <i>(length=%d)</i>", htmlspecialchars(StringUtil::get($param)->chkCode()), strlen($param));
         echo $str;
     }
 
-	/**
-		 * 输出类对象
-		 * @param $obj
-	 * @param $className
-	 * @param $num
-		 */
+    /**
+     * 输出类对象
+     * @param $obj
+     * @param $className
+     * @param $num
+     */
 	public function dumpProp($obj, $className, $num)
     {
         if ($className == get_class($obj) && $num > 2) return;
@@ -137,7 +136,6 @@ class Dump
         array_push($pads, "    ");
         for ($i = 0; $i < $len; $i++) {
             $index = $i;
-
             $prop[$index]->setAccessible(true);
             $prop_name = $prop[$index]->getName();
             echo "\n", implode('', $pads), sprintf("<i style='color: #333;'> %s </i><i style='color:#888a85'>=&gt;", $prop_name);

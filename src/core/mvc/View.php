@@ -1,13 +1,13 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\mvc;
 
-use app\core\debug\Error;
+use app\core\error\Error;
 use app\core\debug\Log;
-use app\core\debug\StringUtil;
+use app\core\utils\StringUtil;
 
 
 /**
@@ -19,19 +19,19 @@ use app\core\debug\StringUtil;
  */
 class View
 {
-    private $template_dir, $compile_dir, $right_delimiter, $left_delimiter;
+    private  $template_dir, $compile_dir, $right_delimiter, $left_delimiter;
     //      模板路径         编译路径       左边分隔符          右边分隔符
     private $template_vals = [];
     //      模板变量
 
     /**
      * View constructor.
-     * @param          $template_dir
-     * @param          $compile_dir
-     * @param  string  $left_delimiter
-     * @param  string  $right_delimiter
+     * @param string $template_dir
+     * @param string $compile_dir
+     * @param string $left_delimiter
+     * @param string $right_delimiter
      */
-    public function __construct($template_dir, $compile_dir, $left_delimiter = '<{', $right_delimiter = '}>')
+    public function __construct(string $template_dir, string $compile_dir, string $left_delimiter = '<{', string $right_delimiter = '}>')
     {
         $this->left_delimiter = $left_delimiter;
         $this->right_delimiter = $right_delimiter;
@@ -42,13 +42,13 @@ class View
 
     /**
      * 编译并渲染
-     * @param $tempalte_name
+     * @param string $tempalte_name
      * @return false|string
      */
     public function render($tempalte_name)
     {
         $complied_file = $this->compile($tempalte_name);
-        Log::debug('view', '编译耗时: ' . strval((microtime(true) - $GLOBALS['display_start']) * 1000) . 'ms');
+        Log::debug('view', '编译耗时: ' . (microtime(true) - $GLOBALS['display_start']) * 1000 . 'ms');
         ob_start();
         $_view_obj = &$this;
         extract($this->template_vals, EXTR_SKIP);
@@ -59,10 +59,10 @@ class View
 
     /**
      * 模板编译
-     * @param $template_name
+     * @param string $template_name
      * @return string
      */
-    public function compile($template_name)
+    public function compile(string $template_name): string
     {
         global $__module;
         $realName=$template_name;
@@ -97,7 +97,6 @@ class View
         $tmp_file = $complied_file . uniqid('_tpl', true);
         if (!file_put_contents($tmp_file, $template_data))
             Error::err('错误: 写入 "' . $tmp_file . '" 文件失败.');
-
         $success = @rename($tmp_file, $complied_file);
         if (!$success) {
             if (is_file($complied_file)) @unlink($complied_file);
@@ -110,10 +109,10 @@ class View
 
     /**
      * 翻译模板语法
-     * @param $template_data
-     * @return string|string[]|null
+     * @param string $template_data
+     * @return string|string[]
      */
-    private function _compile_struct($template_data)
+    private function _compile_struct(string $template_data)
     {
         $foreach_inner_before = '<?php if(!empty($1)){ $_foreach_$3_counter = 0; $_foreach_$3_total = count($1);?>';
         $foreach_inner_after = '<?php $_foreach_$3_index = $_foreach_$3_counter;$_foreach_$3_iteration = $_foreach_$3_counter + 1;$_foreach_$3_first = ($_foreach_$3_counter == 0);$_foreach_$3_last = ($_foreach_$3_counter == $_foreach_$3_total - 1);$_foreach_$3_counter++;?>';
@@ -149,10 +148,10 @@ class View
 
     /**
      * 函数编译
-     * @param $template_data
+     * @param string $template_data
      * @return string|string[]|null
      */
-    private function _compile_function($template_data)
+    private function _compile_function(string $template_data)
     {
         $pattern = '/' . $this->left_delimiter . '(\w+)\s*(.*?)' . $this->right_delimiter . '/';
         return preg_replace_callback($pattern, [$this, '_compile_function_callback'], $template_data);
@@ -160,28 +159,27 @@ class View
 
     /**
      * js脚本位置重定位
-     * @param $template_data
+     * @param string $template_data
      * @return string|string[]
      */
-    public function _complie_script_get($template_data)
+    public function _complie_script_get(string $template_data)
     {
         $isMatched = preg_match_all('/<!--include_start-->([\s\S]*?)<!--include_end-->/', $template_data, $matches);
-        if ($isMatched && $isMatched === 1) {
+        if ($isMatched === 1) {
             $script = $matches[1][0];
             $fileName=md5($script)."_script.tpl";
             file_put_contents(APP_TMP.$fileName,$script);
             $template_data = str_replace($matches[0][0], '<?php $template_file_script="' . $fileName. '";?>', $template_data);
-            /* $template_data = str_replace($matches[0][0], '<?php $template_file_script="' . base64_encode($script) . '";?>', $template_data);*/
         }
         return $template_data;
     }
 
     /**
      * js脚本位置重定位
-     * @param $template_data
+     * @param string $template_data
      * @return string|string[]
      */
-    public function _complie_script_put($template_data)
+    public function _complie_script_put(string $template_data)
     {
 
         $template_data = str_replace('<!--template_file_script-->', '<?php if(isset($template_file_script))include_once $_view_obj->compile($template_file_script);?>', $template_data);
@@ -190,10 +188,11 @@ class View
 
     /**
      * 清除注释
-     * @param $template_data
+     * @param string $template_data
      * @return string
      */
-    public function cleanRemark($template_data){
+    public function cleanRemark(string $template_data): string
+    {
         $isMatched = preg_match_all('/<!--[\s\S]*?-->/', $template_data, $matches);
         if ($isMatched) {
             foreach ($matches[0] as $match){
@@ -206,9 +205,9 @@ class View
 
     /**
      * 清除过期的文件
-     * @param $tempalte_name
+     * @param string $tempalte_name
      */
-    private function _clear_compliedfile($tempalte_name)
+    private function _clear_compliedfile(string $tempalte_name)
     {
         $dir = scandir($this->compile_dir);
         if ($dir) {
@@ -224,10 +223,10 @@ class View
 
     /**
      * 变量赋值
-     * @param          $mixed
-     * @param  string  $val
+     * @param string|array $mixed
+     * @param string $val
      */
-    public function assign($mixed, $val = '')
+    public function assign( $mixed, string $val = '')
     {
         if (is_array($mixed)) {
             foreach ($mixed as $k => $v) {
@@ -246,8 +245,16 @@ class View
     private function _compile_function_callback($matches)
     {
 
+        //dump($matches,true);
+
         if (empty($matches[2])) return '<?php echo ' . $matches[1] . '();?>';
-        $sysfunc = preg_replace('/\((.*)\)\s*$/', '<?php echo ' . $matches[1] . '($1);?>', $matches[2], -1, $count);
+
+        if($matches[1]!=="unset"){
+            $replace = '<?php echo ' . $matches[1] . '($1);?>';
+        }else{
+            $replace = '<?php  ' . $matches[1] . '($1);?>';
+        }
+        $sysfunc = preg_replace('/\((.*)\)\s*$/', $replace, $matches[2], -1, $count);
         if ($count) return $sysfunc;
 
         $pattern_inner = '/\b([-\w]+?)\s*=\s*(\$[\w"\'\]\[\-_>\$]+|"[^"\\\\]*(?:\\\\.[^"\\\\]*)*"|\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'|([->\w]+))\s*?/';

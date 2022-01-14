@@ -1,11 +1,11 @@
 <!--****************************************************************************
-  * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
   ***************************************************************************-->
 
 <html lang="zh-cn">
 <head>
     <meta charset="utf-8">
-    <style type="text/css">* {
+    <style >* {
         padding: 0;
         margin: 0;
     }
@@ -54,7 +54,7 @@
     if (parseInt(wait) !== -1) {
         document.getElementById('jump_box').innerHTML = "还有<span id='jump'><{$time}></span>秒为您自动跳转，<a href='<{$url}>' target='_self'><{$desc}></a>"
         setInterval(function () {
-            document.getElementById("jump").innerText = --wait;
+            document.getElementById("jump").innerText = (--wait).toString();
             if (wait <= 0) {
                 location.href = "<{$url}>";
             }

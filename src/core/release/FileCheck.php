@@ -7,7 +7,7 @@ namespace app\core\release;
 
 
 use app\core\debug\Log;
-use app\core\debug\StringUtil;
+use app\core\utils\StringUtil;
 
 class FileCheck
 {

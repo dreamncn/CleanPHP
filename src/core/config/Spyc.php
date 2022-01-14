@@ -1,11 +1,18 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\config;
 use stdClass;
 
+/**
+ * Class Spyc
+ * Created By ankio.
+ * Date : 2022/1/12
+ * Time : 5:06 下午
+ * Description :解析yml
+ */
 class Spyc
 {
 

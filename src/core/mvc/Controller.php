@@ -1,10 +1,9 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\mvc;
-
 
 use app\core\debug\Log;
 
@@ -28,9 +27,9 @@ class Controller
 
     private $_data = [];//模板参数数组
 
-    private $encode=true;
+    private $encode = true;
 
-    private $init_result=null;
+    private $init_result = null;
 
     /**
      * Controller constructor.
@@ -40,59 +39,71 @@ class Controller
         $this->init_result = $this->init();
     }
 
-    public function getInit(){
+    public function getInit()
+    {
         return $this->init_result;
     }
 
     /**
      * 控制器初始化方法
-     * @return null|void|string|array
+     *
      */
     public function init()
     {
+        return null;
     }
 
     /**
      * 设置layout文件
-     * @param $file
+     * @param string $file
      */
-    public function setLayout($file)
+    public function setLayout(string $file)
     {
         $this->layout = $file;
     }
 
-    public function setEncode($encode){
-        $this->encode=$encode;
+    /**
+     * 是否输出进行html编码
+     * @param bool $encode
+     */
+    public function setEncode(bool $encode)
+    {
+        $this->encode = $encode;
     }
 
-    public function isEncode(){
-        return $this->encode===true;
+    /**
+     * 是否输出进行html编码
+     * @return bool
+     */
+    public function isEncode(): bool
+    {
+        return $this->encode === true;
     }
 
     /**
      * 设置自动编译目录
-     * @param $dir
+     * @param string $dir
      */
-    public function setAutoPathDir($dir)
+    public function setAutoPathDir(string $dir)
     {
         $this->_auto_path_dir = $dir;
     }
 
     /**
      * 设置模板数据
-     * @param $name
+     * @param string $name
      * @param $value
      */
-    function setData($name, $value)
+    function setData(string $name, $value)
     {
         $this->_data[$name] = $value;
     }
 
     /**
      * 设置模板数据数组
-     * @param $array
+     * @param array $array
      */
-    function setArray($array)
+    function setArray(array $array)
     {
         $this->_data = $array;
     }
@@ -100,10 +111,10 @@ class Controller
 
     /**
      * 渲染模板
-     * @param         $tpl_name
+     * @param string $tpl_name
      * @return false|string
      */
-    public function display($tpl_name)
+    public function display(string $tpl_name)
     {
         $GLOBALS['display_start'] = microtime(true);
         Log::debug('view', '尝试编译模板文件 "' . $tpl_name . '"');
@@ -121,7 +132,7 @@ class Controller
             $tpl_name = $this->layout;
         }
         $this->_auto_display = false;
-        $this->encode=false;
+        $this->encode = false;
         return $this->_v->render($tpl_name);
     }
 }

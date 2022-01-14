@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 /**
@@ -12,7 +12,6 @@
 
 namespace app\core\web;
 
-use app\core\debug\Log;
 use app\core\mvc\Controller;
 
 /**
@@ -29,13 +28,18 @@ class Response
 		 * 获取当前访问的URL域名
 		 * @return string
 		 */
-	public static function getAddress()
+	public static function getAddress(): string
     {
         return $GLOBALS['http_scheme'] . $_SERVER["HTTP_HOST"];
     }
 
-    public static function getRootDomain(){
-        $url="http://".$_SERVER ['HTTP_HOST'];
+    /**
+     * 获取根域名，如hot.baidu.com,获取到是baidu.com
+     * @return string
+     */
+    public static function getRootDomain(): string
+    {
+        $url= "https://" .$_SERVER ['HTTP_HOST'];
         $hosts = parse_url($url);
         $host = $hosts['host'];
         //查看是几级域名
@@ -52,14 +56,20 @@ class Response
         }
         return $host;
     }
-    public static function getDomain(){
+
+    /**
+     * 获取域名，比如hot.baidu.com获取到的是baidu.com
+     * @return string
+     */
+    public static function getDomain(): string
+    {
 	    return $_SERVER["HTTP_HOST"];
     }
 	/**
 		 * 获取当前访问的地址
 		 * @return string
 		 */
-	public static function getNowAddress()
+	public static function getNowAddress(): string
     {
         return $GLOBALS['http_scheme'] . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'];
     }
@@ -67,7 +77,7 @@ class Response
 	/**
 		 * 获取当前服务器IP
 		 */
-    public static function getMyIp()
+    public static function getMyIp(): string
     {
         return gethostbyname(gethostname());
     }
@@ -75,15 +85,15 @@ class Response
 
 	/**
 		 * 跳转提示类
-		 * @param  false   $err 是否错误
-	 * @param  int     $code 错误代码（200、403、404等）
-	 * @param  string  $title 错误标题
-	 * @param  string  $msg 错误信息
-	 * @param  int     $time 跳转时间
-	 * @param  string  $url 跳转URL
-	 * @param  string  $desc 跳转描述
+		 * @param false $err 是否错误
+	 * @param int $code 错误代码（200、403、404等）
+	 * @param string $title 错误标题
+	 * @param string $msg 错误信息
+	 * @param int $time 跳转时间
+	 * @param string $url 跳转URL
+	 * @param string $desc 跳转描述
 		 */
-	public static function msg($err = false, $code = 404, $title = "", $msg = "", $time = 3, $url = '', $desc = "立即跳转")
+	public static function msg(bool $err = false, int $code = 404, string $title = "", string $msg = "", int $time = 3, string $url = '', string $desc = "立即跳转")
     {
         global $__module;
         $__module = '';
@@ -112,21 +122,26 @@ class Response
      * @param int $timeout 延时跳转
      * @param bool $exit 发生跳转是否直接退出
      */
-	public static function location($url,$timeout=0,$exit=true)
+	public static function location($url, int $timeout=0, bool $exit=true)
     {
         if($timeout!==0){
             header("refresh:$timeout,".$url);
         }else{
             header("Location:{$url}");
         }
-        Log::debug('Clean', '发生强制跳转： '.$url );
         if($exit){
             exitApp("发生强制跳转：  $url");
         }
 
     }
 
-    public static function isInner($ip){
-        return preg_match('%^127\.|10\.|192\.168|172\.(1[6-9]|2|3[01])%',$ip);
+    /**
+     * 是否为内网IP
+     * @param string $ip
+     * @return bool 返回false表示不是内网ip
+     */
+    public static function isInner(string $ip): bool
+    {
+        return !(preg_match('%^127\.|10\.|192\.168|172\.(1[6-9]|2|3[01])%', $ip) === 0);
     }
 }

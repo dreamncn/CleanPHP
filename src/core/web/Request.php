@@ -1,11 +1,11 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\web;
 
-use app\core\debug\StringUtil;
+use app\core\utils\StringUtil;
 
 /**
  * Class Request
@@ -29,15 +29,15 @@ class Request
                 $headers[ucfirst(strtolower(str_replace('_', '-', substr($key, 5))))] = $value;
             }
             if (isset($_SERVER['PHP_AUTH_DIGEST'])) {
-                $header['AUTHORIZATION'] = $_SERVER['PHP_AUTH_DIGEST'];
+                $headers['AUTHORIZATION'] = $_SERVER['PHP_AUTH_DIGEST'];
             } elseif (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
-                $header['AUTHORIZATION'] = base64_encode($_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
+                $headers['AUTHORIZATION'] = base64_encode($_SERVER['PHP_AUTH_USER'] . ':' . $_SERVER['PHP_AUTH_PW']);
             }
             if (isset($_SERVER['CONTENT_LENGTH'])) {
-                $header['CONTENT-LENGTH'] = $_SERVER['CONTENT_LENGTH'];
+                $headers['CONTENT-LENGTH'] = $_SERVER['CONTENT_LENGTH'];
             }
             if (isset($_SERVER['CONTENT_TYPE'])) {
-                $header['CONTENT-TYPE'] = $_SERVER['CONTENT_TYPE'];
+                $headers['CONTENT-TYPE'] = $_SERVER['CONTENT_TYPE'];
             }
         }
         return $headers;
@@ -56,18 +56,19 @@ class Request
      * 通过数据库获取浏览器信息，需要配置php.ini https://www.php.net/manual/zh/function.get-browser.php
      * @return string
      */
-    public static function getBroswerByIni(){
+    public static function getBrowserByIni(): string
+    {
         $browser = get_browser($_SERVER['HTTP_USER_AGENT'] ,true);
         return $browser["platform_description"]."（{$browser['browser']})";
     }
 
     /**
-     * 获取浏览器信息
+     * 简单获取浏览器信息
      * @return string
      */
-    public static function getBroswer()
+    public static function getBrowser(): string
     {
-        $sys = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';  //获取用户代理字符串
+        $sys = $_SERVER['HTTP_USER_AGENT'] ?? '';  //获取用户代理字符串
         if (stripos($sys, "Firefox/") > 0) {
             preg_match("/Firefox\/([^;)]+)+/i", $sys, $b);
             $exp[0] = "Firefox";
@@ -109,9 +110,9 @@ class Request
      * 获取系统信息
      * @return string
      */
-    public static function getOS()
+    public static function getOS(): string
     {
-        $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+        $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         $os = false;
 
         if (preg_match('/win/i', $agent) && strpos($agent, '95')) {
@@ -179,9 +180,9 @@ class Request
 
     /**
      * 获取客户端真实IP
-     * @return array|false|mixed|string
+     * @return string
      */
-    public static function getClientIP()
+    public static function getClientIP(): string
     {
         $REMOTE_ADDR =  $_SERVER["REMOTE_ADDR"];
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -198,7 +199,7 @@ class Request
      * 是否PJAX请求
      * @return bool
      */
-    public static function isPjax()
+    public static function isPjax(): bool
     {
         return (isset($_SERVER['HTTP_X_PJAX']) && $_SERVER['HTTP_X_PJAX'] == 'true');
     }
@@ -208,7 +209,7 @@ class Request
      * 是否AJAX请求
      * @return bool
      */
-    public static function isAjax()
+    public static function isAjax(): bool
     {
         return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
     }
@@ -218,7 +219,7 @@ class Request
      * 是否GET请求
      * @return bool
      */
-    public static function isGet()
+    public static function isGet(): bool
     {
         return $_SERVER['REQUEST_METHOD'] == 'GET';
     }
@@ -227,7 +228,7 @@ class Request
      * 是否POST请求
      * @return bool
      */
-    public static function isPost()
+    public static function isPost(): bool
     {
         return $_SERVER['REQUEST_METHOD'] == 'POST';
     }

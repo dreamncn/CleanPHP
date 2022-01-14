@@ -1,5 +1,5 @@
 <!--****************************************************************************
-  * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
   ***************************************************************************-->
 
 
@@ -68,6 +68,7 @@
                     <a href="javascript:;">拓展工具类</a>
                     <dl class="layui-nav-child">
                         <dd><a href="<{url('index','lib','rsa')}>">RSA与AES加密解密</a></dd>
+                        <dd><a href="<{url('index','lib','sm')}>">国密算法加解密</a></dd>
                         <dd><a href="<{url('index','lib','upload')}>">文件上传处理类</a></dd>
                         <dd><a href="<{url('index','lib','csrf')}>">SSRF与CSRF防御</a></dd>
                     </dl>

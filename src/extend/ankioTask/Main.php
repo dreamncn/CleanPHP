@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\extend\ankioTask;
@@ -12,7 +12,12 @@ define("EXTEND_TASKER",APP_EXTEND."ankioTask".DS);
 
 class Main implements EventListener
 {
-    public function handleEvent($event,$msg)
+    /**
+     * @param string $event
+     * @param array|string $msg
+     * @return void 实现接口
+     */
+    public function handleEvent(string $event, $msg)
     {
         $server=Server::getInstance();//获取对象实例
         $server->route();

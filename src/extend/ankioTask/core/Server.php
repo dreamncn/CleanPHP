@@ -1,12 +1,11 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\extend\ankioTask\core;
 
 
-use app\core\debug\Log;
 use app\core\mvc\Model;
 use app\core\web\Response;
 use app\lib\Async\Async;
@@ -21,9 +20,9 @@ use app\lib\Async\Async;
 class Server extends Model
 {
 
-    private static $instance=null;
+    private static ?Server $instance=null;
 
-    private $taskerUrl;
+    private string $taskerUrl;
 
     public function __construct()
     {
@@ -32,8 +31,8 @@ class Server extends Model
         $this->setDatabase("sqlite");
         $this->execute(
         "CREATE TABLE  IF NOT EXISTS extend_lock(
-                    lock_time varchar(200)
-                    )"
+              ock_time varchar(200)
+            )"
     );
         $this->taskerUrl=Response::getAddress()."/tasker_server/";
         //任务URL
@@ -43,7 +42,8 @@ class Server extends Model
      * 获取对象实例
      * @return Server
      */
-    public static function getInstance(){
+    public static function getInstance(): ?Server
+    {
         return self::$instance===null?(self::$instance=new Server()):self::$instance;
     }
 
@@ -53,15 +53,15 @@ class Server extends Model
      */
     public  function route()
     {
-        $splite=explode("/",$_SERVER['REQUEST_URI']);
+        $split=explode("/",$_SERVER['REQUEST_URI']);
 
-        if(sizeof($splite)!==3)return;
+        if(sizeof($split)!==3)return;
 
-        if($splite[1]!=="tasker_server")return;
+        if($split[1]!=="tasker_server")return;
 
         Async::getInstance()->response(0);
 
-        switch ($splite[2]){
+        switch ($split[2]){
             case "init":$this->init();break;
         }
 
@@ -73,9 +73,7 @@ class Server extends Model
      */
     public function start(){
         if(!$this->isLock()){//没有锁定，请求保持锁定
-            Log::debug("Tasker","定时任务好久没有访问了。所以我就尝试发起锁定！");
             $bool=Async::getInstance()->request($this->taskerUrl."init","GET",[],[],"tasker_start");
-            Log::debug("Tasker","定时任务服务启动。");
         }
     }
 
@@ -100,10 +98,8 @@ class Server extends Model
             $this->lock(time());//更新锁定时间
             //循环扫描
             Tasker::getInstance()->run();
-            Log::debug("Tasker","循环扫描中...");
             sleep(10);
             if($this->isStop()){//间歇10秒后如果发现停止
-                Log::debug("Tasker","进程退出...");
                 break;
             }
         } while(true);
@@ -116,7 +112,7 @@ class Server extends Model
      * @param $time int 锁定时间
      * @return void
      */
-    private function lock($time){
+    private function lock(int $time){
        // Log::debug("time_",print_r($time,true));
         $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
         if(empty($data)){
@@ -128,7 +124,8 @@ class Server extends Model
      *  判断是否停止
      * @return bool
      */
-    private function isStop(){
+    private function isStop(): bool
+    {
         $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
         if(empty($data))return false;
         return (time()-intval($data[0]['lock_time'])>20);
@@ -139,7 +136,8 @@ class Server extends Model
      *  判断是否锁定
      * @return bool
      */
-    private function isLock(){
+    private function isLock(): bool
+    {
         $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
        // Log::debug("time",print_r($data,true));
         if(empty($data))return false;

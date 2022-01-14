@@ -1,11 +1,11 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\lib\Async;
 use app\core\cache\Cache;
-use app\core\debug\Log;
+use app\core\utils\StringUtil;
 use app\core\web\Request;
 use app\core\web\Response;
 
@@ -18,10 +18,10 @@ use app\core\web\Response;
  */
 class Async
 {
-    private $err = '';
-    private static $instance=null;
+    private string $err = '';
+    private static ?Async $instance=null;
 
-    public function err()
+    public function err(): string
     {
         return $this->err;
     }
@@ -35,7 +35,8 @@ class Async
     /**
      * @return Async
      */
-    public static function getInstance(){
+    public static function getInstance(): ?Async
+    {
         return self::$instance===null?(self::$instance=new Async()):self::$instance;
     }
     /**
@@ -47,11 +48,9 @@ class Async
      * @param string $identify 唯一标识符
      * @return bool
      */
-    public function request($url, $method = 'GET', $data = [], $cookie = [], $identify = 'clean')
+    public function request(string $url, string $method = 'GET', array $data = [], array $cookie = [], string $identify = 'clean'): bool
     {
 
-        Log::debug("Async","异步发起中：".$url);
-        Log::debug("Async","identify：".$identify);
 
         $url_array = parse_url($url); //获取URL信息，以便平凑HTTP HEADER
 
@@ -66,12 +65,10 @@ class Async
            $fp = fsockopen(($url_array['scheme'] == 'http' ? "" : 'ssl://') . $url_array['host'], $port, $errno, $errstr, 30);
        }catch (\Exception $e){
            $this->err = '无法向该URL发起请求' . $errstr;
-           Log::debug("Async","异步发起失败，原因：".$this->err);
            return false;
        }
         if (!$fp) {
             $this->err = '无法向该URL发起请求' . $errstr;
-            Log::debug("Async","异步发起失败，原因：".$this->err);
             return false;
         }
 
@@ -83,7 +80,7 @@ class Async
         $header = $method . " " . $getPath;
         $header .= " HTTP/1.1" . PHP_EOL;
         $header .= "Host: " . $url_array['host'] ./*":".$port .*/ PHP_EOL; //HTTP 1.1 Host域不能省略
-        $token = getRandom(128);
+        $token = StringUtil::get()->getRandom(128);
 
         $identify=md5($token . $identify);
 
@@ -112,8 +109,7 @@ class Async
             $post_str =   PHP_EOL . PHP_EOL . " "; //传递POST数据
         }
         $header .= $post_str;
-        Log::debug("Async",$header);
-        Log::debug("Async","异步发起结束");
+
         fwrite($fp, $header);
         fclose($fp);
         return true;
@@ -125,13 +121,11 @@ class Async
      */
     public function response(int $time = 0)
     {
-        Log::debug('Async_Res', '异步响应中...' );
+
         if (!$this->checkToken()) {
-            Log::debug('Async_Res', '异步响应失败，原因：' . $this->err);
             Response::msg(true,403,"禁止访问","您无权访问该资源。",0,Response::getAddress(),"立即跳转");
         }
         ignore_user_abort(true); // 后台运行，不受前端断开连接影响
-        Log::debug('Async_Res', '异步响应成功... '.Response::getNowAddress() );
         set_time_limit($time);
         ob_end_clean();
         header("Connection: close");
@@ -145,14 +139,13 @@ class Async
             fastcgi_finish_request(); /* 响应完成, 关闭连接 */
         }
         sleep(1);
-        Log::debug('ASync_Res', '异步响应结束...' );
     }
 
     /**
      * 进行Token检查
      * @return bool
      */
-    private function checkToken()
+    private function checkToken(): bool
     {
         $header = Request::getHeader();
         if (isset($header['Token']) && isset($header['Identify'])) {

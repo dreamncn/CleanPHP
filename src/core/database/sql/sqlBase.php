@@ -1,21 +1,12 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-/**
- * File sqlBase
- *
- * @package app\core\sql\sql
- * Date: 2020/10/18 12:28 下午
- * Author: ankio
- * Description:
- */
+
 
 namespace app\core\database\sql;
-
-
-use app\core\debug\Error;
+use app\core\error\AppError;
 use PDO;
 
 /**
@@ -29,7 +20,6 @@ class sqlBase
 {
 
     protected $opt = [];//封装常见的数据库查询选项
-
     protected $tableName;
     protected $traSql = null;//编译完成的sql语句
     protected $bindParam = [];//绑定的参数列表
@@ -37,14 +27,14 @@ class sqlBase
 
 
 	/**
-	 * sqlBase constructor.
-	 * @param $tableName
-	 * @param $sqlDetail
-	 */
+* sqlBase constructor.
+* @param $tableName
+* @param $sqlDetail
+*/
 	public function __construct($tableName, $sqlDetail)
     {
         if (!class_exists("PDO") || !in_array("mysql", PDO::getAvailableDrivers(), true)) {
-            Error::err('Database Err: PDO or PDO_MYSQL doesn\'t exist!');
+            new AppError("请安装PDO拓展并启用",APP_CONF."db.yml","type");
         }
         //初始化基础数据
         $this->opt['type'] = 'select';
@@ -54,12 +44,12 @@ class sqlBase
     }
 
 	/**
-		 * 获取存储的数据选项
-		 * @param $head
-	 * @param $opt
-		 * @return string
-		 */
-	protected function getOpt($head, $opt)
+	* 获取存储的数据选项
+	* @param $head
+    * @param $opt
+	* @return string
+	*/
+	protected function getOpt($head, $opt): string
     {
         if (isset($this->opt[$opt])) return ' ' . $head . ' ' . $this->opt[$opt] . ' ';
         return ' ';
@@ -67,11 +57,11 @@ class sqlBase
 
 
 	/**
-		 * 设置表名
-		 * @param $tableName
-		 * @return $this
-		 */
-	protected function table($tableName)
+	* 设置表名
+	* @param string $tableName
+	* @return $this
+	*/
+	protected function table(string $tableName): sqlBase
     {
         $this->opt['tableName'] = $tableName;
         return $this;
@@ -79,11 +69,11 @@ class sqlBase
 
 
 	/**
-		 * 设置查询条件
-		 * @param $conditions
-		 * @return $this
-		 */
-	protected function where($conditions)
+	* 设置查询条件
+	* @param array $conditions 条件内容，必须是数组,格式如下["name"=>"张三","i > :hello",":hello"=>"hi"]
+	* @return $this
+	*/
+	protected function where(array $conditions): sqlBase
     {
         if (is_array($conditions) && !empty($conditions)) {
             $sql = null;

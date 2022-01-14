@@ -13,13 +13,13 @@ class DefenseAgainstSSRF
     /**
      * @var int
      */
-    private $timeout;
+    private int $timeout;
 
     /**
      * @var int
      */
-    private $limit;
-    private $err="";
+    private int $limit;
+    private string $err="";
 
     /**
      * DefenseAgainstSSRF constructor.
@@ -34,6 +34,7 @@ class DefenseAgainstSSRF
 
 
     /**
+     * 设置超时时间
      * @param $var
      */
     public function setTimeout($var)
@@ -43,6 +44,7 @@ class DefenseAgainstSSRF
 
 
     /**
+     * 设置跳转等待时间
      * @param $var
      */
     public function setJmpLimit($var)
@@ -51,14 +53,21 @@ class DefenseAgainstSSRF
     }
 
 
-    public function getErr(){
+    /**
+     * 获取错误
+     * @return string
+     */
+    public function getErr(): string
+    {
         return $this->err;
     }
+
     /**
+     * 验证ssrf
      * @param $url
      * @return bool
      */
-    public function verifySSRFURL($url)
+    public function verifySSRFURL($url): bool
     {
 
 
@@ -82,10 +91,11 @@ class DefenseAgainstSSRF
 
 
     /**
+     * 检测域名
      * @param $url
      * @return bool
      */
-    private function checkDomain($url)
+    private function checkDomain($url): bool
     {
         $this->err= "非文本类型";
         if (!is_string($url)) {
@@ -114,6 +124,7 @@ class DefenseAgainstSSRF
 
 
     /**
+     * 获取真实IP
      * @param $url
      * @return bool|string
      */
@@ -143,10 +154,11 @@ class DefenseAgainstSSRF
 
 
     /**
+     * 获取URL信息
      * @param $url
      * @return array
      */
-    private function getURLInfo($url)
+    private function getURLInfo($url): array
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HEADER, true);
@@ -177,10 +189,11 @@ class DefenseAgainstSSRF
 
 
     /**
+     * 判断是否为内网IP
      * @param $ip_arg
      * @return bool
      */
-    private function isInnerIP($ip_arg)
+    private function isInnerIP($ip_arg): bool
     {
         $ip = ip2long($ip_arg);
         return ip2long('127.0.0.0') >> 24 === $ip >> 24 or \

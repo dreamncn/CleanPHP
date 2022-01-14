@@ -1,31 +1,31 @@
 <?php
-/**
- * Name         :File.php
- * Author       :dreamn
- * Date         :2020/2/12 22:47
- * Description  :文件文件夹io操作类
- */
-namespace app\core\release;
+
+namespace app\core\utils;
 
 
 /**
  * Class File
- * @package includes
+ * Created By ankio.
+ * Date : 2022/1/12
+ * Time : 8:09 下午
+ * Description : 文件工具类
  */
-class File {
-
+class FileUtil {
     public static function delFile($fileName){
         if(is_file($fileName))unlink($fileName);
     }
     /**
-     * 文件夹删除
+     * 文件夹删除或者文件删除
      * @param $dirname
-     * @return bool|string
+     * @return bool
      */
-    public static function del($dirname)
+    public static function del($dirname): bool
     {
         if (!is_dir($dirname)) {
-            return " $dirname is not a dir!";
+            if(is_file($dirname))
+                return  unlink($dirname);
+            else
+                return false;
         }
         $handle = opendir($dirname); //打开目录
         while (($file = readdir($handle)) !== false) {
@@ -36,10 +36,14 @@ class File {
             }
         }
         closedir($handle);
-        $result = rmdir($dirname) ? true : false;
-        return $result;
+        return rmdir($dirname);
     }
-    static function cleanDir($path)
+
+    /**
+     * 清空一个文件夹
+     * @param string $path
+     */
+    static function cleanDir(string $path)
     {
         //如果是目录则继续
         if (is_dir($path)) {
@@ -69,7 +73,7 @@ class File {
      * @param string $dst 目的地文件夹
      * @return bool
      */
-    public static function copyDir($src = '', $dst = '')
+    public static function copyDir(string $src = '', string $dst = ''): bool
     {
         if (empty($src) || empty($dst))
         {
@@ -105,7 +109,7 @@ class File {
      * @param bool $recursive 是否递归创建
      * @return bool
      */
-    public static function mkDir($path = '', $mode = 0777, $recursive = true)
+    public static function mkDir(string $path = '', int $mode = 0777, bool $recursive = true): bool
     {
         clearstatcache();
         if (!is_dir($path))
@@ -123,7 +127,8 @@ class File {
      * @param $name
      * @return bool
      */
-    public static function isName($name){
+    public static function isName($name): bool
+    {
         $isMatched = preg_match_all('/^[0-9a-zA-Z_]+$/', $name);
         if($isMatched)return true;
         else {

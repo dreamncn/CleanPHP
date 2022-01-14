@@ -4,11 +4,16 @@
  ******************************************************************************/
 
 namespace app\core\database\sql;
-
-
+/**
+ * Class Page
+ * Created By ankio.
+ * Date : 2022/1/12
+ * Time : 7:43 下午
+ * Description : 分页处理类
+ */
 class Page
 {
-    private $page = [];
+    private array $page;
 
     public function __construct($page)
     {
@@ -16,89 +21,100 @@ class Page
     }
     /**
      * 总数量
-     * @return mixed
+     * @return int
      */
-    public function getTotalCount(){
-        return $this->page["total_count"];
+    public function getTotalCount(): int
+    {
+        return $this->page["total_count"]??0;
     }
 
     /**
      * 一页大小
-     * @return mixed
+     * @return int
      */
-    public function getPageSize(){
-        return $this->page["page_size"];
+    public function getPageSize(): int
+    {
+        return $this->page["page_size"]??0;
     }
 
     /**
      * 总页数
-     * @return mixed
+     * @return int
      */
-    public function getTotalPage(){
-        return $this->page["total_page"];
+    public function getTotalPage(): int
+    {
+        return $this->page["total_page"]??0;
     }
 
     /**
      * 第一页
-     * @return mixed
+     * @return int
      */
-    public function getFirstPage(){
-        return $this->page["first_page"];
+    public function getFirstPage(): int
+    {
+        return $this->page["first_page"]??0;
     }
 
     /**
      * 上一页
-     * @return mixed
+     * @return int
      */
-    public function getPrevPage(){
-        return $this->page["prev_page"];
+    public function getPrevPage(): int
+    {
+        return $this->page["prev_page"]??0;
     }
 
     /**
      * 上一页
-     * @return mixed
+     * @return int
      */
-    public function getNextPage(){
-        return $this->page["next_page"];
+    public function getNextPage(): int
+    {
+        return $this->page["next_page"]??0;
     }
 
     /**
      * 最后一页
-     * @return mixed
+     * @return int
      */
-    public function getLastPage(){
-        return $this->page["last_page"];
+    public function getLastPage(): int
+    {
+        return $this->page["last_page"]??0;
     }
 
     /**
      * 当前页
-     * @return mixed
+     * @return int
      */
-    public function getCurrentPage(){
-        return $this->page["current_page"];
+    public function getCurrentPage(): int
+    {
+        return $this->page["current_page"]??0;
     }
 
     /**
      * 所有页
-     * @return mixed
+     * @return int
      */
-    public function getAllPages(){
-        return $this->page["all_pages"];
+    public function getAllPages(): int
+    {
+        return $this->page["all_pages"]??0;
     }
 
     /**
      * 偏移
-     * @return mixed
+     * @return int
      */
-    public function getOffset(){
-        return $this->page["offset"];
+    public function getOffset(): int
+    {
+        return $this->page["offset"]??0;
     }
 
     /**
      *  一页大小
-     * @return mixed
+     * @return int
      */
-    public function getLimit(){
-        return $this->page["limit"];
+    public function getLimit(): int
+    {
+        return $this->page["limit"]??0;
     }
 }

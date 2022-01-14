@@ -8,6 +8,10 @@
     "require": {
         "ext-sockets": "*",
       "ext-json": "*",
-      "ext-pdo": "*"
+      "ext-pdo": "*",
+      "ext-mbstring": "*",
+      "ext-zip": "*",
+      "ext-openssl": "*",
+      "ext-curl": "*"
     }
 }

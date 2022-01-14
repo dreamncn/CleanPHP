@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\event;
@@ -19,5 +19,5 @@ interface EventListener
      * @param $msg string|array 自行判断类型
      * @return mixed
      */
-	public function handleEvent($event,$msg);
+	public function handleEvent(string $event, $msg);
 }

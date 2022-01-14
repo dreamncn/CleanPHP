@@ -17,7 +17,7 @@ class AESEncryptHelper
     /**
      * @var string
      */
-    private $secretKey = '0123456789012345678901';
+    private string $secretKey = '0123456789012345678901';
 
 
 
@@ -35,7 +35,7 @@ class AESEncryptHelper
      * @param int $options
      * @return string
      */
-    public function encryptWithOpenssl($data, $options = 0)
+    public function encryptWithOpenssl($data, int $options = 0): string
     {
         $iv = substr($this->secretKey, 8, 16);
         return openssl_encrypt($data, self::METHOD, $this->secretKey, $options, $iv);
@@ -47,7 +47,7 @@ class AESEncryptHelper
      * @param int $options
      * @return string
      */
-    public function decryptWithOpenssl($data, $options = 0)
+    public function decryptWithOpenssl($data, int $options = 0): string
     {
         $iv = substr($this->secretKey, 8, 16);
         return openssl_decrypt($data, self::METHOD, $this->secretKey, $options, $iv);
@@ -56,8 +56,9 @@ class AESEncryptHelper
 
     /**
      * @param $uuid
+     * @return string
      */
-    public function createSecretKey($uuid)
+    public function createSecretKey($uuid): string
     {
         $this->secretKey  = md5($this->sha256WithOpenssl($uuid . '|' . $this->secretKey) . '|' . $this->secretKey);
         return  $this->secretKey;
@@ -68,7 +69,7 @@ class AESEncryptHelper
      * @param $data
      * @return string
      */
-    private function sha256WithOpenssl($data)
+    private function sha256WithOpenssl($data): string
     {
         return openssl_digest($data, self::SHA256);
     }

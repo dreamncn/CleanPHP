@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\database\sql;
@@ -29,20 +29,20 @@ class Update extends sqlBase
 
 	/**
 		 * 设置表
-		 * @param $table_name
+		 * @param string $tableName
 		 * @return Update
 		 */
-	public function table($table_name)
+	public function table(string $tableName)
     {
-        return parent::table($table_name);
+        return parent::table($tableName);
     }
 
 	/**
 		 * 设置条件
-		 * @param $conditions
+		 * @param array $conditions
 		 * @return Update
 		 */
-	public function where($conditions)
+	public function where(array $conditions)
     {
         return parent::where($conditions);
     }

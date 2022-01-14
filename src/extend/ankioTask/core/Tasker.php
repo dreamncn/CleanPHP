@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\extend\ankioTask\core;
@@ -18,7 +18,7 @@ use app\lib\Async\Async;
 
 class Tasker extends Model
 {
-    private static $instance;
+    private static Tasker $instance;
 
     public function __construct()
     {
@@ -45,11 +45,13 @@ class Tasker extends Model
      * 获取对象实例
      * @return Tasker
      */
-    public static function getInstance(){
+    public static function getInstance(): Tasker
+    {
         return self::$instance===null?(self::$instance=new Tasker()):self::$instance;
     }
 
-    public static function getTimes($id){
+    public static function getTimes($id): int
+    {
         $data=self::getInstance()->select("times")->table("extend_tasker")->where(["id"=>$id])->limit("1")->commit();
         if(!empty($data)){
             return 1 - intval($data[0]["times"]);
@@ -75,12 +77,12 @@ class Tasker extends Model
 
     /**
      * 添加一个定时任务，与linux定时任务语法完全一致
-     * @param array  $package 定时任务时间包
+     * @param array $package 定时任务时间包
      * @param string $url    执行的URL
-     * @param int    $times  执行次数,-1不限制
+     * @param int $times  执行次数,-1不限制
      * @return int 返回定时任务ID
      */
-    public function add($package,$url,$identify,$times=-1){
+    public function add(array $package, string $url, $identify, int $times=-1){
         if(sizeof($package)!=5)return false;
         $minute=$package[0];$hour=$package[1];$day=$package[2];$month=$package[3];$week=$package[4];
         $time=$this->getNext($minute,$hour,$day,$month,$week);
@@ -121,7 +123,8 @@ class Tasker extends Model
      * @param $minute int 分钟
      * @return array
      */
-    public function cycleDay($hour,$minute){
+    public function cycleDay(int $hour, int $minute): array
+    {
         return [$minute,$hour,1,0,0];
     }
 
@@ -132,7 +135,8 @@ class Tasker extends Model
      * @param $minute int 分钟
      * @return array
      */
-    public function cycleNDay($day,$hour,$minute){
+    public function cycleNDay(int $day, int $hour, int $minute): array
+    {
         return [$minute,$hour,$day,0,0];
     }
 
@@ -142,7 +146,8 @@ class Tasker extends Model
      * @param $minute int 分钟
      * @return array
      */
-    public function cycleNHour($hour,$minute){
+    public function cycleNHour(int $hour, int $minute): array
+    {
         return [$minute,$hour,1,0,0];
     }
 
@@ -151,7 +156,8 @@ class Tasker extends Model
      * @param $minute int 分钟
      * @return array
      */
-    public function cycleHour($minute){
+    public function cycleHour(int $minute): array
+    {
         return [$minute,1,0,0,0];
     }
 
@@ -160,7 +166,8 @@ class Tasker extends Model
      * @param $minute int 分钟
      * @return array
      */
-    public function cycleNMinute($minute){
+    public function cycleNMinute(int $minute): array
+    {
         return [$minute,0,0,0,0];
     }
 
@@ -171,7 +178,8 @@ class Tasker extends Model
      * @param $minute int 分钟
      * @return array
      */
-    public function cycleWeek($week,$hour,$minute){
+    public function cycleWeek(int $week, int $hour, int $minute): array
+    {
         return [$minute,$hour,0,0,$week];
     }
 
@@ -182,7 +190,8 @@ class Tasker extends Model
      * @param $minute int 分钟
      * @return array
      */
-    public function cycleMonth($day,$hour,$minute){
+    public function cycleMonth(int $day, int $hour, int $minute): array
+    {
         return [$minute,$hour,$day,1,0];
     }
 
@@ -193,20 +202,20 @@ class Tasker extends Model
      * @param $day int 天
      * @param $month int 月
      * @param $week int 周
-     * @return string 返回下次执行时间
+     * @return float 返回下次执行时间
      */
-    protected function getNext($minute, $hour, $day, $month, $week){
+    protected function getNext(int $minute, int $hour, int $day, int $month, int $week){
         $time=$minute*60+$hour*60*60+$day*60*60*24+$month*60*60*24*30+$week*60*60*24*7;
         return time()+$time;
     }
 
     /**
      * 启动一个任务
-     * @param $url
-     * @param $identify
+     * @param $url string 任务url
+     * @param $identify string 唯一标识
      * @return void
      */
-    private function startTasker($url,$identify)
+    private function startTasker(string $url, string $identify)
     {
         Async::getInstance()->request($url,"GET",[],[],$identify);
     }

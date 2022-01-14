@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\database\sql;
@@ -15,17 +15,17 @@ namespace app\core\database\sql;
 class Select extends sqlBase
 {
     /**
-     * @var null
+     * @var array|null
      */
-    protected $page = null;//开启分页的分页数据
+    protected ?array $page = null;//开启分页的分页数据
 
 
     /**
      * 初始化
-     * @param  string  $field
+     * @param string $field 需要的字段
      * @return $this
      */
-    public function select($field = "*")
+    public function select(string $field = "*"): Select
     {
         $this->opt = [];
         $this->opt['tableName'] = $this->tableName;
@@ -37,21 +37,21 @@ class Select extends sqlBase
 
     /**
      * 设置表
-     * @param $table_name
+     * @param string $tableName
      * @return Select
      */
-    public function table($table_name)
+    public function table(string $tableName):Select
     {
-        return parent::table($table_name);
+        return parent::table($tableName);
     }
 
 
     /**
      * 使用排序
-     * @param $string
+     * @param string $string 排序方式
      * @return $this
      */
-    public function orderBy($string)
+    public function orderBy(string $string): Select
     {
         $this->opt['order'] = $string;
         return $this;
@@ -60,10 +60,10 @@ class Select extends sqlBase
 
     /**
      * limit函数
-     * @param  string  $limit
+     * @param string $limit
      * @return $this
      */
-    public function limit($limit = '1')
+    public function limit(string $limit = '1'): Select
     {
         unset($this->opt['page']);
         $this->opt['limit'] = $limit;
@@ -72,12 +72,12 @@ class Select extends sqlBase
 
     /**
      * 分页
-     * @param  int  $start 开始
-     * @param  int  $count 数量
-     * @param  int  $range 最多分页
+     * @param int $start 开始
+     * @param int $count 数量
+     * @param int $range 最多分页
      * @return $this
      */
-    public function page($start = 1, $count = 10, $range = 10)
+    public function page(int $start = 1, int $count = 10, int $range = 10): Select
     {
         unset($this->opt['limit']);
         $this->opt['page'] = true;
@@ -90,10 +90,10 @@ class Select extends sqlBase
 
     /**
      * 查询条件
-     * @param $conditions
+     * @param array $conditions
      * @return Select
      */
-    public function where($conditions)
+    public function where(array $conditions):Select
     {
         return parent::where($conditions);
     }
@@ -104,22 +104,16 @@ class Select extends sqlBase
      */
     public function commit()
     {
-        if (isset($this->opt['page'])) {
-            $sql = 'SELECT COUNT(*) as M_COUNTER ';
+        $sql = 'SELECT COUNT(*) as M_COUNTER ';
+        $sql .= $this->getOpt('FROM', 'tableName');
+        $sql .= $this->getOpt('WHERE', 'where');
+        $sql .= $this->getOpt('ORDER BY', 'order');
 
-            // dump($this->getOpt('FROM', 'tableName'));
-            // dump($this->tableName,true);
+        $total = $this->sql->execute($sql, $this->bindParam, true);
+        $this->page = $this->pager($this->opt['start'], $this->opt['count'], $this->opt['range'], $total[0]['M_COUNTER']);
+        if (!empty($this->page))
+            $this->opt['limit'] = $this->page['offset'] . ',' . $this->page['limit'];
 
-            $sql .= $this->getOpt('FROM', 'tableName');
-            $sql .= $this->getOpt('WHERE', 'where');
-
-            $sql .= $this->getOpt('ORDER BY', 'order');
-
-            $total = $this->sql->execute($sql, $this->bindParam, true);
-            $this->page = $this->pager($this->opt['start'], $this->opt['count'], $this->opt['range'], $total[0]['M_COUNTER']);
-            if (!empty($this->page))
-                $this->opt['limit'] = $this->page['offset'] . ',' . $this->page['limit'];
-        }
         $this->translateSql();
         return $this->sql->execute($this->traSql, $this->bindParam, true);
     }
@@ -128,12 +122,12 @@ class Select extends sqlBase
     /**
      * 分页函数
      * @param       $page
-     * @param  int  $pageSize
-     * @param  int  $scope
-     * @param  int  $total
+     * @param int $pageSize
+     * @param int $scope
+     * @param int $total
      * @return array|null
      */
-    protected function pager($page, $pageSize = 10, $scope = 10, $total = 0)
+    protected function pager($page, int $pageSize = 10, int $scope = 10, int $total = 0): ?array
     {
         $this->page = [
             'total_count' => $total,//总数量
@@ -174,21 +168,19 @@ class Select extends sqlBase
      */
     private function translateSql()
     {
-        $sql = '';
-        $sql .= $this->getOpt('SELECT', 'field');
+        $sql = $this->getOpt('SELECT', 'field');
         $sql .= $this->getOpt('FROM', 'tableName');
         $sql .= $this->getOpt('WHERE', 'where');
         $sql .= $this->getOpt('ORDER BY', 'order');
         $sql .= $this->getOpt('LIMIT', 'limit');
         $this->traSql = $sql . ";";
-
     }
 
     /**
      * 获取分页数据
      * @return array
      */
-    public function getPage()
+    public function getPage(): ?array
     {
         return $this->page;
     }
@@ -196,10 +188,10 @@ class Select extends sqlBase
 
     /**
      * 统计查出来的数据的总数
-     * @param array|string $conditions
+     * @param array $conditions 统计条件
      * @return int|mixed
      */
-    public function count($conditions)
+    public function count(array $conditions)
     {
         $this->where($conditions);
         $sql= "SELECT COUNT(*) AS M_COUNTER FROM " . $this->tableName." where " . $this->opt['where'];
@@ -210,11 +202,11 @@ class Select extends sqlBase
 
     /**
      * 对某个字段进行求和
-     * @param array|string $conditions
-     * @param string $param
+     * @param array $conditions 求和条件
+     * @param string $param 求和字段
      * @return int|mixed
      */
-    public function sum($conditions, $param)
+    public function sum(array $conditions, string $param)
     {
         $this->where($conditions);
         $sql= "SELECT SUM($param) AS M_COUNTER FROM " . $this->tableName." where "  . $this->opt['where'];

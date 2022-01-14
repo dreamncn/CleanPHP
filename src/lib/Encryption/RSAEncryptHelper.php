@@ -11,7 +11,7 @@ class RSAEncryptHelper
     /**
      * @var array
      */
-    private $config = array('public_key' => '', 'private_key' => '');
+    private array $config = array('public_key' => '', 'private_key' => '');
 
     /**
      * RSAEncryptHelper constructor.
@@ -20,7 +20,8 @@ class RSAEncryptHelper
     {
     }
 
-    public function getKey(){
+    public function getKey(): array
+    {
         return $this->config;
     }
     public function create(){
@@ -82,7 +83,7 @@ class RSAEncryptHelper
      * @param string $data
      * @return null|string
      */
-    public function rsaPublicEncrypt($data = '')
+    public function rsaPublicEncrypt(string $data = ''): ?string
     {
         if (!is_string($data)) {
             return null;
@@ -105,7 +106,7 @@ class RSAEncryptHelper
      * @param string $encrypted
      * @return null
      */
-    public function rsaPrivateDecrypt($encrypted = '')
+    public function rsaPrivateDecrypt(string $encrypted = '')
     {
         if (!is_string($encrypted)) {
             return null;
@@ -117,7 +118,7 @@ class RSAEncryptHelper
     /**
      * @return bool|resource
      */
-    private function getPrivateKey()
+    private function getPrivateKey(): bool
     {
         $priv_key = $this->config['private_key'];
         return openssl_pkey_get_private($priv_key);
@@ -128,7 +129,7 @@ class RSAEncryptHelper
      * @param string $data
      * @return null|string
      */
-    public function rsaPrivateEncrypt($data = '')
+    public function rsaPrivateEncrypt(string $data = ''): ?string
     {
         if (!is_string($data)) {
             return null;
@@ -141,7 +142,7 @@ class RSAEncryptHelper
      * @param string $encrypted
      * @return null
      */
-    public function rsaPublicDecrypt($encrypted = '')
+    public function rsaPublicDecrypt(string $encrypted = '')
     {
         if (!is_string($encrypted)) {
             return null;

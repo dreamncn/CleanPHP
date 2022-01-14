@@ -1,15 +1,11 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\controller\index;
 
-use app\extend\ankioTask\core\Tasker;
-use app\core\config\Config;
 use app\core\debug\Log;
-use app\core\mvc\Model;
-use app\core\web\Response;
 
 class Sql extends BaseController
 {

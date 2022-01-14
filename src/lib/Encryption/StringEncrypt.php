@@ -5,26 +5,47 @@
 
 namespace app\lib\Encryption;
 
-//基于异或计算的文本加密类
+/**
+ * Class StringEncrypt
+ * Created By ankio.
+ * Date : 2022/1/14
+ * Time : 10:48 上午
+ * Description : 基于异或计算的文本加密类
+ */
 class StringEncrypt
 {
-    function strToHex($str){
+    /**
+     * @param $str string 到hex的文本
+     * @return string
+     */
+    function strToHex(string $str): string
+    {
         $hex="";
         for($i=0;$i<strlen($str);$i++)
             $hex.=dechex(ord($str[$i]));
-        $hex=strtoupper($hex);
-        return $hex;
+        return strtoupper($hex);
     }
 
 
-    function hexToStr($hex){
+    /**
+     * @param $hex string 要到文本的hex
+     * @return string
+     */
+    function hexToStr(string $hex): string
+    {
         $str="";
         for($i=0;$i<strlen($hex)-1;$i+=2)
             $str.=chr(hexdec($hex[$i].$hex[$i+1]));
         return $str;
     }
 
-    function encode($string){
+    /**
+     *
+     * @param $string string 需要加密的文本
+     * @return string
+     */
+    function encode(string $string): string
+    {
 
         $datas="%^&*()_+{}|:<>?`1234567890-=qwertyuiop[]\asdfghjkl;'zxcvbnm,./~!@#$";
         $datas=str_shuffle($datas);//每次都打乱顺序
@@ -46,11 +67,16 @@ class StringEncrypt
             }
         }
 
-        return strToHex(str_rot13($str));
+        return $this->strToHex(str_rot13($str));
     }
 
-    function decode($string){
-        $string=str_rot13(hexToStr($string));
+    /**
+     * @param $string string 需要解密的文本
+     * @return string
+     */
+    function decode(string $string): string
+    {
+        $string=str_rot13($this->hexToStr($string));
         $arr1=str_split($string,2);
         $str="";
         foreach ($arr1 as $item){

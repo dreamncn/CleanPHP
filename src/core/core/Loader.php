@@ -1,11 +1,11 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\core;
 
-use app\core\debug\Error;
+use app\core\error\Error;
 use app\core\debug\Log;
 
 
@@ -19,8 +19,8 @@ use app\core\debug\Log;
 class Loader
 {
 	/**
-		 * 注册自动加载
-		 */
+     * 注册自动加载
+     */
 	public static function register()
     {
         spl_autoload_register('app\\core\\core\\Loader::autoload', true, true);
@@ -35,10 +35,10 @@ class Loader
         require_once APP_COMPOSER . 'autoload.php';
     }
 	/**
-		 * 框架本身的自动加载
-		 * @param string $realClass 自动加载的类名
-		 */
-	public static function autoload($realClass)
+     * 框架本身的自动加载
+     * @param string $realClass 自动加载的类名
+     */
+	public static function autoload(string $realClass)
     {
 		//解析出路径与类名
         $classArr = self::getClass($realClass);
@@ -58,11 +58,11 @@ class Loader
     }
 
 	/**
-		 * 根据命名空间解析类名与路径
-		 * @param $class
-		 * @return array
-		 */
-	public static function getClass($class)
+     * 根据命名空间解析类名与路径
+     * @param string $class
+     * @return array
+     */
+	public static function getClass(string $class): array
     {
         if (strpos($class, '.')) Error::err('[Loader]"' . $class . '" 不是一个有效的类名！');
         $name = explode('\\', $class);

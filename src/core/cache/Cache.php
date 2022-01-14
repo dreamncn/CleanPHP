@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 /**
@@ -22,6 +22,7 @@ use app\core\debug\Log;
  * Author: ankio
  * Description: 缓存类
  */
+
 class Cache
 {
     private static $cache_path = APP_CACHE;
@@ -29,13 +30,8 @@ class Cache
 	private static $cache_security = false;
 
 
-	/**
-		 * 缓存设置
-		 * @param  int     $exp_time  缓存时间
-	 * @param  string  $path 缓存路径
-	 * @param  bool    $security 使用安全缓存
-		 */
-	public static function init($exp_time = 3600, $path = APP_CACHE,$security=true)
+
+	public static function init(int $exp_time = 3600, string $path = APP_CACHE, bool $security=true)
     {
         self::$cache_expire = $exp_time;
         self::$cache_path = $path;
@@ -47,11 +43,11 @@ class Cache
     }
 
 
-	/**
-		 * 删除缓存
-		 * @param $key
-		 */
-	public static function del($key)
+    /**
+     * 删除缓存
+     * @param string $key
+     */
+	public static function del(string $key)
     {
         $filename = self::fileName($key);
         if (file_exists($filename))
@@ -60,12 +56,12 @@ class Cache
 		    unlink($filename."_md5");
     }
 
-	/**
-		 * 获取缓存文件名
-		 * @param $key
-		 * @return string
-		 */
-	private static function fileName($key)
+    /**
+     * 获取缓存文件名
+     * @param string $key
+     * @return string
+     */
+	private static function fileName(string $key): string
     {
         return self::$cache_path . md5($key);
     }
@@ -73,11 +69,11 @@ class Cache
 
 	/**
 		 * 设置缓存
-		 * @param $key
-	 * @param $data
+		 * @param string $key
+	 * @param array|string|int $data
 		 * @return bool
 		 */
-	public static function set($key, $data)
+	public static function set(string $key, $data): bool
     {
         $values = serialize($data);
         $filename = self::fileName($key);
@@ -99,23 +95,23 @@ class Cache
 
 	/**
 		 * 获取缓存值
-		 * @param $key
-		 * @return mixed|null
+		 * @param string $key
+		 * @return string
 		 */
-	public static function get($key)
+	public static function get(string $key): string
     {
         $filename = self::fileName($key);
         if (!file_exists($filename) || !is_readable($filename)) {
-            return null;
+            return "";
         }
         if (time() < (filemtime($filename) + self::$cache_expire)) {
             $file = fopen($filename, "r");
             if ($file) {
 	            if(self::$cache_security){
 		            //校验,防止出现意外篡改
-		            if(!is_file($filename."_md5"))return null;
+		            if(!is_file($filename."_md5"))return "";
 		            if(md5_file($filename)!==file_get_contents($filename."_md5"))
-			            return null;
+			            return "";
 	            }
 
                 flock($file, LOCK_SH);
@@ -126,12 +122,12 @@ class Cache
                try{
                    return unserialize($data);
                }catch (\Throwable $e){
-                   return null;
+                   return "";
                }
-            } else return null;
+            } else return "";
         } else {
             self::del($key);
-            return null;
+            return "";
         }
     }
 

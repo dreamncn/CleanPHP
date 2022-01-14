@@ -1,16 +1,9 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-/**
- * File delete
- *
- * @package app\core\sql
- * Date: 2020/10/14 11:20 下午
- * Author: ankio
- * Description:delete SQL
- */
+
 
 namespace app\core\database\sql;
 
@@ -25,10 +18,10 @@ namespace app\core\database\sql;
 class Delete extends sqlBase
 {
 	/**
-		 * 初始化
-		 * @return $this
-		 */
-	public function delete()
+	* 初始化
+	* @return $this
+	*/
+	public function delete(): Delete
     {
         $this->opt = [];
         $this->opt['tableName'] = $this->tableName;
@@ -38,29 +31,29 @@ class Delete extends sqlBase
     }
 
 	/**
-		 * 设置表
-		 * @param $table_name
-		 * @return Delete
-		 */
-	public function table($table_name)
+	* 设置表
+	* @param string $tableName 表名
+	* @return Delete
+	*/
+	public function table(string $tableName): Delete
     {
-        return parent::table($table_name);
+        return parent::table($tableName);
     }
 
 	/**
-		 * 设置条件
-		 * @param $conditions
-		 * @return Delete
-		 */
-	public function where($conditions)
+	* 设置条件
+	* @param array $conditions 条件内容，必须是数组,格式如下["name"=>"张三","i > :hello",":hello"=>"hi"]
+	* @return Delete
+	*/
+	public function where(array $conditions): Delete
     {
         return parent::where($conditions);
     }
 
 	/**
-		 * 提交
-		 * @return mixed
-		 */
+     * 提交
+     * @return mixed
+     */
 	public function commit()
     {
         $this->translateSql();
@@ -68,14 +61,12 @@ class Delete extends sqlBase
     }
 
 	/**
-		 * 编译
-		 */
+     * 编译
+     */
 	private function translateSql()
     {
-        $sql = '';
-        $sql .= $this->getOpt('DELETE FROM', 'tableName');
+        $sql = $this->getOpt('DELETE FROM', 'tableName');
         $sql .= $this->getOpt('WHERE', 'where');
         $this->traSql = $sql . ";";
-
     }
 }

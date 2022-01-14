@@ -1,16 +1,14 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\controller\index;
 
-use app\core\web\Request;
-use app\extend\ankioTask\core\Tasker;
-use app\core\config\Config;
 use app\core\debug\Log;
-use app\core\mvc\Model;
+use app\core\web\Request;
 use app\core\web\Response;
+use app\extend\ankioTask\core\Tasker;
 
 class Main extends BaseController
 {

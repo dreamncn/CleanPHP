@@ -1,21 +1,12 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-/**
- * File insert
- *
- * @package app\core\sql
- * Date: 2020/10/14 11:31 下午
- * Author: ankio
- * Description:
- */
+
 
 namespace app\core\database\sql;
 
-
-use app\core\debug\Error;
 
 /**
  * Class Insert
@@ -28,10 +19,10 @@ class Insert extends sqlBase
 {
     /**
      * 用来初始化的
-     * @param  int  $model
+     * @param int $model insert模式
      * @return $this
      */
-    public function insert($model = SQL_INSERT_NORMAL)
+    public function insert(int $model = SQL_INSERT_NORMAL): Insert
     {
         $this->opt = [];
         $this->opt['tableName'] = $this->tableName;
@@ -43,20 +34,20 @@ class Insert extends sqlBase
 
     /**
      * 设置表
-     * @param $table_name
+     * @param string $tableName
      * @return Insert
      */
-    public function table($table_name)
+    public function table(string $tableName) :Insert
     {
-        return parent::table($table_name);
+        return parent::table($tableName);
     }
 
     /**
      * 设置查询条件
-     * @param $conditions
+     * @param array $conditions 条件内容，必须是数组,格式如下["name"=>"张三","i > :hello",":hello"=>"hi"]
      * @return Insert
      */
-    public function where($conditions)
+    public function where(array $conditions):Insert
     {
         return parent::where($conditions);
     }
@@ -64,14 +55,13 @@ class Insert extends sqlBase
     /**
      * 设置添加的kv数组
      * @param $kv array 数组对应的插入值
-     * @param $udpKey array 需要更新的字段
+     * @param $udpKey array|null 需要更新的字段
      * @return Insert
      */
-    public function keyValue($kv,$udpKey=null)
+    public function keyValue(array $kv, array $udpKey=null):Insert
     {
         $key = array_keys($kv);
         $value = array_values($kv);
-
         return $this->keys($key,$udpKey)->values([$value]);
     }
 
@@ -80,7 +70,7 @@ class Insert extends sqlBase
      * @param $row array 需要插入的数组
      * @return $this
      */
-    public function values($row)
+    public function values(array $row): Insert
     {
         $length = sizeof($row);
         $k = 0;
@@ -105,11 +95,11 @@ class Insert extends sqlBase
 
     /**
      * 需要插入的Key
-     * @param    array     $key
-     * @param  array  $columns
+     * @param array $key
+     * @param array $columns
      * @return $this
      */
-    public function keys($key, $columns = [])
+    public function keys(array $key, array $columns = []): Insert
     {
         if ($this->opt['model'] == SQL_INSERT_DUPLICATE && sizeof($columns) == 0) {
             Error::err('数据库错误：DUPLICATE模式必须具有更新字段。');

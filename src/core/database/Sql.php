@@ -1,17 +1,16 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\database;
-
-
 use app\core\database\sql\Delete;
 use app\core\database\sql\Insert;
 use app\core\database\sql\Page;
 use app\core\database\sql\Select;
 use app\core\database\sql\sqlExec;
 use app\core\database\sql\Update;
+use Exception;
 
 /**
  * Class Sql
@@ -34,29 +33,39 @@ class Sql
      * @var array
      */
     private $instances = [];
+    /**
+     * @var sqlExec
+     */
+    private $sql;
 
 
     /**
      * Sql constructor.
-     * @param  string  $tableName
+     * @param string $tableName 数据表名
      */
-    public function __construct($tableName = '')
+    public function __construct(string $tableName = '')
     {
         $this->sql = new sqlExec();
         if($tableName!=="")
             $this->tableName = $tableName;
     }
-    protected function table($tableName){
+
+    /**
+     * @param string $tableName 表名
+     * @return $this
+     */
+    protected function table(string $tableName): Sql
+    {
         $this->tableName = $tableName;
         return $this;
     }
 
     /**
      * select
-     * @param  string  $field
+     * @param string $field select字段
      * @return Select
      */
-    protected function select($field = "*")
+    protected function select(string $field = "*"): Select
     {
         return $this->sqlInstance("Select")->select($field);
     }
@@ -64,10 +73,10 @@ class Sql
 
     /**
      * 获取sql实例
-     * @param  string  $name
+     * @param string $name 获取sql实例
      * @return sqlExec|Insert|Select|Delete|Update
      */
-    private function sqlInstance($name = "")
+    private function sqlInstance(string $name = "")
     {
         if ($name === "") return $this->sql;//为空直接获取执行实例
         $class = 'app\core\database\sql\\' . $name;
@@ -86,7 +95,7 @@ class Sql
      * 获取分页数据
      * @return Page
      */
-    public function getPage()
+    public function getPage(): Page
     {
         return new Page($this->sqlInstance("Select")->getPage());
     }
@@ -95,7 +104,7 @@ class Sql
      * 删除
      * @return Delete
      */
-    protected function delete()
+    protected function delete(): Delete
     {
         return $this->sqlInstance("Delete")->delete();
     }
@@ -105,7 +114,7 @@ class Sql
      * @param $model int 数据库插入模式
      * @return Insert
      */
-    protected function insert($model)
+    protected function insert(int $model): Insert
     {
         return $this->sqlInstance("Insert")->insert($model);
     }
@@ -114,19 +123,19 @@ class Sql
      * 更新
      * @return Update
      */
-    protected function update()
+    protected function update(): Update
     {
         return $this->sqlInstance("Update")->update();
     }
 
     /**
      * 数据库执行
-     * @param  string  $sql 执行的sql语句
-     * @param  array  $params 绑定参数
-     * @param  false  $readonly 是否只读
+     * @param string $sql 执行的sql语句
+     * @param array $params 绑定参数
+     * @param false $readonly 是否只读
      * @return array|false|int
-     */
-    protected function execute($sql, $params = [], $readonly = false)
+       */
+    protected function execute(string $sql, array $params = [], bool $readonly = false)
     {
         return $this->sqlInstance()->execute($sql, $params, $readonly);
     }
@@ -135,7 +144,7 @@ class Sql
      * 输出所有查询的语句
      * @return array
      */
-    public function dumpSql()
+    public function dumpSql(): array
     {
         return $this->sql->dumpSql();
     }
@@ -170,7 +179,7 @@ class Sql
      * @param $name string 文件名
      * @return $this
      */
-    protected function setDbLocation($path, $name)
+    protected function setDbLocation(string $path, string $name): Sql
     {
         $this->sql->setDbFile($path, $name);
         return $this;
@@ -181,7 +190,7 @@ class Sql
      * @param $dbName string 配置文件名
      * @return $this
      */
-    protected function setDatabase($dbName)
+    protected function setDatabase(string $dbName): Sql
     {
         $this->sql->setDatabase($dbName);
         $this->sqlIndex = $dbName;
@@ -192,7 +201,7 @@ class Sql
      * 清空数据表
      * @param $table_name string 预清空的数据表
      */
-    protected function emptyTable($table_name)
+    protected function emptyTable(string $table_name)
     {
         $this->sqlInstance()->emptyTable($table_name);
     }

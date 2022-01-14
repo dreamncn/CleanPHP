@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\mvc;
@@ -22,9 +22,9 @@ class Model extends Sql
     /**
      * Model constructor.
      *
-     * @param null $table_name
+     * @param string $table_name
      */
-    public function __construct($table_name = null)
+    public function __construct(string $table_name = '')
     {
 
         parent::__construct($table_name);

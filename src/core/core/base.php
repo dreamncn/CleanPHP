@@ -1,19 +1,22 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 namespace app\core\core;
-
 use app\core\config\Config;
-use app\core\debug\Error;
-use app\core\debug\Log;
+use app\core\error\Error;
 use app\core\event\EventManager;
+use app\core\debug\Log;
 
-//定义时区
+// 全局变量清空
+$GLOBALS          = [];
+//框架加载的开始时间
+$GLOBALS['frame_start'] = microtime(true);
+//定义使用的时区
 date_default_timezone_set('PRC');
 //定义框架版本
-define('FRAME_VERSION', '2.0');
+define('FRAME_VERSION', '3.0');
 //定义控制器所在路径
 define('APP_CONTROLLER', APP_DIR.DS.'controller'.DS);
 //定义存储空间位置
@@ -42,10 +45,8 @@ define('APP_VIEW', APP_DIR.DS.'static'.DS.'view'.DS);
 define('APP_INNER', APP_DIR.DS.'static'.DS.'innerView'.DS);
 //框架公开位置
 define('APP_PUBLIC', APP_DIR.DS.'public'.DS);
-//静态视图文件（可以被直接访问）
-define('APP_UI', APP_DIR.DS.'public'.DS.'ui'.DS.'view'.DS);
-//静态资源文件（可以被直接访问）
-define('APP_IMG', APP_DIR.DS.'public'.DS.'ui'.DS.'img'.DS);
+//UI位置（可以被直接访问）
+define('APP_UI', APP_DIR.DS.'public'.DS.'ui'.DS);
 //appComposer
 define('APP_COMPOSER', APP_DIR.DS.'vendor'.DS);
 ////vendor/autoload.php
@@ -55,22 +56,17 @@ require APP_CORE."core".DS."helper.php";
 require APP_CORE."core".DS."Loader.php";
 // 注册自动加载
 Loader::register();
-// 加载配置文件
-Config::register();
 // 注册错误和异常处理机制
 Error::register();
+// 加载配置文件
+Config::register();
 // 事件模型注册
 EventManager::register();
 
-//框架加载的开始时间
-$GLOBALS['frame_start'] = microtime(true);
-
-
 EventManager::fire("beforeRunFrame", null);
-
 Log::debug("clean",
 	'----------------------------------------------------------------------------------------------');
-Log::debug("clean", '框架启动.');
+Log::debug("clean", '[Clean]框架启动.');
 
 
 

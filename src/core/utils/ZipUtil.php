@@ -3,14 +3,19 @@
  * Copyright (c) 2021. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\release;
-/*
-$Id: PHPZip.php
-*/
+namespace app\core\utils;
+
 
 use ZipArchive;
 
-class Zip
+/**
+ * Class ZipUtil
+ * Created By ankio.
+ * Date : 2022/1/12
+ * Time : 8:12 下午
+ * Description :zip工具类
+ */
+class ZipUtil
 {
 
 

@@ -5,9 +5,8 @@
 
 namespace app\core\core;
 
-use app\core\config\Config;
-use app\core\debug\Error;
 use app\core\debug\Log;
+use app\core\error\RouteError;
 use app\core\event\EventManager;
 use app\core\mvc\Controller;
 use app\core\release\FileCheck;
@@ -39,7 +38,8 @@ class Clean
         }
     }
 
-    public static function isConsole(){
+    public static function isConsole(): bool
+    {
         return isset($_SERVER['CLEAN_CONSOLE'])&&$_SERVER['CLEAN_CONSOLE'];
     }
     static private function Console(){
@@ -70,55 +70,43 @@ class Clean
             $GLOBALS['http_scheme'] = 'http://';
         }
         //允许跨域
-        $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+        $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
         if (in_array(str_replace($GLOBALS['http_scheme'], '', $origin), $GLOBALS["frame"]['host'])) {
             header('Access-Control-Allow-Origin:' . $origin);
         }
-
+        //判断是否为命令行执行
         if(self::isConsole()){
             self::Console();//命令行执行
         }else{
-            EventManager::fire("afterFrameInit", null);
-
-            //完整性校验
-            if(!isDebug()&&Config::getInstance("frame")->setLocation(APP_CONF)->getOne("check")){
-
-                if(!FileCheck::checkMd5(APP_DIR,Config::getInstance("frame")->setLocation(APP_CONF)->getOne("md5"))){
-                    exitApp("应用程序完整性检查校验未通过。");
-                }
-            }
+            EventManager::fire("afterFrameInit");
         }
-
-
-
     }
 
     /**
-     *
+     * 根据识别到的url创建对象
      */
     static public function createObj()
     {
         global $__module, $__controller, $__action;
-        if ($__controller === 'BaseController') Error::_err_router("错误: 基类 'BaseController' 不允许被访问！");
+        if (strtolower($__controller) === 'basecontroller')
+            new RouteError("错误: 基类 'BaseController' 不允许被访问！");
 
         $controller_name = ucfirst($__controller);
         $action_name = $__action;
+
         Log::debug('clean', "[MVC] $__module/$controller_name/$action_name");
-        Log::debug('mvc', '模块: ' . $__module);
-        Log::debug('mvc', '控制器: ' . $controller_name);
-        Log::debug('mvc', '方法: ' . $action_name);
-        Log::debug('clean', '路由耗时: ' . strval((microtime(true) - $GLOBALS['frame_start']) * 1000) . 'ms');
+        Log::debug('clean', '[Clean]路由耗时: ' . (microtime(true) - $GLOBALS['frame_start']) * 1000 . 'ms');
 
-        if (!self::is_available_classname($__module)) Error::_err_router("错误: 模块 '$__module' 不正确!");
+        if (!self::isAvailableClassname($__module)) new RouteError("错误: 模块 '$__module' 命名不符合规范!");
 
 
-        if (!is_dir(APP_CONTROLLER . $__module)) Error::_err_router("错误: 模块 '$__module' 不存在!");
+        if (!is_dir(APP_CONTROLLER . $__module)) new RouteError("错误: 模块 '$__module' 不存在!");
 
         $controller_name = 'app\\controller\\' . $__module . '\\' . $controller_name;
 
 
-        if (!self::is_available_classname($__controller))
-            Error::_err_router("错误: 控制器 '$controller_name' 不正确!");
+        if (!self::isAvailableClassname($__controller))
+            new RouteError("错误: 控制器 '$controller_name' 命名不符合规范!");
 
         /**
          * @var $controller_obj Controller
@@ -132,11 +120,11 @@ class Clean
         $controller_method_exists = method_exists($controller_name, $action_name);
 
         if (!$controller_class_exists && !$auto_tpl_file_exists) {
-            Error::_err_router("错误: 控制器 '$controller_name' 不存在!");
+            new RouteError("错误: 控制器 '$controller_name' 不存在!");
         }
 
         if (!$controller_method_exists && !$auto_tpl_file_exists) {
-            Error::_err_router("错误: 控制器 '$controller_name' 中的方法 '$action_name' 不存在!");
+            new RouteError("错误: 控制器 '$controller_name' 中的方法 '$action_name' 不存在!");
         }
         $result = null;
         if ($controller_class_exists && $controller_method_exists) {
@@ -149,7 +137,7 @@ class Clean
             if ($controller_obj->_auto_display) {
 
                 if ($auto_tpl_file_exists) {
-                    Log::debug('clean', '自动输出模板 '.$auto_tpl_name);
+                    Log::debug('clean', '[Clean]自动输出模板 '.$auto_tpl_name);
                     $result =  $controller_obj->display($auto_tpl_name);
                 }
             }
@@ -158,7 +146,7 @@ class Clean
             $base='app\\controller\\' . $__module . '\\BaseController';
             $controller_obj = new $base();
             if ($auto_tpl_file_exists) {
-                Log::debug('clean', '无方法输出模板 '.$auto_tpl_name);
+                Log::debug('clean', '[Clean]无方法输出模板 '.$auto_tpl_name);
                 $result = $controller_obj->display($auto_tpl_name);
 
             }
@@ -175,12 +163,17 @@ class Clean
             }
         }
         //输出html
-        Log::debug('Clean', '框架运行完成，总耗时: ' . strval((microtime(true) - $GLOBALS['frame_start']) * 1000) . 'ms');
+        Log::debug('clean', '[Clean]框架运行完成，总耗时: ' . strval((microtime(true) - $GLOBALS['frame_start']) * 1000) . 'ms');
 
     }
 
 
-    static public function is_available_classname($name)
+    /**
+     * 判断是否为标准class
+     * @param string $name
+     * @return false|int
+     */
+    static public function isAvailableClassname(string $name)
     {
         return preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $name);
     }

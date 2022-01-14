@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2020. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
 /**
@@ -10,7 +10,7 @@
 
 namespace app\core\event;
 
-use app\core\debug\StringUtil;
+use app\core\utils\StringUtil;
 
 /**
  * Class EventManager
@@ -21,8 +21,7 @@ use app\core\debug\StringUtil;
  */
 class EventManager
 {
-    private static $eventList = [];
-
+    private static array $eventList = [];
 
     /**
      * 事件注册，主要是注册给拓展使用
@@ -43,10 +42,10 @@ class EventManager
 
     /**
      * 绑定事件
-     * @param  string  $eventName 事件名
-     * @param  string  $listener 监听器名
+     * @param string $eventName 事件名
+     * @param string $listener 监听器名
      */
-    public static function attach( $eventName,  $listener)
+    public static function attach(string $eventName, string $listener)
     {
         //一个事件名绑定多个监听器
         self::$eventList[$eventName][] = $listener;
@@ -64,10 +63,10 @@ class EventManager
 
     /**
      * 触发事件
-     * @param  string  $eventName  事件名
-     * @param  null    $data       事件携带的数据
+     * @param string $eventName  事件名
+     * @param  array    $data       事件携带的数据
      */
-    public static function fire( $eventName, $data=null)
+    public static function fire(string $eventName, $data=[])
     {
         foreach (self::$eventList as $attachEventName => $listenerList) {
             //匹配监听列表
