@@ -55,10 +55,10 @@ class Session
     /**
      * 设置session
      * @param string $name session名称
-     * @param string $value session值
+     * @param  $value
      * @param int $expire 过期时间,单位秒
      */
-    public function set(string $name, string $value, int $expire = 0)
+    public function set(string $name,  $value, int $expire = 0)
     {
         if (is_array($value) || is_object($value)) {
             $value = json_encode($value);

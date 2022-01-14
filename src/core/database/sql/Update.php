@@ -85,8 +85,7 @@ class Update extends sqlBase
 		 */
 	private function translateSql()
     {
-        $sql = '';
-        $sql .= $this->getOpt('UPDATE', 'tableName');
+        $sql = $this->getOpt('UPDATE', 'tableName');
         $sql .= $this->getOpt('SET', 'set');
         $sql .= $this->getOpt('WHERE', 'where');
         $this->traSql = $sql . ";";

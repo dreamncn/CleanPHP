@@ -9,10 +9,8 @@ namespace app\core\utils;
  * 字符串工具类
  */
 class StringUtil{
-    /**
-     * @var StringUtil
-     */
-    private static StringUtil $stringUtil;
+
+    private static ?StringUtil $stringUtil=null;
     private string $str="";
 
     /**

@@ -205,9 +205,6 @@ class Error
             $__module = '';
             self::display($msg, $traces,$dump);
         }
-        Log::debug("Clean",$dump);
-        Log::debug('Clean', '出现异常: ' . $msg);
-        Log::debug('Clean', '退出框架，总耗时: ' . strval((microtime(true) - $GLOBALS['frame_start']) * 1000) . 'ms');
         exit(500);
     }
 
@@ -228,6 +225,7 @@ class Error
         foreach ($traces as $trace) {
             if(++$index==1&&sizeof($traces)!=1)continue;
             if (is_array($trace) && ! empty($trace["file"])) {
+                $trace["keyword"] =$trace["keyword"]??"";
                 $sourceLine = self::errorFile($trace["file"], $trace["line"],$trace["keyword"]);
                 $trace["line"] = $sourceLine["line"];
                 unset( $sourceLine["line"]);

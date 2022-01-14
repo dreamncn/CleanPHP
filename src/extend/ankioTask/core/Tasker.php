@@ -18,7 +18,7 @@ use app\lib\Async\Async;
 
 class Tasker extends Model
 {
-    private static Tasker $instance;
+    private static ?Tasker $instance=null;
 
     public function __construct()
     {

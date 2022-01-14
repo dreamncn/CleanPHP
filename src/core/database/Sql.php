@@ -24,19 +24,13 @@ class Sql
     /**
      * @var string
      */
-    protected $sqlIndex = "master";
+    protected string $sqlIndex = "master";
     /**
      * @var mixed|string
      */
     private $tableName;
-    /**
-     * @var array
-     */
-    private $instances = [];
-    /**
-     * @var sqlExec
-     */
-    private $sql;
+    private array $instances = [];
+    private ?sqlExec $sql;
 
 
     /**

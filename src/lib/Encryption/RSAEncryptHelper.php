@@ -116,9 +116,9 @@ class RSAEncryptHelper
 
 
     /**
-     * @return bool|resource
+     * @return false|resource
      */
-    private function getPrivateKey(): bool
+    private function getPrivateKey()
     {
         $priv_key = $this->config['private_key'];
         return openssl_pkey_get_private($priv_key);

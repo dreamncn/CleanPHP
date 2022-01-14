@@ -37,6 +37,7 @@ class Log
         $self->write(1, $msg);
     }
 
+
     /**
      * 获取实例
      * @param $tag
@@ -107,6 +108,24 @@ class Log
         self::rm(date('Y-m-d', strtotime("- " . self::$validTime . " day")));
     }
 
+    public static function d($tag,$msg){
+        self::$validTime = Config::getInstance("frame")->getOne("logValidTime");
+        $msg = '[' . date('Y-m-d H:i:s') . ']' . $msg. "\n";
+        $file = APP_LOG . date('Y-m-d') . DS . 'debug_'.$tag.'.log';
+        $dir_name = dirname($file);
+        //目录不存在就创建
+        if (!file_exists($dir_name)) {
+            self::mkdirs($dir_name);
+        }
+        $handler = fopen($file, 'a');
+
+        flock($handler, LOCK_EX);
+        fwrite($handler, $msg, strlen($msg));
+        flock($handler, LOCK_UN);
+        fclose($handler);
+        //删除指定日期之前的日志
+        self::rm(date('Y-m-d', strtotime("- " . self::$validTime . " day")));
+    }
     /**
      * 获取等级
      * @param $level

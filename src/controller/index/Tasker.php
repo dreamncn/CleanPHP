@@ -15,20 +15,15 @@ class Tasker extends BaseController
         Async::getInstance()->response();
     }
     public function tasker_start_1(){
-        Log::debug("Tasker","write_0_2 -> 任务1 立刻执行 执行次数 2，info:".arg("info","")."");
-    }
+         }
     public function tasker_start_2(){
-        Log::debug("Tasker","write_1_-1 -> 任务2 每隔1分钟 无执行次数限制，info:".arg("info",""));
-    }
+           }
     public function tasker_start_3(){
-        Log::debug("Tasker","write_2_3 -> 任务3 每隔2分钟 执行次数 3");
         $id = arg("id",-1,false,"int");//在定时任务2执行了>=2次以后关闭它
-        Log::debug("Tasker","任务ID".$id);
-       $times = \app\extend\ankioTask\core\Tasker::getInstance()->getTimes($id);
+        $times = \app\extend\ankioTask\core\Tasker::getInstance()->getTimes($id);
        if($times>=2){
            \app\extend\ankioTask\core\Tasker::getInstance()->del($id);
-           Log::debug("Tasker","write_2_3[任务内容] -> 把定时任务2关了");
-       }
+          }
 
 
     }

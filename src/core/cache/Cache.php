@@ -35,7 +35,7 @@ class Cache
     {
         self::$cache_expire = $exp_time;
         self::$cache_path = $path;
-        Log::debug("cache","缓存信息：$path");
+
         if(!is_dir($path)){
            Log::mkdirs($path);
         }

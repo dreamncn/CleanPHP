@@ -49,11 +49,9 @@ class Loader
         //存在就加载
         if (file_exists($file)) {
             include_once $file;
-	        Log::debug('loader', '加载 "' . $realClass . '"');
-            return;
+	        return;
         }
 
-	    Log::debug('loader', '默认加载器找不到指定类 "' . $realClass . '"(' . $file . ') , 它可能由第三方类的自动加载器提供。');
 
     }
 

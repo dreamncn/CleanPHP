@@ -30,7 +30,7 @@ class sqlExec
 	private array $sqlList = [];
 	private string $db = "";
 	private string $name = "";
-	private string $dbData = "";
+	private array $dbData = [];
 
 	private static array $instances=[];
 
@@ -142,14 +142,11 @@ class sqlExec
         if ($sth->execute()) {
             $end = microtime(true) - $start;
             if (isDebug()) {
-                Log::debug('sql', $sql);
                 $sqlDefault = $sql;
                 foreach ($params as $k => $v) {
                     $sqlDefault = str_replace($k, "\"$v\"", $sqlDefault);
                 }
-                Log::debug('sqlTranslate', $sqlDefault);
-                Log::debug('sqlTranslate', strval($end * 1000) . "ms");
-                $this->sqlList[] = [$sql, $sqlDefault, strval($end * 1000) . "ms"];
+               $this->sqlList[] = [$sql, $sqlDefault, strval($end * 1000) . "ms"];
             }
 
             return $readonly ? $sth->fetchAll(PDO::FETCH_ASSOC) : $sth->rowCount();
@@ -181,7 +178,6 @@ class sqlExec
             if (!isset($dsn[$this->sqlType]))
                  new AppError("数据库错误: 我们不支持该类型数据库.({$this->sqlType})",$this->db,"type");
             $connectData = $dsn[$this->sqlType];
-            Log::debug("clean","[database]当前数据库信息：  {$connectData}");
             $key=md5($connectData);
            if(isset(self::$instances[$key]))return self::$instances[$key];
 

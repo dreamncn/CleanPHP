@@ -48,8 +48,7 @@ class View
     public function render($tempalte_name)
     {
         $complied_file = $this->compile($tempalte_name);
-        Log::debug('view', '编译耗时: ' . (microtime(true) - $GLOBALS['display_start']) * 1000 . 'ms');
-        ob_start();
+       ob_start();
         $_view_obj = &$this;
         extract($this->template_vals, EXTR_SKIP);
         include $complied_file;
@@ -80,7 +79,6 @@ class View
 
         $complied_file = $this->compile_dir . DS . md5(realpath($file)) . '.' . filemtime($file) . '.' . basename($template_name) . '.php';
         if (file_exists($complied_file)) {
-            Log::debug('view', '发现缓存文件 "' . $template_name . '"');
             return $complied_file;
         }
 
@@ -103,8 +101,7 @@ class View
             $success = @rename($tmp_file, $complied_file);
         }
         if (!$success) Error::err('错误: 写入 "' . $complied_file . '" 文件失败.');
-        Log::debug('view', '编译文件"' . $template_name . '" 成功!');
-        return $complied_file;
+       return $complied_file;
     }
 
     /**

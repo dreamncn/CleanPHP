@@ -117,7 +117,6 @@ class Controller
     public function display(string $tpl_name)
     {
         $GLOBALS['display_start'] = microtime(true);
-        Log::debug('view', '尝试编译模板文件 "' . $tpl_name . '"');
         if (!$this->_v) {
             $compile_dir = APP_TMP;
             if ($this->_auto_path_dir !== "")

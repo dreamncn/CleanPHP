@@ -56,17 +56,21 @@ class Test extends BaseController
             $bool = $upload->upload("file");
             if($bool){
                 $str=$upload->getFileName();
+                $path = $upload->getFilePath();
                 dump("上传的文件名".$str);
+                dump("存储路径".$path);
                 $this->setEncode(false);
                 return "<img src='".url('index','test','img',['img'=>$str])."'>";
             }else{
                 dump("上传失败".$upload->getErrorMsg());
+                $str=$upload->getFileName();
+                $path = $upload->getFilePath();
+                dump("上传的文件名".$str);
+                dump("存储路径".$path);
             }
 
         }else{
             $csrf->setCSRFToken(Session::getInstance()->Id());
-         //   dump($_SESSION);
-           // dump("csrfToken:".Session::getInstance()->get("csrftoken"));
         }
         return null;
     }

@@ -100,7 +100,7 @@ class Select extends sqlBase
 
     /**
      * 提交
-     * @return mixed
+     * @return array|int
      */
     public function commit()
     {
@@ -110,6 +110,11 @@ class Select extends sqlBase
         $sql .= $this->getOpt('ORDER BY', 'order');
 
         $total = $this->sql->execute($sql, $this->bindParam, true);
+        if(!isset($this->opt['start'])){
+            $this->opt['start'] = 0;
+            $this->opt['count'] = 100;
+            $this->opt['range'] = 100;
+        }
         $this->page = $this->pager($this->opt['start'], $this->opt['count'], $this->opt['range'], $total[0]['M_COUNTER']);
         if (!empty($this->page))
             $this->opt['limit'] = $this->page['offset'] . ',' . $this->page['limit'];

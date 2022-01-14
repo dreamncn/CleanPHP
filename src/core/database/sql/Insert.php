@@ -8,6 +8,8 @@
 namespace app\core\database\sql;
 
 
+use app\core\error\Error;
+
 /**
  * Class Insert
  * @package app\core\database\sql
@@ -96,10 +98,10 @@ class Insert extends sqlBase
     /**
      * 需要插入的Key
      * @param array $key
-     * @param array $columns
+     * @param ?array $columns
      * @return $this
      */
-    public function keys(array $key, array $columns = []): Insert
+    public function keys(array $key, ?array $columns = []): Insert
     {
         if ($this->opt['model'] == SQL_INSERT_DUPLICATE && sizeof($columns) == 0) {
             Error::err('数据库错误：DUPLICATE模式必须具有更新字段。');

@@ -3,8 +3,8 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
+use app\core\debug\Dump;
 use app\core\mvc\Controller;
-use app\core\utils\Dump;
 use app\core\debug\Log;
 use app\core\web\Route;
 
@@ -135,15 +135,12 @@ function exitApp(string $msg, string $tpl=null, string $path='', array $data=[])
         $obj = new Controller();
         $obj->setArray($data);
         $obj->setAutoPathDir($path);
-        Log::debug('clean', '[Clean]退出展示模板: ' . $path.DS . $tpl . '.tpl');
-        if (file_exists($path.DS . $tpl . '.tpl'))
+       if (file_exists($path.DS . $tpl . '.tpl'))
           echo  $obj->display($tpl);
         else
           echo "";
     }
-    Log::info("clean",'[Clean]程序调用退出: ' . $msg);
-    Log::debug('clean', '[Clean]退出框架，总耗时: ' . (microtime(true) - $GLOBALS['frame_start']) * 1000 . 'ms');
-    exit();
+   exit();
 }
 
 

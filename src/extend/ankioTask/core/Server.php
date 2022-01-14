@@ -113,7 +113,7 @@ class Server extends Model
      * @return void
      */
     private function lock(int $time){
-       // Log::debug("time_",print_r($time,true));
+
         $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
         if(empty($data)){
             self::getInstance()->insert(SQL_INSERT_NORMAL)->keyValue(["lock_time"=>$time])->table("extend_lock")->commit();
@@ -139,7 +139,7 @@ class Server extends Model
     private function isLock(): bool
     {
         $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
-       // Log::debug("time",print_r($data,true));
+
         if(empty($data))return false;
         return (time()-intval($data[0]['lock_time'])<15);
     }

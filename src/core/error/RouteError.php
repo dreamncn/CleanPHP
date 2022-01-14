@@ -30,8 +30,6 @@ class RouteError
         } else {
             Error::err($message);
         }
-        Log::debug('Clean', '出现路由错误: ' . $message);
-        Log::debug('Clean', '退出框架，总耗时: ' . (microtime(true) - $GLOBALS['frame_start']) * 1000 . 'ms');
         exitApp($message);
     }
 }

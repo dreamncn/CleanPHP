@@ -6,6 +6,7 @@
 namespace app\controller\index;
 
 
+use app\core\utils\StringUtil;
 use app\lib\Encryption\AESEncryptHelper;
 use app\lib\Encryption\RSAEncryptHelper;
 use app\lib\URL\DefenseAgainstCSRF;
@@ -17,7 +18,7 @@ class Lib extends Controller
     function rsa(){
 
         dump("AES 加密解密演示");
-        $key=getRandom(32);
+        $key=StringUtil::get()->getRandom(32);
         $aes = new AESEncryptHelper($key);
         $key = $aes-> createSecretKey($key);
         dump("加密密钥：$key");
@@ -46,7 +47,7 @@ class Lib extends Controller
     }
 
     function csrf(){
-        $session=getRandom(32);//随机找个session，真实环境中请使用Session类进行管理
+        $session=StringUtil::get()->getRandom(32);//随机找个session，真实环境中请使用Session类进行管理
         $csrf=new DefenseAgainstCSRF();
         $token=$csrf->setCSRFToken($session);
         //表单页面应该调用该方法

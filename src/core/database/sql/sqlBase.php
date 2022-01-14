@@ -19,11 +19,11 @@ use PDO;
 class sqlBase
 {
 
-    protected $opt = [];//封装常见的数据库查询选项
-    protected $tableName;
-    protected $traSql = null;//编译完成的sql语句
-    protected $bindParam = [];//绑定的参数列表
-    protected $sql = null;
+    protected array $opt = [];//封装常见的数据库查询选项
+    protected string $tableName;
+    protected ?string $traSql = null;//编译完成的sql语句
+    protected array $bindParam = [];//绑定的参数列表
+    protected ?sqlExec $sql = null;
 
 
 	/**
@@ -61,7 +61,7 @@ class sqlBase
 	* @param string $tableName
 	* @return $this
 	*/
-	protected function table(string $tableName): sqlBase
+	protected function table(string $tableName)
     {
         $this->opt['tableName'] = $tableName;
         return $this;
@@ -73,7 +73,7 @@ class sqlBase
 	* @param array $conditions 条件内容，必须是数组,格式如下["name"=>"张三","i > :hello",":hello"=>"hi"]
 	* @return $this
 	*/
-	protected function where(array $conditions): sqlBase
+	protected function where(array $conditions)
     {
         if (is_array($conditions) && !empty($conditions)) {
             $sql = null;

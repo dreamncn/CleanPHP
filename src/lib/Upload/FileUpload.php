@@ -1,5 +1,6 @@
 <?php
 namespace app\lib\Upload;
+use app\core\debug\Log;
 use app\core\utils\FileUtil;
 use app\core\utils\StringUtil;
 
@@ -21,15 +22,15 @@ class FileUpload {
 
     private int $maxSize = 1000000;           //限制文件上传大小（字节）
 
-    private string $originName;              //源文件名
+    private string $originName="";              //源文件名
 
-    private string $tmpFileName;              //临时文件名
+    private string $tmpFileName="";              //临时文件名
 
-    private string $fileType;               //文件类型(文件后缀)
+    private string $fileType="";               //文件类型(文件后缀)
 
-    private string $fileSize;               //文件大小
+    private int $fileSize=0;               //文件大小
 
-    private $newFileName;              //新文件名
+    private  $newFileName="";              //新文件名
 
     private int $errorNum = 0;             //错误号
 
@@ -44,15 +45,11 @@ class FileUpload {
      */
     function set(string $key, $val): FileUpload
     {
-
         $key = strtolower($key);
-
         if( array_key_exists( $key, get_class_vars(get_class($this)))){
             $this->setOption($key, $val);
         }
-
         return $this;
-
     }
 
     /**
@@ -111,7 +108,7 @@ class FileUpload {
         $tmp_name = $_FILES[$fileField]['tmp_name'];
         $size = $_FILES[$fileField]['size'];
         $error = $_FILES[$fileField]['error'];
-        
+
         /* 如果是多个文件上传则$file["name"]会是一个数组 */
 
         if(is_Array($name)){
@@ -134,7 +131,7 @@ class FileUpload {
                 if(!$return)
                     $this->setFiles();
             }
-            
+
             if($return){
                 /* 存放所有上传后文件名的变量数组 */
                 $fileNames = array();
@@ -170,10 +167,7 @@ class FileUpload {
                     /* 为上传文件设置新文件名 */
                     $this->setNewFileName();
                     /* 上传文件  返回0为成功， 小于0都为错误 */
-                    $result=$this->copyFile();
-                    if($result){
-                        return true;
-                    }
+                    $return = $this->copyFile();
                 }
             }
             $this->errorMsg=$this->getError();
@@ -187,13 +181,12 @@ class FileUpload {
     /**
      * 获取上传后的文件名称
      * @param  void   没有参数
-     * @return string 上传后，新文件的名称， 如果是多文件上传返回数组
+     * @return ?string|array 上传后，新文件的名称， 如果是多文件上传返回数组
      */
 
     public function getFileName(): string
     {
         return $this->newFileName;
-
     }
 
     /**
@@ -236,6 +229,7 @@ class FileUpload {
             case -4: $str .= "建立存放上传文件目录失败，请重新指定上传目录"; break;
             case -5: $str .= "必须指定上传文件的路径"; break;
             case -6: $str .= "发现病毒！";break;
+            case 0: $str .= "无错误";break;
             default: $str .= "未知错误";
         }
         return $str;
@@ -254,14 +248,14 @@ class FileUpload {
 
     private function setFiles(string $name="", string $tmp_name="", int $size=0, int $error=0): bool
     {
-        $this->setOption('errorNum', $error);
+        $this->errorNum= $error;
         if($error)
             return false;
-        $this->setOption('originName', $name);
-        $this->setOption('tmpFileName',$tmp_name);
+        $this->originName= $name;
+       $this->tmpFileName=$tmp_name;
         $aryStr = explode(".", $name);
-        $this->setOption('fileType', strtolower($aryStr[count($aryStr)-1]));
-        $this->setOption('fileSize', $size);
+       $this->fileType=strtolower($aryStr[count($aryStr)-1]);
+       $this->fileSize= $size;
         return true;
     }
 
@@ -282,7 +276,7 @@ class FileUpload {
      */
 
     private function setNewFileName() {
-        $this->setOption('newFileName', $this->proRandName());
+        $this->newFileName =  $this->proRandName();
     }
 
 
@@ -290,16 +284,14 @@ class FileUpload {
      * 检查上传的文件是否是合法的类型
      * @return bool
      */
-
     private function checkFileType(): bool
     {
         if (in_array(strtolower($this->fileType), $this->allowType)) {
             return true;
         }else {
-            $this->setOption('error_num', -1);
+           $this->errorNum= -1;
             return false;
         }
-
     }
 
 
@@ -310,7 +302,7 @@ class FileUpload {
     private function checkFileSize(): bool
     {
         if ($this->fileSize > $this->maxSize) {
-            $this->setOption('error_num', -2);
+           $this->errorNum= -2;
             return false;
         }else{
             return true;
@@ -326,12 +318,12 @@ class FileUpload {
     private function checkFilePath(): bool
     {
         if(empty($this->path)){
-            $this->setOption('error_num', -5);
+           $this->errorNum= -5;
             return false;
         }
         if (!file_exists($this->path) || !is_writable($this->path)) {
             if (!@mkdir($this->path, 0755)) {
-                $this->setOption('error_num', -4);
+               $this->errorNum= -4;
                 return false;
             }
         }
@@ -358,21 +350,20 @@ class FileUpload {
     private function copyFile(): bool
     {
 
-        if(0!==$this->errorNum) {
+        if($this->errorNum==0) {
             $path = rtrim($this->path, '/').'/';
             $path .= $this->newFileName;
             if($this->isPHP($this->tmpFileName)){
-                $this->setOption('error_num', -6);
+               $this->errorNum= -6;
                 return false;
             }
             //优化奇奇怪怪的文件拷贝
-            if (@move_uploaded_file($this->tmpFileName, $path)||@copy($this->tmpFileName, $path)) {
-                @unlink($this->tmpFileName);
+            if (move_uploaded_file($this->tmpFileName, $path)||copy($this->tmpFileName, $path)) {
+                $this->errorNum = 0;
                 return true;
             }else{
-                @unlink($this->tmpFileName);
-                $this->setOption('error_num', -3);
-                return false;
+               $this->errorNum = -3;
+               return false;
             }
         } else {
             return false;

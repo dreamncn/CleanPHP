@@ -94,8 +94,6 @@ class Clean
         $controller_name = ucfirst($__controller);
         $action_name = $__action;
 
-        Log::debug('clean', "[MVC] $__module/$controller_name/$action_name");
-        Log::debug('clean', '[Clean]路由耗时: ' . (microtime(true) - $GLOBALS['frame_start']) * 1000 . 'ms');
 
         if (!self::isAvailableClassname($__module)) new RouteError("错误: 模块 '$__module' 命名不符合规范!");
 
@@ -137,8 +135,7 @@ class Clean
             if ($controller_obj->_auto_display) {
 
                 if ($auto_tpl_file_exists) {
-                    Log::debug('clean', '[Clean]自动输出模板 '.$auto_tpl_name);
-                    $result =  $controller_obj->display($auto_tpl_name);
+                  $result =  $controller_obj->display($auto_tpl_name);
                 }
             }
 
@@ -146,9 +143,7 @@ class Clean
             $base='app\\controller\\' . $__module . '\\BaseController';
             $controller_obj = new $base();
             if ($auto_tpl_file_exists) {
-                Log::debug('clean', '[Clean]无方法输出模板 '.$auto_tpl_name);
                 $result = $controller_obj->display($auto_tpl_name);
-
             }
 
         }
@@ -159,11 +154,10 @@ class Clean
             }else if($controller_obj->isEncode()){
                 echo htmlspecialchars($result,ENT_QUOTES,"UTF-8",true);
             }else{
-                echo $result;
+                echo $result.file_get_contents(APP_INNER."tip".DS.'float.tpl');
             }
         }
         //输出html
-        Log::debug('clean', '[Clean]框架运行完成，总耗时: ' . strval((microtime(true) - $GLOBALS['frame_start']) * 1000) . 'ms');
 
     }
 
