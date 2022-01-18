@@ -3,8 +3,6 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/src/controller/index/Main.php" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/src/controller/index/Sql.php" dialect="SQLite" />
-    <file url="file://$PROJECT_DIR$/src/extend/net_ankio_cc_defense/core/BanIP.php" dialect="SQLite" />
-    <file url="file://$PROJECT_DIR$/src/extend/net_ankio_cc_defense/core/Record.php" dialect="SQLite" />
     <file url="file://$PROJECT_DIR$/src/model/index/Test.php" dialect="MySQL" />
     <file url="PROJECT" dialect="SQLite" />
   </component>

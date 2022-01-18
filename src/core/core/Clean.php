@@ -157,6 +157,22 @@ class Clean
         if($result!=null){
             if(is_array($result)){
                 @header('content-type:application/json');
+                if(isDebug()) {
+                    $result["frame"]["time"]["执行时间"] = (microtime(true) - $GLOBALS['frame_start']) . "ms";
+                    $result["frame"]["time"]["模板编译时间"] = $GLOBALS["frame"]["time"]["tpl_time"] . "ms";
+                    $result["frame"]["time"]["路由时间"] = $GLOBALS["frame"]["time"]["route_time"] . "ms";
+                    $result["frame"]["路由"] = Request::getHeader();
+                    $result["frame"]["frame"]["response"]["method"] = $_SERVER['REQUEST_METHOD'];
+                    $result["frame"]["frame"]["response"]["headers"] = Request::getHeader();
+                    $result["frame"]["框架日志"] = $GLOBALS["frame"]["clean"];
+                    $result["frame"]["路由"] = $GLOBALS["frame"]["route"];
+                    $result["frame"]["sql"] = $GLOBALS["frame"]["sql"];
+                    $result["frame"]["文件加载"] = $GLOBALS["frame"]["file"];
+                    $g = $GLOBALS;
+                    unset($g["frame"]);
+                    $result["frame"]["time"]["response"]["全局变量"] = $g;
+                    $result["frame"]["time"]["response"]["参数信息"] = arg();
+                }
                 echo json_encode($result);
             }else if($controller_obj->isEncode()){
                 echo htmlspecialchars($result,ENT_QUOTES,"UTF-8",true);
