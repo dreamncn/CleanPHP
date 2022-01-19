@@ -113,7 +113,6 @@ class sqlExec
      */
 	public function execute(string $sql, array $params = [], bool $readonly = false)
     {
-        if(isDebug())  $GLOBALS["frame"]["sql"][]="要执行的sql语句：".$sql;
         $start = microtime(true);
         /**
          * @var $sth PDOStatement
@@ -146,7 +145,7 @@ class sqlExec
                 foreach ($params as $k => $v) {
                     $sqlDefault = str_replace($k, "\"$v\"", $sqlDefault);
                 }
-               $this->sqlList[] = [$sql, $sqlDefault, strval($end * 1000) . "ms"];
+                $GLOBALS["frame"]["sql"][]= ["原始SQL"=>$sql, "填充内容后的SQL"=>$sqlDefault, "执行时间"=>strval($end * 1000) . "ms"];
             }
 
             return $readonly ? $sth->fetchAll(PDO::FETCH_ASSOC) : $sth->rowCount();
