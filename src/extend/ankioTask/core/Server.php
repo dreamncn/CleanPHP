@@ -6,6 +6,8 @@
 namespace app\extend\ankioTask\core;
 
 
+use app\core\debug\Debug;
+use app\core\debug\Log;
 use app\core\mvc\Model;
 use app\core\web\Response;
 use app\lib\Async\Async;
@@ -54,13 +56,9 @@ class Server extends Model
     public  function route()
     {
         $split=explode("/",$_SERVER['REQUEST_URI']);
-
         if(sizeof($split)!==3)return;
-
         if($split[1]!=="tasker_server")return;
-
-        Async::getInstance()->response(0);
-
+        Async::getInstance()->response();
         switch ($split[2]){
             case "init":$this->init();break;
         }
@@ -73,7 +71,7 @@ class Server extends Model
      */
     public function start(){
         if(!$this->isLock()){//没有锁定，请求保持锁定
-            $bool=Async::getInstance()->request($this->taskerUrl."init","GET",[],[],"tasker_start");
+            Async::getInstance()->request($this->taskerUrl."init","GET",[],[],"tasker_start");
         }
     }
 
@@ -92,16 +90,21 @@ class Server extends Model
      */
     private function init()
     {
-
      //   $this->stop();
         do {
+            $file = fopen(APP_TRASH."task.lock", "w+");
+            flock($file, LOCK_EX ) or die("Can't lock");
+            Debug::i("task","10s pass....");
             $this->lock(time());//更新锁定时间
             //循环扫描
             Tasker::getInstance()->run();
             sleep(10);
+            flock($file, LOCK_UN);
+            fclose($file);
             if($this->isStop()){//间歇10秒后如果发现停止
                 break;
             }
+
         } while(true);
 
         exitApp("服务退出，框架退出");

@@ -5,6 +5,8 @@
 
 namespace app\extend\ankioTask\core;
 
+use app\core\debug\Debug;
+use app\core\debug\Log;
 use app\core\mvc\Model;
 use app\lib\Async\Async;
 
@@ -36,7 +38,8 @@ class Tasker extends Model
                     month varchar(200),
                     week varchar(200),
                     next varchar(200),
-                    times integer
+                    times integer,loop integer
+    
                     )"
         );
     }
@@ -82,10 +85,14 @@ class Tasker extends Model
      * @param int $times  执行次数,-1不限制
      * @return int 返回定时任务ID
      */
-    public function add(array $package, string $url, $identify, int $times=-1){
+    public function add(array $package, string $url, $identify, int $times=-1,bool $loop){
         if(sizeof($package)!=5)return false;
         $minute=$package[0];$hour=$package[1];$day=$package[2];$month=$package[3];$week=$package[4];
-        $time=$this->getNext($minute,$hour,$day,$month,$week);
+        $time=$this->getNext($minute,$hour,$day,$month,$week,$loop?1:0);
+
+        Debug::i("tasker","添加定时任务：$identify");
+        Debug::i("tasker","下次执行时间为：".date("Y-m-d H:i:s",$time));
+
         return self::getInstance()->insert(SQL_INSERT_NORMAL)->table("extend_tasker")->keyValue(
             ["minute"=>$minute,
                 "hour"=>$hour,
@@ -95,7 +102,8 @@ class Tasker extends Model
                 "url"=>$url,
                 "times"=>$times,
                 "identify"=>$identify,
-                "next"=>$time
+                "next"=>$time,
+                "loop"=>$loop?1:0
             ])->commit();
     }
 
@@ -104,14 +112,16 @@ class Tasker extends Model
      * @return void
      */
     public function run(){
+
         $db=self::getInstance();
         $data=$db->select()->table("extend_tasker")->commit();
         foreach ($data as $value){
             if(intval($value["times"])==0){
                 $db->delete()->table("extend_tasker")->where(["id"=>$value["id"]])->commit();
             }elseif($value["next"]<=time()){
-                $time=$this->getNext($value["minute"],$value["hour"],$value["day"],$value["month"],$value["week"]);
+                $time=$this->getNext($value["minute"],$value["hour"],$value["day"],$value["month"],$value["week"],intval($value["loop"]));
                 $db->update()->table("extend_tasker")->where(["id"=>$value["id"]])->set(["times=times-1","next"=>$time])->commit();
+                Debug::i("tasker","下次执行时间为：".date("Y-m-d H:i:s",$time));
                 $this->startTasker($value["url"],$value["identify"]);
             }
         }
@@ -204,9 +214,18 @@ class Tasker extends Model
      * @param $week int 周
      * @return float 返回下次执行时间
      */
-    protected function getNext(int $minute, int $hour, int $day, int $month, int $week){
+    protected function getNext(int $minute, int $hour, int $day, int $month, int $week,int $loop){
         $time=$minute*60+$hour*60*60+$day*60*60*24+$month*60*60*24*30+$week*60*60*24*7;
-        return time()+$time;
+     //if($day!=0||$month!=0||)
+        if($loop==0){
+            $retTime = strtotime(date("Y-m-d"),time())+$time;
+            while($retTime<time()){
+                $retTime = strtotime(date("Y-m-d","+1 Day"))+$time;
+            }
+        }else{
+            $retTime = time()+$time;
+        }
+        return $retTime;
     }
 
     /**

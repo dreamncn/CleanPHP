@@ -22,11 +22,13 @@ class RouteError
         global $__module, $__controller, $__action;
         $nameBase = "app\\controller\\$__module\\BaseController";
         if (!isDebug()) {
+            Log::error("route",$message);
             if (method_exists($nameBase, 'err404')) {
                 $nameBase::err404($__module, $__controller, $__action, $message);
             } else {
                 Response::msg(true, 404, '404 Not Found', '无法找到该页面.', 3, '/');
             }
+
         } else {
             Error::err($message);
         }

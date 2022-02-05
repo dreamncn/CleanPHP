@@ -116,8 +116,13 @@ class Select extends sqlBase
             $this->opt['range'] = 100;
         }
         $this->page = $this->pager($this->opt['start'], $this->opt['count'], $this->opt['range'], $total[0]['M_COUNTER']);
-        if (!empty($this->page))
+        if (!empty($this->page)){
+            if($this->page['offset']<0){
+                $this->page['offset'] = 0;
+            }
             $this->opt['limit'] = $this->page['offset'] . ',' . $this->page['limit'];
+        }
+
 
         $this->translateSql();
         return $this->sql->execute($this->traSql, $this->bindParam, true);
