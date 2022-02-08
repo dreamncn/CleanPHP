@@ -9,5 +9,40 @@
  * Time : 11:42 上午
  * Description :
  */
+ini_set('date.timezone','Asia/Shanghai');
+ function getNext(int $minute, int $hour, int $day, int $month, int $week,int $loop){
+    $time=$minute*60+$hour*60*60+$day*60*60*24+$month*60*60*24*30+$week*60*60*24*7;
+    //if($day!=0||$month!=0||)
+    if($loop==0){//如果是循环的话，每小时，每天，每周，每月
+        $loopType = "Month";//循环类型
+        $date = mktime(0,0,0,date('m'),1,date('Y'));//取当前月的第一天
+        $add= $month*60*60*24*30;
+        if($month==0){
+            $loopType="Week";
+            $date = mktime(0,0,0,date("m"),date("d")-date("w")+1,date("Y"));//取当前周的第一天
+            $add= $week*60*60*24*7;
+            if($week==0){
+                $loopType="Day";
+                $date = mktime(0,0,0,date('m'),date('d'),date('Y'));//获取当天的
+                $add= $day*60*60*24;
+                if($day==0){
+                    $loopType="Hour";
+                    $date = mktime($hour,0,0,date('m'),date('d'),date('Y'));//获取当天的
+                    $add= $hour*60*60;
+                }
+            }
+        }
+        //判断出循环类型
+        $retTime = $date+$time;
 
-var_dump((base64_decode(strrev(urldecode('K0QfK0QfgACIgoQD9BCIgACIgACIK0wOpkXZrRCLhRXYkRCKlR2bj5WZ90VZtFmTkF2bslXYwRyWO9USTNVRT9FJgACIgACIgACIgACIK0wepU2csFmZ90TIpIybm5WSzNWazFmQ0V2ZiwSY0FGZkgycvBXayR3coAiZpBCIgACIgACIK0welNHbl1HIgACIK0wOpYTMskSeltGJuM3chBHJoUDZthic0NnY1NHIvh2YlBCIgACIgACIK0wOpkSeltGJskSY0FGZkgib1JHQoUGZvNmblhSZk92YuV2X0YTZzFmYg8GajVGIgACIgACIgoQD7kiNxwCMskSeltGJuM3chBHJoUDZthic0NnY1NHIvh2YlBCIgACIgACIK0wOpQWYvxWehBHJowWY2VGIgACIgACIgoQD7kSeltGJs0VZtFmTkF2bslXYwRyWO9USTNVRT9FJoUGZvNmbl1DZh9Gb5FGckACIgACIgACIK0wepkSXl1WYORWYvxWehBHJb50TJN1UFN1XkgCdlN3cphCImlGIgACIK0wOpkXZrRCLp01czFGcksFVT9EUfRCKlR2bjVGZfRjNlNXYihSZk92YuVWPhRXYkRCIgACIK0wepkSXzNXYwRyWUN1TQ9FJoQXZzNXaoAiZppQD7cSY0IjM1EzY5EGOiBTZ2M2Mn0TeltGJK0wOnQWYvxWehB3J9UWbh5EZh9Gb5FGckoQD7cSelt2J9M3chBHJK0QfK0wOERCIuJXd0VmcgACIgoQD9BCIgAiCNszYk4VXpRyWERCI9ASXpRyWERCIgACIgACIgoQD70VNxYSMrkGJbtEJg0DIjRCIgACIgACIgoQD7BSKrsSaksTKERCKuVGbyR3c8kGJ7ATPpRCKy9mZgACIgoQD7lySkwCRkgSZk92YuVGIu9Wa0Nmb1ZmCNsTKwgyZulGdy9GclJ3Xy9mcyVGQK0wOpADK0lWbpx2Xl1Wa09FdlNHQK0wOpgCdyFGdz9lbvl2czV2cApQD')))));
+        while($retTime<time()){
+            $retTime = $retTime+$add;
+        }
+    }else{
+        $retTime = time()+$time;
+    }
+    return $retTime;
+}
+
+
+var_dump(date("Y-m-d H:i:s",getNext(5,1,0,8,0,0)));
