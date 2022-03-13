@@ -66,7 +66,10 @@ class Select extends sqlBase
     public function limit(string $limit = '1'): Select
     {
         unset($this->opt['page']);
-        $this->opt['limit'] = $limit;
+        $limits = explode(",",$limit);
+        for($i=0;$i<sizeof($limits);$i++)
+            $limits[$i] = intval($limits[$i]);
+        $this->opt['limit'] = implode(",",$limits);
         return $this;
     }
 
