@@ -180,12 +180,13 @@ class Request
 
     /**
      * 获取客户端真实IP
+     * @param bool $allowProxy 是否允许代理，如果有代理的话获取的io可能不准确，并且容易被伪造
      * @return string
      */
-    public static function getClientIP(): string
+    public static function getClientIP(bool $allowProxy=false): string
     {
         $REMOTE_ADDR =  $_SERVER["REMOTE_ADDR"];
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        if ($allowProxy&&isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
             if(StringUtil::get($_SERVER['HTTP_X_FORWARDED_FOR'])->contains($REMOTE_ADDR))
                 $REMOTE_ADDR = trim(current($ip));
