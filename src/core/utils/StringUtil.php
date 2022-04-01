@@ -141,10 +141,12 @@ class StringUtil{
      * @return string|null
      */
 
-    function sub($start, $length)
+    function substr($start, $length): ?string
 
     {
        return mb_substr($this->str,$start,$length);
     }
+
+
 
 }
