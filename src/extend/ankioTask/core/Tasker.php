@@ -81,11 +81,13 @@ class Tasker extends Model
     /**
      * 添加一个定时任务，与linux定时任务语法完全一致
      * @param array $package 定时任务时间包
-     * @param string $url    执行的URL
-     * @param int $times  执行次数,-1不限制
+     * @param string $url 执行的URL
+     * @param $identify
+     * @param int $times
+     * @param bool $loop
      * @return int 返回定时任务ID
      */
-    public function add(array $package, string $url, $identify, int $times=-1,bool $loop){
+    public function add(array $package, string $url, $identify, int $times=-1,bool $loop=false){
         if(sizeof($package)!=5)return false;
         $minute=$package[0];$hour=$package[1];$day=$package[2];$month=$package[3];$week=$package[4];
         $time=$this->getNext($minute,$hour,$day,$month,$week,$loop?1:0);
