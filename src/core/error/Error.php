@@ -182,7 +182,7 @@ class Error
      */
     public static function err(string $msg, array $errInfo = [])
     {
-        Log::error("runError", $msg);
+        Log::info("runError", $msg);
         $traces = sizeof($errInfo) === 0 ? debug_backtrace() : $errInfo;
         if ($dump = ob_get_contents()) {
             ob_end_clean();
@@ -216,6 +216,15 @@ class Error
             foreach ($traces as $trace) {
                 if (is_array($trace) && ! empty($trace["file"])) {
                     echo "{$trace["file"]} on line {$trace["line"]}"."\n";
+                }
+            }
+            return;
+        }
+        
+        if(!isDebug ()){
+            foreach ($traces as $trace) {
+                if (is_array($trace) && ! empty($trace["file"])) {
+                    Log::info ("runError","{$trace["file"]} on line {$trace["line"]}");
                 }
             }
             return;
