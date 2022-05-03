@@ -9,11 +9,3 @@ master : "\n"
   db :   # 数据库库名
   charset : utf8 # 数据库编码
 # 配置其他数据库，直接往下添加即可
-sqlite_demo : "\n"
-  type : sqlite3  # 数据库类型，支持mysql、sqlite2、sqlite3
-  host : /storage/sql/1.db  # 数据库地址
-  username :   # 数据库用户名
-  password :   # 数据库密码
-  port :   # 数据库端口
-  db :   # 数据库库名
-  charset : utf-8 # 数据库编码

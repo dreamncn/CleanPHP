@@ -152,6 +152,7 @@ function exitApp(string $msg, string $tpl=null, string $path='', array $data=[])
     if(isDebug()){
         $GLOBALS["frame"]["clean"][] = $msg;
         $GLOBALS["frame"]["time"]["resp_time"]=(microtime(true)-$GLOBALS['frame_start']);
+
         $result["frame"]["time"]["执行时间"] = (microtime(true) - $GLOBALS['frame_start']) . "ms";
         $result["frame"]["time"]["模板编译时间"] = $GLOBALS["frame"]["time"]["tpl_time"] . "ms";
         $result["frame"]["time"]["路由时间"] = $GLOBALS["frame"]["time"]["route_time"] . "ms";
@@ -172,25 +173,5 @@ function exitApp(string $msg, string $tpl=null, string $path='', array $data=[])
     }
     exit();
 }
-
-function getDoc($class,$method,$name): string
-{
-    try {
-        if($method==null){
-            $reflection = new ReflectionClass($class);
-            $tmp  = $reflection->getDocComment();
-        }else{
-            $act = new $class();
-            $func = new ReflectionMethod($act, $method);
-            $tmp   = $func->getDocComment();
-        }
-        $rule = "@$name(.*?)\n";
-        preg_match_all('/'.$rule.'/',$tmp,$tmp);
-        return trim($tmp[1][0]);
-    } catch (ReflectionException $e) {
-        return "";
-    }
-}
-
 
 

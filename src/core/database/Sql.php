@@ -75,14 +75,14 @@ class Sql
         if ($name === "") return $this->sql;//为空直接获取执行实例
         $class = 'app\core\database\sql\\' . $name;
         if (isset($this->instances[$name]) && get_class($this->instances[$name]) === $class)
-            return $this->instances[$name];
+            return $this->instances[$name]->table($this->tableName);
 
         if (class_exists($class)) {
             $this->instances[$name] = new $class($this->tableName, $this->sql);
         } else {
             return $this->sql;
         }
-        return $this->instances[$name];
+        return $this->instances[$name]->table($this->tableName);
     }
 
     /**

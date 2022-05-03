@@ -63,9 +63,11 @@ class sqlBase
 	*/
 	protected function table(string $tableName)
     {
+        $this->tableName = $tableName;
         $this->opt['tableName'] = $tableName;
         return $this;
     }
+
 
 
 	/**

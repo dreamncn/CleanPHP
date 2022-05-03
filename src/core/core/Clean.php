@@ -168,6 +168,7 @@ class Clean
                 echo htmlspecialchars($result,ENT_QUOTES,"UTF-8",true);
             }else{
                 echo $result;
+                
             }
         }
         exitApp("框架执行完毕，退出。");

@@ -29,9 +29,11 @@ class Select extends sqlBase
     {
         $this->opt = [];
         $this->opt['tableName'] = $this->tableName;
+
         $this->opt['type'] = 'select';
         $this->opt['field'] = $field;
         $this->bindParam = [];
+      //  print_r($this->opt);
         return $this;
     }
 
@@ -42,6 +44,7 @@ class Select extends sqlBase
      */
     public function table(string $tableName):Select
     {
+       // $this->tableName = $tableName;
         return parent::table($tableName);
     }
 
@@ -111,6 +114,8 @@ class Select extends sqlBase
         $sql .= $this->getOpt('FROM', 'tableName');
         $sql .= $this->getOpt('WHERE', 'where');
         $sql .= $this->getOpt('ORDER BY', 'order');
+
+
 
         $total = $this->sql->execute($sql, $this->bindParam, true);
         if(!isset($this->opt['start'])){

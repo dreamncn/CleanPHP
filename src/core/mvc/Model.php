@@ -19,19 +19,33 @@ use app\core\database\Sql;
 class Model extends Sql
 {
 
+    protected static  $instance = null;
+    public static string $table = "";
+    public static function getInstance()
+    {
+        if(self::$instance==null) {
+            //
+            self::$instance  = new static();
+        }
+        $classFullName = get_called_class();
+        self::$instance->setTable($classFullName::$table);
+        return self::$instance;
+
+    }
+
     /**
      * Model constructor.
      *
      * @param string $table_name
      */
-    public function __construct(string $table_name = '')
+    public function setTable(string $table_name = '')
     {
 
-        parent::__construct($table_name);
         //手动设置默认数据库位置
-        $this->setDbLocation(APP_CONF,"db");
-        $this->setDatabase("master");
-       // $this->table($table_name);
+        $this->setDbLocation(APP_CONF,"db")->setDatabase("master")->table($table_name);
+
+       // print_r("table:$table_name\n");
+
     }
 
 
