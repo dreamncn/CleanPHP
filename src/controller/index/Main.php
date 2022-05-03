@@ -12,7 +12,7 @@ class Main extends BaseController
 {
 	public function index()
 	{
-         Response::msg(false,200,"CleanPHP","Welcome to use CleanPHP",-1);
+         Response::msg(false,200,"CleanPHP","Welcome to use CleanPHP",-1,"https://github.com/dreamncn/CleanPHP","Github");
     }
     
 }
