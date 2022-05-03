@@ -20,8 +20,7 @@ use app\lib\Async\Async;
 
 class Tasker extends Model
 {
-    private static ?Tasker $instance=null;
-
+    
     public function __construct()
     {
         parent::__construct("extend_tasker");

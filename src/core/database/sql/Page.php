@@ -13,7 +13,7 @@ namespace app\core\database\sql;
  */
 class Page
 {
-    private array $page;
+    private ?array $page;
 
     public function __construct($page)
     {
