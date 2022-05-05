@@ -145,4 +145,8 @@ class Response
     {
         return !(preg_match('%^127\.|10\.|192\.168|172\.(1[6-9]|2|3[01])%', $ip) === 0);
     }
+
+    public static function getHttpSchema(){
+        return $GLOBALS['http_scheme'];
+    }
 }

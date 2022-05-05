@@ -121,6 +121,12 @@ class Clean
         if (!$controller_method_exists && !$auto_tpl_file_exists) {
             new RouteError("错误: 控制器 '$controller_name' 中的方法 '$action_name' 不存在!");
         }
+
+        if(!in_array($action_name,get_class_methods($controller_name))){
+            new RouteError("错误: 控制器 '$controller_name' 中的方法 '$action_name' 为私有方法，禁止访问!");
+        }
+
+
         $result = null;
         if ($controller_class_exists && $controller_method_exists) {
             $controller_obj = new $controller_name();

@@ -28,7 +28,7 @@ class Tasker extends Db
         parent::setDb();
 
         $this->execute(
-            "CREATE TABLE  IF NOT EXISTS extend_tasker(
+            "CREATE TABLE IF NOT EXISTS extend_tasker(
                     id integer PRIMARY KEY AUTOINCREMENT ,
                     url text,
                     identify TEXT,
@@ -112,7 +112,8 @@ class Tasker extends Db
         $data=$db->select()->table("extend_tasker")->commit();
         foreach ($data as $value){
             if(intval($value["times"])==0){
-                $db->delete()->table("extend_tasker")->where(["id"=>$value["id"]])->commit();
+                Log::info("tasker","该ID {$value["id"]} 的数据执行完毕，删掉");
+               $db->delete()->table("extend_tasker")->where(["id"=>$value["id"]])->commit();
             }elseif($value["next"]<=time()){
                 $time=$this->getNext($value["minute"],$value["hour"],$value["day"],$value["month"],$value["week"],intval($value["loop"]));
                 $db->update()->table("extend_tasker")->where(["id"=>$value["id"]])->set(["times=times-1","next"=>$time])->commit();
@@ -121,6 +122,8 @@ class Tasker extends Db
             }
         }
     }
+
+
 
 
     /**
