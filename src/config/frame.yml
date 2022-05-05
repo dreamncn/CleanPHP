@@ -9,6 +9,8 @@ host :
 debug : true
 # 使用伪静态
 rewrite: true
+# 应用模式
+mode: mvc
 # 项目名
 app : cleanPHP
 # 项目升级次数

@@ -98,22 +98,30 @@ class Response
     {
         global $__module;
         $__module = '';
-        @header("Content-type: text/html; charset=utf-8", true, $code);
-        $err = $err ? ":(" : ":)";
-
         if ($time == 0) {
             self::location($url);
-            return;
+            exitApp("出现重定向或不可访问的页面。响应代码：  $code");
         }
-        $data = get_defined_vars();
-        $obj = new Controller();
-        $obj->setArray($data);
-        $obj->setAutoPathDir(APP_INNER . DS . "tip");
-        if (file_exists(APP_INNER . DS . "tip" . $code . '.tpl'))
-           echo $obj->display($code);
-        else {
-            echo $obj->display('common');
+        if(isSPA()){
+            @header('content-type:application/json',true, $code);
+            echo json_encode(["code"=>$code,"msg"=>$msg,"data"=>$url]);
+        }else{
+            @header("Content-type: text/html; charset=utf-8", true, $code);
+            $err = $err ? ":(" : ":)";
+
+
+            $data = get_defined_vars();
+            $obj = new Controller();
+            $obj->setArray($data);
+            $obj->setAutoPathDir(APP_INNER . DS . "tip");
+            if (file_exists(APP_INNER . DS . "tip" . $code . '.tpl'))
+                echo $obj->display($code);
+            else {
+                echo $obj->display('common');
+            }
         }
+
+
         exitApp("出现重定向或不可访问的页面。响应代码：  $code");
     }
 

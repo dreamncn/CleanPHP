@@ -34,7 +34,7 @@ class Route
      */
     public static function url(string $m, string $c, string $a, array $params = []): string
     {
-        $isRewrite=Config::getInstance("frame")->setLocation(APP_CONF)->getOne("rewrite");
+        $isRewrite=$GLOBALS["frame"]["rewrite"];
         if(!$isRewrite){
             $params["m"]=$m;
             $params["c"]=$c;
@@ -107,7 +107,7 @@ class Route
     {
         $GLOBALS['route_start']=microtime(true);
         Log::debug("frame_run","路由开始");
-        $isRewrite=Config::getInstance("frame")->setLocation(APP_CONF)->getOne("rewrite");
+        $isRewrite=$GLOBALS["frame"]["rewrite"];
         if($isRewrite){
             Log::debug("frame_run","路由重写开始");
             //不允许的参数
@@ -186,12 +186,13 @@ class Route
      * 路由匹配
      * @return array
      */
-    public static function convertUrl(): array
+    public static function convertUrl($url=""): array
     {
 
         $route_arr = [];
-
-        $url = strtolower($GLOBALS['http_scheme'] . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        if($url==""){
+            $url = strtolower($GLOBALS['http_scheme'] . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+        }
 
         Log::debug("frame_run","正在匹配路由表：$url");
 

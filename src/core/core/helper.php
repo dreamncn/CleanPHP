@@ -134,6 +134,24 @@ function isConsole(): bool
 }
 
 /**
+ * 是否为mvc模式
+ * @return bool
+ */
+function isMVC(): bool
+{
+   return $GLOBALS["frame"]["mode"]=="mvc";
+}
+
+/**
+ * 是否为SPA模式
+ * @return bool
+ */
+function isSPA(): bool
+{
+    return $GLOBALS["frame"]["mode"]=="spa";
+}
+
+/**
  * 退出框架运行
  * @param string $msg
  * @param string|null $tpl 退出模板文件名
@@ -142,7 +160,7 @@ function isConsole(): bool
  */
 function exitApp(string $msg, string $tpl=null, string $path='', array $data=[])
 {
-    if($tpl!==null){
+    if($tpl!==null&&isMVC()){
         $obj = new Controller();
         $obj->setArray($data);
         $obj->setAutoPathDir($path);

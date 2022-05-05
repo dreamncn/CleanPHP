@@ -190,6 +190,8 @@ class Error
         if($dump!=""){
             $dump = "异常输出：".$dump;
         }
+
+
         if (!isDebug()) {
             global $__module, $__controller, $__action;
             $nameBase = "app\\controller\\$__module\\BaseController";
@@ -204,7 +206,8 @@ class Error
             $__module = '';
             self::display($msg, $traces,$dump);
         }
-        exit(500);
+
+        exitApp($msg);
     }
 
     public static function display($msg, $traces,$dump)
@@ -217,17 +220,33 @@ class Error
                     echo "{$trace["file"]} on line {$trace["line"]}"."\n";
                 }
             }
-            return;
+            exitApp($msg);
         }
-        
         if(!isDebug ()){
             foreach ($traces as $trace) {
                 if (is_array($trace) && ! empty($trace["file"])) {
                     Log::info("frame_error","{$trace["file"]} on line {$trace["line"]}");
                 }
             }
-            return;
         }
+
+        if(isSPA()){
+            @header('content-type:application/json',true, 500);
+            if(isDebug()){
+                $data = [];
+                foreach ($traces as $trace) {
+                    if (is_array($trace) && ! empty($trace["file"])) {
+                       $data[] = "{$trace["file"]} on line {$trace["line"]}";
+                    }
+                }
+                echo json_encode(["code"=>500,"msg"=>$dump.$msg,"data"=>$data]);
+            }else{
+                echo json_encode(["code"=>500,"msg"=>"System Error","data"=>""]);
+            }
+            exitApp($msg);
+        }
+        
+
 
         $index = 0;$setArray = [];
         foreach ($traces as $trace) {

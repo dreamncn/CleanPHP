@@ -6,6 +6,7 @@
 namespace app\core\mvc;
 
 use app\core\debug\Log;
+use app\core\event\EventManager;
 
 /**
  * Class Controller
@@ -50,7 +51,8 @@ class Controller
      */
     public function init()
     {
-        return null;
+        global $__module, $__controller, $__action;
+        return EventManager::fire("beforeControllerRun",[ "m"=>$__module,"c"=>$__controller,"a"=>$__action]);
     }
 
     /**
