@@ -26,7 +26,6 @@ use app\core\web\Route;
 class Clean
 {
 
-
     /**
      * 启动
      */
@@ -35,11 +34,9 @@ class Clean
         //框架开始类
         self::Init();
         Log::debug("frame_run","框架初始化完毕");
-        if(!self::isConsole()){
-            Route::rewrite();
-            Log::debug("frame_run","路由完毕");
-            self::createObj();
-        }
+        Route::rewrite();
+        Log::debug("frame_run","路由完毕");
+        self::createObj();
     }
 
     public static function isConsole(): bool
@@ -47,15 +44,7 @@ class Clean
         return isset($_SERVER['CLEAN_CONSOLE'])&&$_SERVER['CLEAN_CONSOLE'];
     }
 
-    static private function Console(){
-        if ($_SERVER["REQUEST_URI"] == "clean_check") {
-            FileCheck::run();
-        } else if ($_SERVER["REQUEST_URI"] == "clean_release") {
-            Release::run();
-        } else if ($_SERVER["REQUEST_URI"] == "clean_clean") {
-            Release::clean();
-        }
-    }
+
     /**
      * 初始化数据
      */
@@ -80,11 +69,9 @@ class Clean
             @header('Access-Control-Allow-Origin:' . $origin);
         }
         //判断是否为命令行执行
-        if(self::isConsole()){
-            self::Console();//命令行执行
-        }else{
+        if(!self::isConsole())
             EventManager::fire("afterFrameInit");
-        }
+
     }
 
     /**

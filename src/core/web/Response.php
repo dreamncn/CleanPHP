@@ -98,7 +98,7 @@ class Response
     {
         global $__module;
         $__module = '';
-        header("Content-type: text/html; charset=utf-8", true, $code);
+        @header("Content-type: text/html; charset=utf-8", true, $code);
         $err = $err ? ":(" : ":)";
 
         if ($time == 0) {

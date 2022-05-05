@@ -35,15 +35,15 @@ class Release
         FileUtil::copyDir(APP_DIR, $new);
         FileUtil::delFile($new . "/clean.php");
         FileUtil::cleanDir($new . "/storage/cache/");//清空文件夹
-        file_put_contents($new . "/storage/cache/.storage","");
+        file_put_contents($new . "/storage/cache/.gitkeep","");
         FileUtil::cleanDir($new . "/storage/logs/");//清空文件夹
-        file_put_contents($new . "/storage/logs/.storage","");
+        file_put_contents($new . "/storage/logs/.gitkeep","");
         FileUtil::cleanDir($new . "/storage/route/");//清空文件夹
-        file_put_contents($new . "/storage/route/.storage","");
+        file_put_contents($new . "/storage/route/.gitkeep","");
         FileUtil::cleanDir($new . "/storage/trash/");//清空文件夹
-        file_put_contents($new . "/storage/trash/.storage","");
+        file_put_contents($new . "/storage/trash/.gitkeep","");
         FileUtil::cleanDir($new . "/storage/view/");//清空文件夹
-        file_put_contents($new . "/storage/view/.storage","");
+        file_put_contents($new . "/storage/view/.gitkeep","");
 
         Config::getInstance("frame")->setLocation($new . "/config/")->set("debug", false);//关闭调试模式
         $hosts = Config::getInstance("frame")->setLocation($new . "/config/")->getOne("host");
@@ -116,35 +116,6 @@ class Release
         echo "\n[项目打包程序]php程序已打包至$fileName";
         FileUtil::del($new);
     }
-
-    public static function clean()
-    {
-        $new = dirname(APP_DIR) . "/release/temp";
-        FileUtil::copyDir(APP_DIR, $new);
-        FileUtil::cleanDir($new . "/extend/");//清空文件夹
-        file_put_contents($new . "/extend/.storage","");
-        //mkdir($new . "/extend/");
-        FileUtil::cleanDir($new . "/lib/");//清空文件夹
-        file_put_contents($new . "/lib/.storage","");
-        //mkdir($new . "/lib/");
-        FileUtil::cleanDir($new . "/controller/");//清空文件夹
-        file_put_contents($new . "/controller/.storage","");
-        FileUtil::cleanDir($new . "/static/view/");//清空文件夹
-        file_put_contents($new . "/static/view/.storage","");
-        //mkdir($new . "/controller/");
-        FileUtil::del($new . "/public/custom/");
-        FileUtil::del($new . "/public/layui/");
-        FileUtil::delFile("$new/storage/sql/1.db");//删除
-        Config::getInstance("db")->setLocation($new . "/config/")->setAll(Config::getInstance("db")->setLocation("$new/config/")->getOne("master"));
-        Config::getInstance("route")->setLocation($new . "/config/")->setAll(["<m>/<c>/<a>"=>"<m>/<c>/<a>"]);
-        $fileName=dirname(APP_DIR) . "/release/clean_clean.zip";
-        //File::zip($new,$new,$fileName );
-        $zip=new ZipUtil();
-        $zip->Zip($new,$fileName);
-        echo "\nclean php净化完成，已打包至该路径 $fileName";
-        FileUtil::del($new);
-    }
-
 
 }
 
