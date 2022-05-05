@@ -106,10 +106,10 @@ class Route
     public static function rewrite()
     {
         $GLOBALS['route_start']=microtime(true);
-        if(isDebug()) $GLOBALS["frame"]["route"][]="路由开始";
+        Log::debug("frame_run","路由开始");
         $isRewrite=Config::getInstance("frame")->setLocation(APP_CONF)->getOne("rewrite");
-        if(isDebug()) $GLOBALS["frame"]["route"][]="已启用路由重写功能";
         if($isRewrite){
+            Log::debug("frame_run","路由重写开始");
             //不允许的参数
             if (isset($_REQUEST['m']) || isset($_REQUEST['a']) || isset($_REQUEST['c'])) {
 
@@ -123,13 +123,15 @@ class Route
                 $data = Cache::get($url);
             }
             if ($data !== null && isset($data['real']) && isset($data['route'])) {
-                if(isDebug()) $GLOBALS["frame"]["route"][]="已确认路由缓存有效";
                 $route_arr_cp = $data['route'];
             } else {
-                if(isDebug()) $GLOBALS["frame"]["route"][]="无有效路由缓存";
                 $route_arr = self::convertUrl();
                 if (!isset($route_arr['m']) || !isset($route_arr['a']) || !isset($route_arr['c'])) {
-                    Log::info("route",$url);
+                    if(StringUtil::get($url)->endsWith("favicon.ico")){
+                        //不需要fav
+                        exitApp("无图标");
+                    }
+                    Log::debug("frame_error","路由地址：$url");
                     new RouteError("错误的路由! 我们需要至少三个参数.");
                 }
                 $route_arr = array_merge($_GET, $route_arr);//get中的参数直接覆盖
@@ -175,7 +177,7 @@ class Route
         $__module = $_REQUEST['m'];
         $__controller = $_REQUEST['c'];
         $__action = $_REQUEST['a'];
-        if(isDebug()) $GLOBALS["frame"]["route"][]="路由完成";
+        Log::debug("frame_run","路由完成");
         self::isInstall();
         EventManager::fire("afterRoute", [$__module, $__controller, $__action]);
     }
@@ -191,14 +193,15 @@ class Route
 
         $url = strtolower($GLOBALS['http_scheme'] . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 
-        if(isDebug()) $GLOBALS["frame"]["route"][]="正在匹配路由表:".$url;
+        Log::debug("frame_run","正在匹配路由表：$url");
+
 
         if (strpos($url, '?') !== false) {
             $url = substr($url, 0, strpos($url, '?'));
         }
 
         foreach ($GLOBALS['route'] as $rule => $mapper) {
-            if(isDebug()) $GLOBALS["frame"]["route"][]="尝试匹配：".$rule;
+            Log::debug("frame_run","尝试匹配：$rule");
             $rule = Response::getAddress() . '/' . $rule;
             $rule = strtolower($rule);
             $rule = '/' . str_ireplace(
@@ -213,15 +216,14 @@ class Route
                 foreach ($matchs as $matchkey => $matchval) {
                     if (!is_int($matchkey)) $route_arr[$matchkey] = $matchval;
                 }
-                if(isDebug()) $GLOBALS["frame"]["route"][]="已匹配路由：".print_r($rule,true);
+                Log::debug("frame_run","已匹配路由：".print_r($rule,true));
                 break;
             }
 
         }
-        if(isDebug()){
-            $GLOBALS["frame"]["route"][]="最终路由数据：".print_r($route_arr,true);
-            $GLOBALS["frame"]["time"]["route_time"]=(microtime(true)-$GLOBALS['route_start']);
-        }
+        Log::debug("frame_run","最终路由数据：".print_r($route_arr,true));
+        Log::debug("frame_run","路由用时：".(microtime(true)-$GLOBALS['route_start'])."ms");
+
         return $route_arr;
     }
     /**
@@ -232,7 +234,6 @@ class Route
         if($GLOBALS["frame"]["install"]!==""&&!is_file(APP_CACHE.'install.lock')){
             global $__controller;
             if(StringUtil::get($GLOBALS["frame"]["install"])->contains($__controller))return;
-
             //没有锁
             Response::location($GLOBALS["frame"]["install"]);
         }

@@ -44,6 +44,11 @@ class Request
     }
 
 
+    /**
+     * 获取header头部内容
+     * @param $headName
+     * @return mixed|null
+     */
     public static function getHeaderValue($headName){
         $headers=self::getHeader();
         if(isset($headers[$headName])){
@@ -52,15 +57,7 @@ class Request
         return null;
     }
 
-    /**
-     * 通过数据库获取浏览器信息，需要配置php.ini https://www.php.net/manual/zh/function.get-browser.php
-     * @return string
-     */
-    public static function getBrowserByIni(): string
-    {
-        $browser = get_browser($_SERVER['HTTP_USER_AGENT'] ,true);
-        return $browser["platform_description"]."（{$browser['browser']})";
-    }
+
 
     /**
      * 简单获取浏览器信息
@@ -233,4 +230,6 @@ class Request
     {
         return $_SERVER['REQUEST_METHOD'] == 'POST';
     }
+
+
 }

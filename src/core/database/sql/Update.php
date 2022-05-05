@@ -44,7 +44,7 @@ class Update extends sqlBase
 		 */
 	public function where(array $conditions)
     {
-        return parent::where($conditions);
+        return  parent::where($conditions);
     }
 
 	/**

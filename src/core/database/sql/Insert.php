@@ -19,12 +19,18 @@ use app\core\error\Error;
  */
 class Insert extends sqlBase
 {
+
+    /*数据库常量*/
+    const NORMAL = 0;
+    const IGNORE = 1;
+    const DUPLICATE = 2;
+
     /**
      * 用来初始化的
      * @param int $model insert模式
      * @return $this
      */
-    public function insert(int $model = SQL_INSERT_NORMAL): Insert
+    public function insert(int $model = self::NORMAL): Insert
     {
         $this->opt = [];
         $this->opt['tableName'] = $this->tableName;
@@ -103,7 +109,7 @@ class Insert extends sqlBase
      */
     public function keys(array $key, ?array $columns = []): Insert
     {
-        if ($this->opt['model'] == SQL_INSERT_DUPLICATE && sizeof($columns) == 0) {
+        if ($this->opt['model'] == self::DUPLICATE && sizeof($columns) == 0) {
             Error::err('数据库错误：DUPLICATE模式必须具有更新字段。');
         }
         $value = '';
@@ -112,6 +118,7 @@ class Insert extends sqlBase
         }
         $value = '(' . rtrim($value, ",") . ')';
         $this->opt['key'] = $value;
+        $update = [];
         if(is_array($columns)&&sizeof($columns)!=0){
             foreach ($columns as $k) {
                 $update[] = "`{$k}`" . " = VALUES(" . $k . ')';
@@ -123,9 +130,9 @@ class Insert extends sqlBase
 
     /**
      * 提交修改
-     * @return mixed
+     * @return string
      */
-    public function commit()
+    public function commit(): string
     {
         $this->translateSql();
         $this->sql->execute($this->traSql, $this->bindParam, false);
@@ -139,18 +146,18 @@ class Insert extends sqlBase
     {
         $sql = '';
         switch ($this->opt['model']) {
-            case SQL_INSERT_DUPLICATE:
+            case self::DUPLICATE:
                 $sql .= $this->getOpt('INSERT INTO', 'tableName');
                 $sql .= $this->getOpt('', 'key');
                 $sql .= $this->getOpt('VALUES', 'values');
                 $sql .= $this->getOpt('ON DUPLICATE KEY UPDATE', 'columns');
                 break;
-            case SQL_INSERT_NORMAL:
+            case self::NORMAL:
                 $sql .= $this->getOpt('INSERT INTO', 'tableName');
                 $sql .= $this->getOpt('', 'key');
                 $sql .= $this->getOpt('VALUES', 'values');
                 break;
-            case SQL_INSERT_IGNORE:
+            case self::IGNORE:
                 $sql .= $this->getOpt('INSERT IGNORE INTO', 'tableName');
                 $sql .= $this->getOpt('', 'key');
                 $sql .= $this->getOpt('VALUES', 'values');

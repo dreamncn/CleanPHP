@@ -5,6 +5,7 @@
 
 namespace app\core\core;
 use app\core\config\Config;
+use app\core\debug\Log;
 use app\core\error\Error;
 use app\core\event\EventManager;
 
@@ -63,11 +64,6 @@ EventManager::register();
 
 EventManager::fire("beforeRunFrame", null);
 
-if(isDebug()) {
-    $GLOBALS["frame"]["time"]["time"]=date("Y-m-d H:i:s");
-    $GLOBALS["frame"]["time"]["tpl_time"]=0;
-    $GLOBALS["frame"]["clean"][]="框架启动";
-}
 
 
 

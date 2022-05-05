@@ -6,11 +6,11 @@
 namespace app\extend\ankioTask\core;
 
 
-use app\core\debug\Debug;
+use app\core\database\sql\Insert;
 use app\core\debug\Log;
+use app\core\extend\Async\Async;
 use app\core\mvc\Model;
 use app\core\web\Response;
-use app\lib\Async\Async;
 
 /**
  * Class Server
@@ -19,34 +19,25 @@ use app\lib\Async\Async;
  * Author: ankio
  * Description:Tasker服务
  */
-class Server extends Model
+class Server extends Db
 {
-    
 
     private string $taskerUrl;
 
-    public function __construct()
-    {
-        parent::__construct("extend_lock");
-        $this->setDbLocation(EXTEND_TASKER."data".DS, "db");
-        $this->setDatabase("sqlite");
-        $this->execute(
-        "CREATE TABLE  IF NOT EXISTS extend_lock(
-              ock_time varchar(200)
-            )"
-    );
-        $this->taskerUrl=Response::getAddress()."/tasker_server/";
-        //任务URL
-    }
+    public static string $table = "extend_lock";
 
-    /**
-     * 获取对象实例
-     * @return Server
-     */
-    public static function getInstance(): ?Server
+    public function setDb()
     {
-        return self::$instance===null?(self::$instance=new Server()):self::$instance;
+        parent::setDb();
+        $this->execute(
+            "CREATE TABLE  IF NOT EXISTS extend_lock(
+              lock_time varchar(200)
+            )"
+        );
+        $this->taskerUrl=Response::getAddress()."/tasker_server/";
+        
     }
+    
 
     /**
      * 定时任务路由，用于对定时任务进行路由
@@ -79,7 +70,7 @@ class Server extends Model
      * @return void
      */
     public function stop(){
-        self::getInstance()->emptyTable("extend_lock");
+        $this->emptyTable("extend_lock");
     }
 
 
@@ -93,7 +84,7 @@ class Server extends Model
         do {
             $file = fopen(APP_TRASH."task.lock", "w+");
             flock($file, LOCK_EX ) or die("Can't lock");
-         //   Debug::i("task","10s pass....");
+            Log::debug("task","10s pass....");
             $this->lock(time());//更新锁定时间
             //循环扫描
             Tasker::getInstance()->run();
@@ -116,10 +107,10 @@ class Server extends Model
      */
     private function lock(int $time){
 
-        $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
+        $data= $this->select()->table("extend_lock")->limit(1)->commit();
         if(empty($data)){
-            self::getInstance()->insert(SQL_INSERT_NORMAL)->keyValue(["lock_time"=>$time])->table("extend_lock")->commit();
-        }else self::getInstance()->update()->set(["lock_time"=>$time])->table("extend_lock")->commit();
+             $this->insert()->keyValue(["lock_time"=>$time])->table("extend_lock")->commit();
+        }else  $this->update()->set(["lock_time"=>$time])->table("extend_lock")->commit();
     }
 
     /**
@@ -128,7 +119,7 @@ class Server extends Model
      */
     private function isStop(): bool
     {
-        $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
+        $data= $this->select()->table("extend_lock")->limit(1)->commit();
         if(empty($data))return false;
         return (time()-intval($data[0]['lock_time'])>20);
     }
@@ -140,7 +131,7 @@ class Server extends Model
      */
     private function isLock(): bool
     {
-        $data=self::getInstance()->select()->table("extend_lock")->limit(1)->commit();
+        $data= $this->select()->table("extend_lock")->limit(1)->commit();
 
         if(empty($data))return false;
         return (time()-intval($data[0]['lock_time'])<15);

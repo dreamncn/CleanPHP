@@ -5,6 +5,9 @@
 
 namespace app\core\database\sql;
 
+use app\core\error\SqlCheckError;
+use app\core\utils\FileUtil;
+
 /**
  * Class Select
  * @package app\core\database\sql
@@ -14,6 +17,9 @@ namespace app\core\database\sql;
  */
 class Select extends sqlBase
 {
+
+    const DESC = "DESC";
+    const ASC = "ASC";
     /**
      * @var array|null
      */
@@ -54,25 +60,33 @@ class Select extends sqlBase
      * @param string $string 排序方式
      * @return $this
      */
-    public function orderBy(string $string): Select
+    public function orderBy(string $string,string $type = self::DESC): Select
     {
-        $this->opt['order'] = $string;
+        if(!FileUtil::isName($string)){
+            new SqlCheckError("字段名称只允许为字母和下划线");
+        }
+        if($type!==self::DESC||$type!==self::ASC){
+            new SqlCheckError("排序方式只允许使用 DESC 和 ASC 两种");
+        }
+        $this->opt['order'] = $string." ".$type;
         return $this;
     }
 
 
     /**
      * limit函数
-     * @param string $limit
+     * @param int $start limit开始
+     * @param int $end limit结束
      * @return $this
      */
-    public function limit(string $limit = '1'): Select
+    public function limit(int $start =1,int $end = -1): Select
     {
         unset($this->opt['page']);
-        $limits = explode(",",$limit);
-        for($i=0;$i<sizeof($limits);$i++)
-            $limits[$i] = intval($limits[$i]);
-        $this->opt['limit'] = implode(",",$limits);
+        $limit = strval($start);
+        if($end!=-1){
+            $limit = ",".strval($end);
+        }
+        $this->opt['limit'] = $limit;
         return $this;
     }
 

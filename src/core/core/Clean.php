@@ -6,6 +6,7 @@
 namespace app\core\core;
 
 use app\core\debug\Debug;
+use app\core\debug\Log;
 use app\core\error\RouteError;
 use app\core\event\EventManager;
 use app\core\mvc\Controller;
@@ -33,12 +34,10 @@ class Clean
     {
         //框架开始类
         self::Init();
-        if(isDebug()) {
-            $GLOBALS["frame"]["clean"][]="框架初始化完毕";
-        }
+        Log::debug("frame_run","框架初始化完毕");
         if(!self::isConsole()){
             Route::rewrite();
-            if(isDebug())  $GLOBALS["frame"]["clean"][]="路由完毕";
+            Log::debug("frame_run","路由完毕");
             self::createObj();
         }
     }
@@ -47,6 +46,7 @@ class Clean
     {
         return isset($_SERVER['CLEAN_CONSOLE'])&&$_SERVER['CLEAN_CONSOLE'];
     }
+
     static private function Console(){
         if ($_SERVER["REQUEST_URI"] == "clean_check") {
             FileCheck::run();
@@ -68,7 +68,6 @@ class Clean
             error_reporting(E_ALL & ~(E_STRICT | E_NOTICE));
             ini_set("display_errors", "Off");
         }
-        if(isDebug())  $GLOBALS["frame"]["clean"][]="已开启错误告警";
         //识别ssl
         if ((!empty($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == "https") || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") || (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
             $GLOBALS['http_scheme'] = 'https://';
@@ -78,7 +77,7 @@ class Clean
         //允许跨域
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
         if (in_array(str_replace($GLOBALS['http_scheme'], '', $origin), $GLOBALS["frame"]['host'])) {
-            header('Access-Control-Allow-Origin:' . $origin);
+            @header('Access-Control-Allow-Origin:' . $origin);
         }
         //判断是否为命令行执行
         if(self::isConsole()){
@@ -86,8 +85,6 @@ class Clean
         }else{
             EventManager::fire("afterFrameInit");
         }
-        $GLOBALS["frame"]["sql"]=[];
-        $GLOBALS["frame"]["file"]=[];
     }
 
     /**
@@ -101,20 +98,20 @@ class Clean
 
         $controller_name = ucfirst($__controller);
         $action_name = $__action;
-        if(isDebug())  $GLOBALS["frame"]["clean"][]="响应controller：$__module/$__controller/$__action";
-
+        Log::debug("frame_run","响应controller：$__module/$__controller/$__action");
 
         if (!self::isAvailableClassname($__module)) new RouteError("错误: 模块 '$__module' 命名不符合规范!");
 
 
         if (!is_dir(APP_CONTROLLER . $__module)){
-      //      Debug::i("clean","$__module/$__controller/$__action");
             new RouteError("错误: 模块 '$__module' 不存在!");
         }
 
         $controller_name = 'app\\controller\\' . $__module . '\\' . $controller_name;
 
-        if(isDebug())  $GLOBALS["frame"]["clean"][]="创建controller对象：".$controller_name;
+
+        Log::debug("frame_run","创建controller对象：".$controller_name);
+
 
         if (!self::isAvailableClassname($__controller))
             new RouteError("错误: 控制器 '$controller_name' 命名不符合规范!");
@@ -162,13 +159,15 @@ class Clean
         }
         if($result!=null){
             if(is_array($result)){
+                Log::debug("frame_run","输出JSON数据");
                 @header('content-type:application/json');
                 echo json_encode($result);
             }else if($controller_obj->isEncode()){
+                Log::debug("frame_run","编码输出html");
                 echo htmlspecialchars($result,ENT_QUOTES,"UTF-8",true);
             }else{
+                Log::debug("frame_run","原样输出html");
                 echo $result;
-                
             }
         }
         exitApp("框架执行完毕，退出。");
@@ -183,6 +182,5 @@ class Clean
     {
         return preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/', $name);
     }
-
 
 }

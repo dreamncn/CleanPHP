@@ -5,8 +5,9 @@
 
 namespace app\core\core;
 
-use app\core\error\Error;
 use app\core\debug\Log;
+use app\core\error\Error;
+
 
 
 /**
@@ -23,7 +24,6 @@ class Loader
      */
 	public static function register()
     {
-        if(isDebug()) $GLOBALS["frame"]["files"][]="注册自动加载";
         spl_autoload_register('app\\core\\core\\Loader::autoload', true, true);
         //注册第三方库的自动加载
         $data = scandir(APP_LIB);
@@ -52,7 +52,7 @@ class Loader
         //存在就加载
         if (file_exists($file)) {
             require_once $file;
-            if(isDebug()) $GLOBALS["frame"]["files"][]="加载：".$namespace.DS.$class;
+            Log::debug("frame_run","加载：".$namespace.DS.$class);
         }
     }
 

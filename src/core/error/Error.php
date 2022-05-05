@@ -6,7 +6,6 @@
 namespace app\core\error;
 use app\core\debug\Log;
 use app\core\mvc\Controller;
-
 use app\core\web\Response;
 
 /**
@@ -182,7 +181,7 @@ class Error
      */
     public static function err(string $msg, array $errInfo = [])
     {
-        Log::info("runError", $msg);
+        Log::info("frame_error", $msg);
         $traces = sizeof($errInfo) === 0 ? debug_backtrace() : $errInfo;
         if ($dump = ob_get_contents()) {
             ob_end_clean();
@@ -224,7 +223,7 @@ class Error
         if(!isDebug ()){
             foreach ($traces as $trace) {
                 if (is_array($trace) && ! empty($trace["file"])) {
-                    Log::info ("runError","{$trace["file"]} on line {$trace["line"]}");
+                    Log::info("frame_error","{$trace["file"]} on line {$trace["line"]}");
                 }
             }
             return;

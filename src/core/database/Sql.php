@@ -108,7 +108,7 @@ class Sql
      * @param $model int 数据库插入模式
      * @return Insert
      */
-    protected function insert(int $model): Insert
+    protected function insert(int $model=Insert::NORMAL): Insert
     {
         return $this->sqlInstance("Insert")->insert($model);
     }

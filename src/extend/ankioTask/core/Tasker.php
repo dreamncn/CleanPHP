@@ -5,10 +5,9 @@
 
 namespace app\extend\ankioTask\core;
 
-use app\core\debug\Debug;
 use app\core\debug\Log;
-use app\core\mvc\Model;
-use app\lib\Async\Async;
+use app\core\extend\Async\Async;
+
 
 /**
  * Class Tasker
@@ -18,39 +17,34 @@ use app\lib\Async\Async;
  * Description: 定时任务管理器
  */
 
-class Tasker extends Model
+class Tasker extends Db
 {
     
-    public function __construct()
+    public static string $table = "extend_tasker";
+    
+
+    public function setDb()
     {
-        parent::__construct("extend_tasker");
-        $this->setDbLocation(EXTEND_TASKER."data".DS, "db");
-        $this->setDatabase("sqlite");
+        parent::setDb();
+
         $this->execute(
             "CREATE TABLE  IF NOT EXISTS extend_tasker(
-                    id integer PRIMARY KEY autoincrement,
+                    id integer PRIMARY KEY AUTOINCREMENT ,
                     url text,
-                    identify varchar(200),
-                    minute varchar(200),
-                    hour varchar(200),
-                    day varchar(200),
-                    month varchar(200),
-                    week varchar(200),
-                    next varchar(200),
+                    identify TEXT,
+                    minute TEXT,
+                    hour TEXT,
+                    day TEXT,
+                    month TEXT,
+                    week TEXT,
+                    next TEXT,
                     times integer,loop integer
-    
                     )"
         );
     }
+    
 
-    /**
-     * 获取对象实例
-     * @return Tasker
-     */
-    public static function getInstance(): Tasker
-    {
-        return self::$instance===null?(self::$instance=new Tasker()):self::$instance;
-    }
+
 
     public static function getTimes($id): int
     {
@@ -91,10 +85,10 @@ class Tasker extends Model
         $minute=$package[0];$hour=$package[1];$day=$package[2];$month=$package[3];$week=$package[4];
         $time=$this->getNext($minute,$hour,$day,$month,$week,$loop?1:0);
 
-        Debug::i("tasker","添加定时任务：$identify");
-        Debug::i("tasker","下次执行时间为：".date("Y-m-d H:i:s",$time));
+        Log::debug("tasker","添加定时任务：$identify");
+        Log::debug("tasker","下次执行时间为：".date("Y-m-d H:i:s",$time));
 
-        return self::getInstance()->insert(SQL_INSERT_NORMAL)->table("extend_tasker")->keyValue(
+        return self::getInstance()->insert()->table("extend_tasker")->keyValue(
             ["minute"=>$minute,
                 "hour"=>$hour,
                 "day"=>$day,
@@ -122,11 +116,12 @@ class Tasker extends Model
             }elseif($value["next"]<=time()){
                 $time=$this->getNext($value["minute"],$value["hour"],$value["day"],$value["month"],$value["week"],intval($value["loop"]));
                 $db->update()->table("extend_tasker")->where(["id"=>$value["id"]])->set(["times=times-1","next"=>$time])->commit();
-                Debug::i("tasker","下次执行时间为：".date("Y-m-d H:i:s",$time));
+                Log::info("tasker","下次执行时间为：".date("Y-m-d H:i:s",$time));
                 $this->startTasker($value["url"],$value["identify"]);
             }
         }
     }
+
 
     /**
      * 以天为周期

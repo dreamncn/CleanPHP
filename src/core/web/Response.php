@@ -40,7 +40,7 @@ class Response
      */
     public static function getRootDomain(): string
     {
-        $url= "https://" .$_SERVER ['HTTP_HOST'];
+        $url= $GLOBALS['http_scheme'] .$_SERVER ['HTTP_HOST'];
         $hosts = parse_url($url);
         $host = $hosts['host'];
         //查看是几级域名

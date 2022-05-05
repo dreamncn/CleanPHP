@@ -1,5 +1,5 @@
 <?php
-namespace app\lib\Json;
+namespace app\core\extend\Json;
 class Services_JSON_Error
 {
     function Services_JSON_Error($message = 'unknown error', $code = null,

@@ -69,25 +69,14 @@ class Log
         $dir_name = dirname($file);
         //目录不存在就创建
         if (!file_exists($dir_name)) {
-            self::mkdirs($dir_name);
+            FileUtil::mkDir($dir_name);
         }
         $this->handler = fopen($file, 'a');
 
         return $this;
     }
 
-    /**
-     * 连续创建文件夹
-     * @param $dir
-     */
-    public static function mkdirs($dir)
-    {
-        if (is_dir(dirname($dir))) {
-            mkdir($dir);
-        } else {
-            self::mkdirs(dirname($dir));
-        }
-    }
+
 
     /**
      * 写入日志文件

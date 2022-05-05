@@ -145,7 +145,7 @@ class sqlExec
                 foreach ($params as $k => $v) {
                     $sqlDefault = str_replace($k, "\"$v\"", $sqlDefault);
                 }
-                $GLOBALS["frame"]["sql"][]= ["原始SQL"=>$sql, "填充内容后的SQL"=>$sqlDefault, "执行时间"=>strval($end * 1000) . "ms"];
+                Log::info("frame_run",print_r(["原始SQL"=>$sql, "填充内容后的SQL"=>$sqlDefault, "执行时间"=>strval($end * 1000) . "ms"],true));
             }
 
             return $readonly ? $sth->fetchAll(PDO::FETCH_ASSOC) : $sth->rowCount();
@@ -177,10 +177,9 @@ class sqlExec
             if (!isset($dsn[$this->sqlType]))
                  new AppError("数据库错误: 我们不支持该类型数据库.({$this->sqlType})",$this->db,"type");
             $connectData = $dsn[$this->sqlType];
-            if(isDebug())  $GLOBALS["frame"]["sql"][]="数据库信息：".$connectData;
             $key=md5($connectData);
            if(isset(self::$instances[$key]))return self::$instances[$key];
-
+            Log::debug("frame_run","数据库信息：".$connectData);
             self::$instances[$key]=new PDO(
                 $connectData,
                 $db_config['username'],

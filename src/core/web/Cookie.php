@@ -41,7 +41,6 @@ class Cookie
 	/**
 		 * 获取cookie设置选项
 		 * @param  array  $options  数组
-	 *+----------------------------------------------------------
 	 * @return void
      */
 	private function getOptions(array $options = []): void

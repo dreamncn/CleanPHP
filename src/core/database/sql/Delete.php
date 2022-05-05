@@ -52,7 +52,7 @@ class Delete extends sqlBase
 
 	/**
      * 提交
-     * @return mixed
+     * @return array|int
      */
 	public function commit()
     {

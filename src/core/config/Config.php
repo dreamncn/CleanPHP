@@ -6,6 +6,7 @@
 namespace app\core\config;
 
 use app\core\debug\Debug;
+use app\core\debug\Log;
 use app\core\error\AppError;
 
 /**
@@ -30,9 +31,7 @@ class Config
 
         $conf = self::getInstance("frame")->setLocation(APP_CONF)->get();
         $GLOBALS["frame"] = $conf;
-        if(isDebug())  {
-            $GLOBALS["frame"]["clean"][]="配置文件读取注册";
-        }
+        Log::debug("frame_run","配置文件读取注册");
         if (!in_array($_SERVER["HTTP_HOST"], $conf['host'])) {
             new AppError("您的域名绑定错误，当前域名为：{$_SERVER["HTTP_HOST"]} , 请在 /config/frame.yml 第2行添加该域名。", APP_CONF . "frame.yml", $conf['host'][0]);
         }

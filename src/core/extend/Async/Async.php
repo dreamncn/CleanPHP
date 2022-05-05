@@ -3,10 +3,8 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\lib\Async;
+namespace app\core\extend\Async;
 use app\core\cache\Cache;
-use app\core\debug\Debug;
-use app\core\debug\Log;
 use app\core\utils\StringUtil;
 use app\core\web\Request;
 use app\core\web\Response;
@@ -97,7 +95,7 @@ class Async
 
         $header .= "Token: " . md5($token) . PHP_EOL;
         $header .= "Identify: $identify" . PHP_EOL;
-        $header .= "User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Async/1.0.0.1 " . PHP_EOL;
+        $header .= "User-Agent:  Async/1.0.0.1 " . PHP_EOL;
         $header .= "Connection:Close" . PHP_EOL;
         if (!empty($cookie)) {
             $_cookie = strval(null);

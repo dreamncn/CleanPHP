@@ -22,7 +22,7 @@ class RouteError
         global $__module, $__controller, $__action;
         $nameBase = "app\\controller\\$__module\\BaseController";
         if (!isDebug()) {
-            Log::error("route",$message);
+            Log::info("frame_error",$message);
             if (method_exists($nameBase, 'err404')) {
                 $nameBase::err404($__module, $__controller, $__action, $message);
             } else {

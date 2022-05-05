@@ -19,6 +19,9 @@ use ReflectionException;
 class Dump
 {
 
+    private $output = "";
+
+
     /**
      * 输出对象
      * @param       $param
@@ -32,7 +35,7 @@ class Dump
             return;
         }
         static $objId = 1;
-        echo "<b style='color: #333;'>Object</b> <i style='color: #333;'>$className</i>";
+        $this->output.= "<b style='color: #333;'>Object</b> <i style='color: #333;'>$className</i>";
         $objId++;
         $this->dumpProp($param, $className, $objId);
 
@@ -49,14 +52,14 @@ class Dump
         $len = count($param);
         $space = str_repeat("    ", $i);
         $i++;
-        echo "<b style='color: #333;'>array</b> <i style='color: #333;'>(size=$len)</i> \r\n";
+        $this->output.="<b style='color: #333;'>array</b> <i style='color: #333;'>(size=$len)</i> \r\n";
         if ($len === 0)
-            echo $space . "  <i  style='color: #888a85;'>empty</i> \r\n";
+            $this->output.=$space . "  <i  style='color: #888a85;'>empty</i> \r\n";
         foreach ($param as $key => $val) {
             $str = htmlspecialchars(StringUtil::get($key)->chkCode(), strlen($key));
-            echo $space . sprintf("<i style='color: #333;'> %s </i><i  style='color: #888a85;'>=&gt;", $str);
+            $this->output.=$space . sprintf("<i style='color: #333;'> %s </i><i  style='color: #888a85;'>=&gt;", $str);
             $this->dumpType($val, $i);
-            echo "</i> \r\n";
+            $this->output.="</i> \r\n";
         }
     }
 
@@ -70,16 +73,16 @@ class Dump
 
         switch (gettype($param)) {
             case 'NULL' :
-                echo '<span style="color: #3465a4">null</span>';
+                $this->output.='<span style="color: #3465a4">null</span>';
                 break;
             case 'boolean' :
-                echo '<small style="color: #333;font-weight: bold">boolean</small> <span style="color:#75507b">' . ($param ? 'true' : 'false') . "</span>";
+                $this->output.='<small style="color: #333;font-weight: bold">boolean</small> <span style="color:#75507b">' . ($param ? 'true' : 'false') . "</span>";
                 break;
             case 'integer' :
-                echo "<small style='color: #333;font-weight: bold'>int</small> <i style='color:#4e9a06'>$param</i>";
+                $this->output.="<small style='color: #333;font-weight: bold'>int</small> <i style='color:#4e9a06'>$param</i>";
                 break;
             case 'double' :
-                echo "<small style='color: #333;font-weight: bold'>float</small> <i style='color:#f57900'>$param</i>";
+                $this->output.="<small style='color: #333;font-weight: bold'>float</small> <i style='color:#f57900'>$param</i>";
                 break;
             case 'string' :
                 $this->dumpString($param);
@@ -91,12 +94,13 @@ class Dump
                 $this->dumpObj($param, $i);
                 break;
             case 'resource' :
-                echo '<i style=\'color:#3465a4\'>resource</i>';
+                $this->output.='<i style=\'color:#3465a4\'>resource</i>';
                 break;
             default :
-                echo '<i style=\'color:#3465a4\'>unknown type</i>';
+                $this->output.='<i style=\'color:#3465a4\'>unknown type</i>';
                 break;
         }
+        return $this->output;
     }
 
     /**
@@ -107,7 +111,7 @@ class Dump
     {
 
         $str = sprintf("<small style='color: #333;font-weight: bold'>string</small> <i style='color:#cc0000'>'%s'</i> <i>(length=%d)</i>", htmlspecialchars(StringUtil::get($param)->chkCode()), strlen($param));
-        echo $str;
+        $this->output.=$str;
     }
 
     /**
@@ -126,19 +130,19 @@ class Dump
             $reflect = null;
         }
         if (!$reflect) {
-            echo "Something Err";
+            $this->output.="Something Err";
             return;
         }
         $prop = $reflect->getProperties();
 
         $len = count($prop);
-        echo "<i style='color: #333;'> (size=$len)</i>";
+        $this->output.="<i style='color: #333;'> (size=$len)</i>";
         array_push($pads, "    ");
         for ($i = 0; $i < $len; $i++) {
             $index = $i;
             $prop[$index]->setAccessible(true);
             $prop_name = $prop[$index]->getName();
-            echo "\n", implode('', $pads), sprintf("<i style='color: #333;'> %s </i><i style='color:#888a85'>=&gt;", $prop_name);
+            $this->output.="\n". implode('', $pads). sprintf("<i style='color: #333;'> %s </i><i style='color:#888a85'>=&gt;", $prop_name);
             $this->dumpType($prop[$index]->getValue($obj), $num);
         }
         array_pop($pads);

@@ -71,10 +71,10 @@ class StringUtil{
 
     /**
      * @param string $endString 倒找文本，并截取掉
-     * @return false|string|string[]
+     * @return false|string
      */
     public function findEnd(string $endString){
-        return str_replace($endString,"",substr($this->str,strrpos($this->str,'/')));
+        return substr($this->str,0,strrpos($this->str,$endString));
     }
 
     /**
@@ -141,9 +141,7 @@ class StringUtil{
      * @return string|null
      */
 
-    function substr($start, $length): ?string
-
-    {
+    function substr($start, $length): ?string{
        return mb_substr($this->str,$start,$length);
     }
 

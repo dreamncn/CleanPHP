@@ -121,7 +121,6 @@ class FileUtil {
         return true;
     }
 
-
     /**
      * 判断是否符合命名规则
      * @param $name

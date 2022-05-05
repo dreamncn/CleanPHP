@@ -24,6 +24,4 @@ class AppError
         Error::err($errorMsg,[["file"=>$file,"line"=>-1,"keyword"=>$keyWord]]);
     }
 
-
-
 }

@@ -7,6 +7,7 @@
 
 namespace app\core\database\sql;
 use app\core\error\AppError;
+use app\core\utils\StringUtil;
 use PDO;
 
 /**
@@ -72,8 +73,9 @@ class sqlBase
 
 	/**
 	* 设置查询条件
-	* @param array $conditions 条件内容，必须是数组,格式如下["name"=>"张三","i > :hello",":hello"=>"hi"]
+	* @param array $conditions 条件内容，必须是数组,格式如下["name"=>"张三","i > :hello",":hello"=>"hi"," id in (:in)",":in"=>"1,3,4,5"]
 	* @return $this
+     * where("id in (:ids) or ip=:ip")
 	*/
 	protected function where(array $conditions)
     {
@@ -82,8 +84,52 @@ class sqlBase
             $join = [];
             reset($conditions);
 
-            foreach ($conditions as $key => $condition) {
+            foreach ($conditions as $key => &$condition) {
                 if (is_int($key)) {
+                    $isMatched = preg_match_all('/in(\s+)?\((\s+)?(:\w+)\)/', $key, $matches);
+                    if($isMatched){
+                        for($i = 0;$i<$isMatched;$i++){
+                            $key2 = $matches[3][$i];
+                            if(isset($conditions[$key2])){
+                                $value = $conditions[$key2];
+                                unset($conditions[$key2]);
+                                $values = explode(",",$value);
+                                $new = "";
+                                $len = sizeof($values);
+                                for($j=0;$j<$len;$j++){
+                                    $new.=$key2."_$j";
+                                    $conditions[$key2."_$j"]=$values[$j];
+                                    if($j!==$len-1){
+                                        $new.= ",";
+                                    }
+                                }
+                                $condition  = str_replace($key2,$new,$condition);
+                                //condition改写
+                            }
+
+                        }
+                    }
+                    //识别Like语句
+                    $isMatched = preg_match_all('/like\s+\'(%)?(:\w+)(%)?\'/', $key, $matches);
+                    if($isMatched){
+                        for($i = 0;$i<$isMatched;$i++){
+                            $key2 = $matches[2][$i];
+                            $left =  $matches[1][$i];
+                            $right = $matches[3][$i];
+
+                            if(isset($conditions[$key2])){
+                                $value = $conditions[$key2];
+                                unset($conditions[$key2]);
+                                $value = "$left$value$right";
+                                $conditions[$key2] = $value;
+                                $condition  = str_replace( "'$left$key2$right'",$key2,$condition);
+                                //condition改写
+                            }
+
+                        }
+                    }
+
+
                     $join[] = $condition;
                     unset($conditions[$key]);
                     continue;
@@ -91,6 +137,7 @@ class sqlBase
                 $key = str_replace('.', '_', $key);
                 if (substr($key, 0, 1) != ":") {
                     unset($conditions[$key]);
+
                     $conditions[":_WHERE_" . $key] = $condition;
                     $join[] = "`" . str_replace('.', '`.`', $key) . "` = :_WHERE_" . $key;
                 }

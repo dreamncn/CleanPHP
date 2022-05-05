@@ -1,8 +1,8 @@
 <?php
 /*******************************************************************************
- * Copyright (c) 2021. CleanPHP. All Rights Reserved.
+ * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
-namespace app\core\web;
+namespace app\core\web\Verity;
 /**
  * Class Verity
  * Created By ankio.
@@ -15,7 +15,6 @@ class Verity
 
     private static ?Verity $instance = null;
     private string $str = "";
-    private string $err = "";
 
     public static function get($str): Verity
     {
@@ -42,42 +41,33 @@ class Verity
         if (!empty($num) && $num > 0) {
             $len = mb_strlen($this->str, 'UTF8');
             if ($len > $num) {
-                $this->err = '不能超过' . floor($num) . '个字符';
                 return false;
             }
         }
 
         switch ($type) {
             case 1:
-            case 'email':
                 $rules = '/^([a-zA-Z0-9_.\-])+@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/';
                 break;
             case 2:
-            case 'mobile':
                 $rules = '/^1[34578]\d{9}$/';
                 break;
             case 3:
-            case 'en':
                 $rules = '/^[a-zA-Z\s]+$/';
                 break;
             case 4:
-            case 'number':
                 $rules = '/^[0-9]*$/';
                 break;
             case 5:
-            case 'cn':
             $rules = '/^[\u4e00-\u9fa5]*$/';
                 break;
             case 6:
-            case 'url':
                 $rules = '/^http://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$/';
                 break;
             case 7:
-            case 'id':
                 $rules = '/^((\d{18})|([0-9x]{18})|([0-9X]{18}))$/';
                 break;
             case 8:
-            case 'qq':
                 $rules = '/[1-9][0-9]{4,}/';
                 break;
             default:
@@ -85,18 +75,12 @@ class Verity
                 break;
         }
         if (preg_match($rules, $this->str)) {
-
-            $this->err = '校验通过';
             return true;
         } else {
-            $this->err = '参数不合法';
             return false;
         }
 
     }
 
-    function getErr(): string
-    {
-        return $this->err;
-    }
 }
+

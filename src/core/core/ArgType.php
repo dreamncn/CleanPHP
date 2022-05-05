@@ -3,18 +3,22 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 /**
- * File ${NAME}
+ * Package: app\core\core
+ * Class ArgType
  * Created By ankio.
- * Date : 2022/1/13
- * Time : 11:42 上午
+ * Date : 2022/5/4
+ * Time : 20:55
  * Description :
  */
 
-$str = <<<EOD
-like '%:aba'
-like '%:aba%'
-like ':aba%'
-EOD;
-;
-$isMatched = preg_match_all('/like\s+\'(%)?(:\w+)(%)?\'/', $str, $matches);
-var_dump($isMatched, $matches);
+namespace app\core\core;
+
+class ArgType
+{
+    //str,bool,float,double,int
+    const INT = 0;
+    const DOUBLE = 1;
+    const FLOAT = 2;
+    const BOOLEAN = 3;
+    const STRING = 4;
+}

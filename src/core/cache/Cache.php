@@ -27,21 +27,22 @@ use app\core\utils\FileUtil;
 
 class Cache
 {
-    private static $cache_path = APP_CACHE;
-    private static $cache_expire = 3600;
-	private static $cache_security = false;
+    private static string $cache_path = APP_CACHE;
+    private static int $cache_expire = 3600;
 
-
-
-	public static function init(int $exp_time = 3600, string $path = APP_CACHE, bool $security=true)
+    /**
+     * @param int $exp_time 超时时间，单位为秒
+     * @param string $path 缓存路径
+     * @return void
+     */
+	public static function init(int $exp_time = 3600, string $path = APP_CACHE)
     {
         self::$cache_expire = $exp_time;
         self::$cache_path = $path;
 
         if(!is_dir($path)){
-           Log::mkdirs($path);
+           FileUtil::mkDir($path);
         }
-        self::$cache_security=$security;
     }
 
 
@@ -54,8 +55,6 @@ class Cache
         $filename = self::fileName($key);
         if (file_exists($filename))
             unlink($filename);
-	    if (file_exists($filename."_md5"))
-		    unlink($filename."_md5");
     }
 
     /**
@@ -85,12 +84,6 @@ class Cache
             fwrite($file, $values);
             flock($file, LOCK_UN);
             fclose($file);
-
-            if(self::$cache_security){
-            	//写入校验,防止出现意外篡改
-	            file_put_contents($filename."_md5", md5_file($filename));
-            }
-
             return true;
         } else return false;
     }
@@ -109,23 +102,14 @@ class Cache
         if (self::$cache_expire==-1||time() < (filemtime($filename) + self::$cache_expire)) {
             $file = fopen($filename, "r");
             if ($file) {
-	            if(self::$cache_security){
-		            //校验,防止出现意外篡改
-		            if(!is_file($filename."_md5"))return "";
-		            if(md5_file($filename)!==file_get_contents($filename."_md5"))
-			            return "";
-	            }
-
                 flock($file, LOCK_SH);
                 $data = fread($file, filesize($filename));
-              //  Log::info("cache","读取数据".$data);
-               // Debug::i("cache","读取数据".$data);
                 flock($file, LOCK_UN);
                 fclose($file);
                try{
                    return unserialize($data);
                }catch (\Throwable $e){
-                   Debug::i("error","读取数据".$e->getMessage());
+                   Log::info("frame_error","缓存读取失败".$e->getMessage());
                    return "";
                }
             } else return "";

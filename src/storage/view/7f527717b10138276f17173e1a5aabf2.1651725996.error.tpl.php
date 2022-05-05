@@ -1,12 +1,10 @@
-<!--****************************************************************************
-  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
-  ***************************************************************************-->
+<?php use app\core\mvc; if(!class_exists("app\\core\\mvc\\View", false)) exit("模板文件禁止被直接访问.");?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title><{$msg nofilter}></title>
+    <title><?php echo $msg; ?></title>
     <style type="">body {
             padding: 0;
             margin: 0;
@@ -108,21 +106,21 @@
 <body>
 <div id="main">
     <div id="contents">
-        <pre><{$dump nofilter}></pre>
+        <pre><?php echo $dump; ?></pre>
         <h2>
-            <pre><{$msg nofilter}></pre>
+            <pre><?php echo $msg; ?></pre>
         </h2>
-        <{$index = 0}>
-        <{foreach $array as $trace}>
+        <?php $index = 0; ?>
+        <?php if(!empty($array)){ $_foreach_trace_counter = 0; $_foreach_trace_total = count($array);?><?php foreach( $array as $trace ) : ?><?php $_foreach_trace_index = $_foreach_trace_counter;$_foreach_trace_iteration = $_foreach_trace_counter + 1;$_foreach_trace_first = ($_foreach_trace_counter == 0);$_foreach_trace_last = ($_foreach_trace_counter == $_foreach_trace_total - 1);$_foreach_trace_counter++;?>
             <ul>
-                <li><span><{$trace["file"]}> on line <{$trace["line"]}> </span></li>
+                <li><span><?php echo htmlspecialchars($trace["file"], ENT_QUOTES, "UTF-8"); ?> on line <?php echo htmlspecialchars($trace["line"], ENT_QUOTES, "UTF-8"); ?> </span></li>
             </ul>
             <div id="oneborder">
-                <{foreach $trace["data"] as $singleLine}>
-                    <{$singleLine nofilter}>
-                <{/foreach}>
+                <?php if(!empty($trace["data"])){ $_foreach_singleLine_counter = 0; $_foreach_singleLine_total = count($trace["data"]);?><?php foreach( $trace["data"] as $singleLine ) : ?><?php $_foreach_singleLine_index = $_foreach_singleLine_counter;$_foreach_singleLine_iteration = $_foreach_singleLine_counter + 1;$_foreach_singleLine_first = ($_foreach_singleLine_counter == 0);$_foreach_singleLine_last = ($_foreach_singleLine_counter == $_foreach_singleLine_total - 1);$_foreach_singleLine_counter++;?>
+                    <?php echo $singleLine; ?>
+                <?php endforeach; }?>
             </div>
-        <{/foreach}>
+        <?php endforeach; }?>
     </div>
 </div>
 <div style="clear:both;padding-bottom:50px;"></div>
