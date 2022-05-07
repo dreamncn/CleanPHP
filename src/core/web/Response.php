@@ -102,7 +102,7 @@ class Response
             self::location($url);
             exitApp("出现重定向或不可访问的页面。响应代码：  $code");
         }
-        if(isSPA()){
+        if(isAPI()){
             @header('content-type:application/json',true, $code);
             echo json_encode(["code"=>$code,"msg"=>$msg,"data"=>$url]);
         }else{

@@ -143,12 +143,12 @@ function isMVC(): bool
 }
 
 /**
- * 是否为SPA模式
+ * 是否为API模式
  * @return bool
  */
-function isSPA(): bool
+function isAPI(): bool
 {
-    return $GLOBALS["frame"]["mode"]=="spa";
+    return $GLOBALS["frame"]["mode"]=="api";
 }
 
 /**
@@ -174,6 +174,17 @@ function exitApp(string $msg, string $tpl=null, string $path='', array $data=[])
     Log::debug("frame_run","------------> 框架结束 <------------");
 
     exit();
+}
+
+/**
+ * 不区分大小写的in_array
+ * @param $value
+ * @param $array
+ * @return bool
+ */
+function in_array_case($value,$array): bool
+{
+       return in_array(strtolower($value),array_map('strtolower',$array));
 }
 
 

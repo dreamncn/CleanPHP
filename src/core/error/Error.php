@@ -230,7 +230,7 @@ class Error
             }
         }
 
-        if(isSPA()){
+        if(isAPI()){
             @header('content-type:application/json',true, 500);
             if(isDebug()){
                 $data = [];

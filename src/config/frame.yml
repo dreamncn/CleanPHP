@@ -10,7 +10,7 @@ debug : true
 # 使用伪静态
 rewrite: true
 # 应用模式
-mode: mvc
+mode: api
 # 项目名
 app : cleanPHP
 # 项目升级次数
@@ -21,7 +21,5 @@ verName : 1.0.0
 logValidTime : 30
 # 安装程序模块名
 install :
-# 项目升级执行的程序
-update:
 
 

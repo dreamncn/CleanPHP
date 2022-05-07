@@ -52,7 +52,7 @@ class View
         $_view_obj = &$this;
         extract($this->template_vals, EXTR_SKIP);
         include $complied_file;
-        Log::debug("frame_run","编译运行时间：".(time()-$GLOBALS['display_start'])."ms");
+        Log::debug("frame_run","编译运行时间：".( microtime(true)-$GLOBALS['display_start'])."ms");
         return ob_get_clean();
     }
 

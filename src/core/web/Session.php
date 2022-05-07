@@ -34,11 +34,16 @@ class Session
 
     /**
      * 启动session
+     * @param int $cacheTime Session缓存时间，默认会话有效
      * @return void
      */
-    public function start()
+    public function start(int $cacheTime=0)
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
+            if($cacheTime!==0){
+                ini_set('session.gc_maxlifetime', $cacheTime);
+                session_set_cookie_params($cacheTime);
+            }
             session_start();
         }
     }

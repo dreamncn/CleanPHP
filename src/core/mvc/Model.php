@@ -20,6 +20,7 @@
     {
         
         protected static array $instance= [];
+
         public static function getInstance()
         {
             $classFullName = get_called_class();

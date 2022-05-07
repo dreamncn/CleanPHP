@@ -133,7 +133,7 @@ class Controller
             $tpl_name = $this->layout;
         }
         $this->_auto_display = false;
-        $this->encode = false;
+     //   $this->encode = false;
         return $this->_v->render($tpl_name);
     }
 }
