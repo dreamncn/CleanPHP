@@ -2,7 +2,7 @@
 id_1:
   role_name: admin
   auth:
-    - all #all表示所有页面都可以访问
+    - all
 id_2:
   role_name: user
   auth:

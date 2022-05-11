@@ -165,13 +165,13 @@ class Async
         $header = Request::getHeader();
         if (isset($header['Token']) && isset($header['Identify'])) {
             $data  =    $this->cacheInstance->get($header['Identify']);
-
-            if (empty($data)) {
+            $this->cacheInstance->del($header['Identify']);
+            if (empty($data)||$data=="") {
                 $this->err = 'token缺失';
                 return false;
             }
 
-            $this->cacheInstance->del($header['Identify']);
+
 
             $token = $data;
 
