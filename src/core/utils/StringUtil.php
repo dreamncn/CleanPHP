@@ -22,14 +22,14 @@ class StringUtil{
         if(self::$stringUtil==null){
             self::$stringUtil=new StringUtil();
         }
-        self::$stringUtil->setStr($s);
+        self::$stringUtil->set($s);
         return self::$stringUtil;
     }
 
     /**
      * @param string $str 设置当前操作的字符串
      */
-    public function setStr(string $str){
+    public function set(string $str){
         $this->str=$str;
     }
 
@@ -129,7 +129,8 @@ class StringUtil{
      */
     public function chkCode(): string
     {
-        $encode = mb_detect_encoding($this->str, array("ASCII", 'UTF-8', "GB2312", "GBK", 'BIG5'));
+        $encode = mb_detect_encoding($this->str, mb_detect_order());
+        if($encode=="UTF-8")return $this->str;
         return mb_convert_encoding($this->str, 'UTF-8', $encode);
     }
 
@@ -141,7 +142,7 @@ class StringUtil{
      * @return string|null
      */
 
-    function substr($start, $length): ?string{
+    function substr($start, $length=null): ?string{
        return mb_substr($this->str,$start,$length);
     }
 

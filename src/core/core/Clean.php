@@ -70,7 +70,7 @@ class Clean
         }
         //判断是否为命令行执行
         if(!self::isConsole())
-            EventManager::fire("afterFrameInit");
+            EventManager::fire("onFrameInit");
 
     }
 

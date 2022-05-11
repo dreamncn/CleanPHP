@@ -33,6 +33,9 @@ class Log
         if (!isDebug()) {
             return;
         }
+
+
+
         $self = self::getInstance($tag, 1);
         $self->write(1, $msg);
     }
@@ -49,7 +52,9 @@ class Log
         if (self::$instance == null) {
             self::$instance = new Log();
         }
-
+        if(isset($GLOBALS["frame_log_tag"])&&$GLOBALS["frame_log_tag"]!==null){
+            $tag = $GLOBALS["frame_log_tag"].$tag;
+        }
         return self::$instance->setLevel($tag, $level);
     }
 

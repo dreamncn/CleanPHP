@@ -4,6 +4,9 @@
  ******************************************************************************/
 
 use app\core\event\EventManager;
-//注册拓展运行位置
-EventManager::attach("afterFrameInit", 'app\extend\ankioTask\Main');
+use app\extend\ankioTask\Main;
+
+const EXTEND_RBAC = APP_EXTEND . "rbac" . DS;
+//订阅事件
+EventManager::attach("onFrameInit", Main::class);
 

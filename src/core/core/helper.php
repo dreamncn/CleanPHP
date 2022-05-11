@@ -7,8 +7,10 @@
 use app\core\core\ArgType;
 use app\core\debug\Dump;
 use app\core\debug\Log;
+use app\core\event\EventManager;
 use app\core\mvc\Controller;
 
+use app\core\web\Response;
 use app\core\web\Route;
 
 
@@ -154,21 +156,12 @@ function isAPI(): bool
 /**
  * 退出框架运行
  * @param string $msg
- * @param string|null $tpl 退出模板文件名
- * @param string $path 模板文件路径
- * @param array $data 模板文件所需变量
  */
-function exitApp(string $msg, string $tpl=null, string $path='', array $data=[])
+function exitApp(string $msg)
 {
-    if($tpl!==null&&isMVC()){
-        $obj = new Controller();
-        $obj->setArray($data);
-        $obj->setAutoPathDir($path);
-       if (file_exists($path.DS . $tpl . '.tpl'))
-          echo  $obj->display($tpl);
-        else
-          echo "";
-    }
+
+    EventManager::fire("onFrameExit",$msg);
+
     Log::debug("frame_run","框架退出消息:".$msg);
     Log::debug("frame_run","框架响应时长:".(microtime(true) - $GLOBALS['frame_start']) . "ms");
     Log::debug("frame_run","------------> 框架结束 <------------");

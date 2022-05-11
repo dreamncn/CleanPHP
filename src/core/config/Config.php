@@ -29,20 +29,20 @@ class Config
     static public function register()
     {
 
-        $conf = self::getInstance("frame")->setLocation(APP_CONF)->get();
+        $conf = self::getInstance("frame")->setLocation(APP_CONF)->getAll();
         $GLOBALS["frame"] = $conf;
         Log::debug("frame_run","配置文件读取注册");
         if (!in_array($_SERVER["HTTP_HOST"], $conf['host'])) {
             new AppError("您的域名绑定错误，当前域名为：{$_SERVER["HTTP_HOST"]} , 请在 /config/frame.yml 第2行添加该域名。", APP_CONF . "frame.yml", $conf['host'][0]);
         }
-        $GLOBALS["route"] = self::getInstance("route")->setLocation(APP_CONF)->get();
+        $GLOBALS["route"] = self::getInstance("route")->setLocation(APP_CONF)->getAll();
     }
 
     /**
      * 获取配置文件数组
      * @return mixed
      */
-    public function get()
+    public function getAll()
     {
         return $this->fileData;
     }
@@ -93,7 +93,7 @@ class Config
      * @param string $key
      * @return string|array
      */
-    public function getOne(string $key)
+    public function get(string $key)
     {
         return $this->fileData[$key] ?? "";
     }

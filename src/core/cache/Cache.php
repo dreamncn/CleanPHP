@@ -33,9 +33,8 @@ class Cache
     /**
      * @param int $exp_time 超时时间，单位为秒
      * @param string $path 缓存路径
-     * @return void
      */
-	public static function init(int $exp_time = 3600, string $path = APP_CACHE)
+	public static function init(int $exp_time = 0, string $path = APP_CACHE): Cache
     {
         self::$cache_expire = $exp_time;
         self::$cache_path = $path;
@@ -43,6 +42,7 @@ class Cache
         if(!is_dir($path)){
            FileUtil::mkDir($path);
         }
+        return new Cache();
     }
 
 
@@ -50,7 +50,7 @@ class Cache
      * 删除缓存
      * @param string $key
      */
-	public static function del(string $key)
+	public  function del(string $key)
     {
         $filename = self::fileName($key);
         if (file_exists($filename))
@@ -62,7 +62,7 @@ class Cache
      * @param string $key
      * @return string
      */
-	private static function fileName(string $key): string
+	private function fileName(string $key): string
     {
         return self::$cache_path . md5($key);
     }
@@ -74,10 +74,10 @@ class Cache
 	 * @param array|string|int $data
 		 * @return bool
 		 */
-	public static function set(string $key, $data): bool
+	public  function set(string $key, $data): bool
     {
         $values = serialize($data);
-        $filename = self::fileName($key);
+        $filename = $this->fileName($key);
         $file = fopen($filename, 'w');
         if ($file) {//able to create the file
             flock($file, LOCK_EX);
@@ -91,15 +91,15 @@ class Cache
     /**
      * 获取缓存值
      * @param string $key
-     * @return mixed|string
+     * @return mixed
      */
-	public static function get(string $key)
+	public  function get(string $key)
     {
         $filename = self::fileName($key);
         if (!file_exists($filename) || !is_readable($filename)) {
             return "";
         }
-        if (self::$cache_expire==-1||time() < (filemtime($filename) + self::$cache_expire)) {
+        if (self::$cache_expire==0||time() < (filemtime($filename) + self::$cache_expire)) {
             $file = fopen($filename, "r");
             if ($file) {
                 flock($file, LOCK_SH);
@@ -122,8 +122,8 @@ class Cache
     /**
      * 清空缓存
      */
-    public static function clean(){
-        FileUtil::cleanDir(self::$cache_path);
+    public  function empty(){
+        FileUtil::empty(self::$cache_path);
     }
 
 }

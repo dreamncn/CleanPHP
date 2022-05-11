@@ -9,12 +9,5 @@
  * Time : 11:42 上午
  * Description :
  */
-
-$str = <<<EOD
-like '%:aba'
-like '%:aba%'
-like ':aba%'
-EOD;
-;
-$isMatched = preg_match_all('/like\s+\'(%)?(:\w+)(%)?\'/', $str, $matches);
-var_dump($isMatched, $matches);
+$url = "http://localhost/index/main/index?id=123";
+var_dump(parse_url($url));

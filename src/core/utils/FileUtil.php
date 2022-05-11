@@ -11,9 +11,7 @@ namespace app\core\utils;
  * Description : 文件工具类
  */
 class FileUtil {
-    public static function delFile($fileName){
-        if(is_file($fileName))unlink($fileName);
-    }
+
     /**
      * 文件夹删除或者文件删除
      * @param $dirname
@@ -43,7 +41,7 @@ class FileUtil {
      * 清空一个文件夹
      * @param string $path
      */
-    static function cleanDir(string $path)
+    static function empty(string $path)
     {
         //如果是目录则继续
         if (is_dir($path)) {
@@ -55,7 +53,7 @@ class FileUtil {
                     //如果是目录则递归子目录，继续操作
                     if (is_dir($path . $val)) {
                         //子目录中操作删除文件夹和文件
-                        self::cleanDir($path . $val . '/');
+                        self::empty($path . $val . '/');
                         //目录清空后删除空文件夹
                           @rmdir($path.$val.'/');
                     } else {
@@ -67,14 +65,18 @@ class FileUtil {
         }
     }
     /**
-     * 文件夹文件拷贝
+     * 文件夹、文件拷贝
      *
-     * @param string $src 来源文件夹
-     * @param string $dst 目的地文件夹
+     * @param string $src 来源文件夹、文件
+     * @param string $dst 目的地文件夹、文件
      * @return bool
      */
-    public static function copyDir(string $src = '', string $dst = ''): bool
+    public static function copy(string $src = '', string $dst = ''): bool
     {
+        if(@is_file($src)){
+           return copy($src , $dst);
+        }
+
         if (empty($src) || empty($dst))
         {
             return false;
@@ -88,7 +90,7 @@ class FileUtil {
             {
                 if (is_dir($src . '/' . $file))
                 {
-                    self::copyDir($src . '/' . $file, $dst . '/' . $file);
+                    self::copy($src . '/' . $file, $dst . '/' . $file);
                 }
                 else
                 {
@@ -105,17 +107,15 @@ class FileUtil {
      * 创建文件夹
      *
      * @param string $path 文件夹路径
-     * @param int $mode 访问权限
      * @param bool $recursive 是否递归创建
      * @return bool
      */
-    public static function mkDir(string $path = '', int $mode = 0777, bool $recursive = true): bool
+    public static function mkDir(string $path, bool $recursive = true): bool
     {
         clearstatcache();
         if (!is_dir($path))
         {
-            mkdir($path, $mode, $recursive);
-            return chmod($path, $mode);
+            return  mkdir($path, 0777, $recursive);
         }
 
         return true;

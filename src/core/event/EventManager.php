@@ -32,9 +32,7 @@ class EventManager
         foreach ($data as $value) {
             if (!StringUtil::get($value)->startsWith(".")) {
                 $file = APP_EXTEND  . $value . DS . 'register.php';
-                if (file_exists($file))
-                    include_once $file;
-
+                if (file_exists($file)) include_once $file;
             }
         }
     }
@@ -44,11 +42,15 @@ class EventManager
      * 绑定事件
      * @param string $eventName 事件名
      * @param string $listener 监听器名
+     * @param int $level
      */
-    public static function attach(string $eventName, string $listener)
+    public static function attach(string $eventName, string $listener,int $level=1000)
     {
+        while (isset(self::$eventList[$eventName][$level])){
+            $level++;
+        }
         //一个事件名绑定多个监听器
-        self::$eventList[$eventName][] = $listener;
+        self::$eventList[$eventName][$level] = $listener;
     }
 
 
@@ -64,20 +66,20 @@ class EventManager
     /**
      * 触发事件
      * @param string $eventName  事件名
-     * @param  array    $data       事件携带的数据
+     * @param  mixed    $data       事件携带的数据
      */
-    public static function fire(string $eventName, $data=[])
+    public static function fire(string $eventName, $data=null)
     {
         foreach (self::$eventList as $attachEventName => $listenerList) {
             //匹配监听列表
             if ($eventName == $attachEventName) {
                 foreach ($listenerList as $eventListener) {
                     $result = (new $eventListener())->handleEvent($eventName,$data);
-                    if($result!==null)
-                        return $result;
+                    if($result!==null) return $result;
                 }
             }
         }
+        return null;
     }
 }
 

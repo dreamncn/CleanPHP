@@ -6,6 +6,6 @@ master : "\n"
   username : root  # 数据库用户名
   password :   # 数据库密码
   port : 3306  # 数据库端口
-  db :   # 数据库库名
+  db : dx  # 数据库库名
   charset : utf8 # 数据库编码
 # 配置其他数据库，直接往下添加即可

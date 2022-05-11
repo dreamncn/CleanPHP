@@ -4,13 +4,17 @@
  ******************************************************************************/
 
 namespace app\core\database;
+use app\core\config\Config;
 use app\core\database\sql\Delete;
 use app\core\database\sql\Insert;
 use app\core\database\sql\Page;
 use app\core\database\sql\Select;
 use app\core\database\sql\sqlExec;
 use app\core\database\sql\Update;
+use app\core\utils\StringUtil;
 use Exception;
+use PDO;
+use PDOException;
 
 /**
  * Class Sql
@@ -134,14 +138,6 @@ class Sql
         return $this->sqlInstance()->execute($sql, $params, $readonly);
     }
 
-    /**
-     * 输出所有查询的语句
-     * @return array
-     */
-    public function dumpSql(): array
-    {
-        return $this->sql->dumpSql();
-    }
 
     /**
      * 事务开始
@@ -173,7 +169,7 @@ class Sql
      * @param $name string 文件名
      * @return $this
      */
-    protected function setDbLocation(string $path, string $name): Sql
+    public function setDbLocation(string $path, string $name): Sql
     {
         $this->sql->setDbFile($path, $name);
         return $this;
@@ -184,7 +180,7 @@ class Sql
      * @param $dbName string 配置文件名
      * @return $this
      */
-    protected function setDatabase(string $dbName): Sql
+    public function setDatabase(string $dbName): Sql
     {
         $this->sql->setDatabase($dbName);
         $this->sqlIndex = $dbName;
@@ -198,6 +194,71 @@ class Sql
     protected function emptyTable(string $table_name)
     {
         $this->sqlInstance()->emptyTable($table_name);
+    }
+
+    /**
+     * 导入数据表
+     * @param string $sqlPath 导入的数据表地址
+     * @return void
+     */
+    public  function import(string $sqlPath){
+        $this->sqlInstance()->execute(file_get_contents($sqlPath));
+    }
+
+    /**
+     * 导出数据表
+     * @param string $output 输出路径
+     * @param bool $onlyStruct 是否只导出结构
+     * @return void
+     */
+    public  function export(string $output, bool $onlyStruct=false){
+        $result = $this->sqlInstance()->execute("show tables",[],true);
+        $tabList = [];
+        foreach ($result as $value){
+            $tabList[] =  $value["Tables_in_dx"];
+        }
+        $info = "-- ----------------------------\r\n";
+        $info .= "-- Powered by CleanPHP\r\n";
+        $info .= "-- ----------------------------\r\n";
+        $info .= "-- ----------------------------\r\n";
+        $info .= "-- 日期：".date("Y-m-d H:i:s",time())."\r\n";
+        $info .= "-- ----------------------------\r\n\r\n";
+
+        foreach($tabList as $val){
+            $sql = "show create table ".$val;
+            $result = $this->sqlInstance()->execute($sql,[],true);
+
+            $info .= "-- ----------------------------\r\n";
+            $info .= "-- Table structure for `".$val."`\r\n";
+            $info .= "-- ----------------------------\r\n";
+            $info .= "DROP TABLE IF EXISTS `".$val."`;\r\n";
+            $info .=$result[0]["Create Table"].";\r\n\r\n";
+        }
+
+        if(!$onlyStruct){
+            foreach($tabList as $val){
+                $sql = "select * from ".$val;
+                $result = $this->sqlInstance()->execute($sql,[],true);
+                if(count($result)<1)continue;
+                $info .= "-- ----------------------------\r\n";
+                $info .= "-- Records for `".$val."`\r\n";
+                $info .= "-- ----------------------------\r\n";
+
+                foreach ($result as  $value){
+                    $sqlStr = "INSERT INTO `".$val."` VALUES (";
+                    foreach($value as  $k){
+                        $sqlStr .= "'".$k."', ";
+                    }
+                    $sqlStr = substr($sqlStr,0,strlen($sqlStr)-2);
+                    $sqlStr .= ");\r\n";
+                    $info .= $sqlStr;
+                }
+
+
+            }
+        }
+
+        file_put_contents($output,$info);
     }
 
 

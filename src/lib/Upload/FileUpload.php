@@ -62,7 +62,7 @@ class FileUpload {
         if(file_exists($path)){
             $data=file_get_contents($path);
             if(StringUtil::get(strtolower($data))->contains("<?php")){
-                FileUtil::delFile($path);
+                FileUtil::del($path);
                 file_put_contents($this->path.DS.md5($path).".phpFile",base64_encode($data));
                 return true;
             }
@@ -77,7 +77,7 @@ class FileUpload {
         if(file_exists($path)){
             $data=file_get_contents($path);
             if(StringUtil::get(strtolower($data))->contains("<?php")){
-                FileUtil::delFile($path);
+                FileUtil::del($path);
                 file_put_contents($path.".phpFile",base64_encode($data));
                 return "";
             }

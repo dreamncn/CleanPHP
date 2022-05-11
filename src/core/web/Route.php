@@ -48,11 +48,11 @@ class Route
         $url = Response::getAddress() . "/";
         $default = $url . $route ;
         $default = strtolower($default). $paramsStr;
-        Cache::init(365 * 24 * 60 * 60, APP_ROUTE);
+       $instance =  Cache::init(365 * 24 * 60 * 60, APP_ROUTE);
         //初始化路由缓存，不区分大小写
         $data = "";
         if (!isDebug())
-            $data = Cache::get('route_' . $default);
+            $data =$instance->get('route_' . $default);
         if ($data !== "") {
             return $data;
         }
@@ -94,7 +94,7 @@ class Route
             $retUrl = $url . $route_find . $paramsStr;
         }
         if (!isDebug())
-            Cache::set('route_' . $default, $retUrl);
+            $instance->set('route_' . $default, $retUrl);
 
         return $retUrl;
 
@@ -117,10 +117,10 @@ class Route
             }
             $url = strtolower(urldecode($_SERVER['REQUEST_URI']));
             $data = null;
+            $instance  = Cache::init(365 * 24 * 60 * 60, APP_ROUTE);
             if (!isDebug()) {//非调试状态从缓存读取
-                Cache::init(365 * 24 * 60 * 60, APP_ROUTE);
                 //初始化路由缓存，不区分大小写
-                $data = Cache::get($url);
+                $data =$instance->get($url);
             }
             if ($data !== null && isset($data['real']) && isset($data['route'])) {
                 $route_arr_cp = $data['route'];
@@ -161,7 +161,7 @@ class Route
                     'route' => $route_arr_cp,
                 ];
                 if (!isDebug())
-                    Cache::set($url, $arr);
+                    $instance->set($url, $arr);
 
             }
         }else{
@@ -179,14 +179,14 @@ class Route
         $__action = $_REQUEST['a'];
         Log::debug("frame_run","路由完成");
         self::isInstall();
-        EventManager::fire("afterRoute", [$__module, $__controller, $__action]);
     }
 
     /**
      * 路由匹配
+     * @param string $url
      * @return array
      */
-    public static function convertUrl($url=""): array
+    public static function convertUrl(string $url=""): array
     {
 
         $route_arr = [];

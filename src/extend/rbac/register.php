@@ -4,6 +4,7 @@
  ******************************************************************************/
 
 use app\core\event\EventManager;
+use app\extend\rbac\Main;
 //注册拓展运行位置
-EventManager::attach("beforeControllerRun", 'app\extend\rbac\Main');
+EventManager::attach("onControllerInit", Main::class);
 

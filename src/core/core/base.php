@@ -62,7 +62,6 @@ Config::register();
 // 事件模型注册
 EventManager::register();
 
-EventManager::fire("beforeRunFrame", null);
 
 
 

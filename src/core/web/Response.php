@@ -129,18 +129,16 @@ class Response
      * 直接跳转
      * @param $url
      * @param int $timeout 延时跳转
-     * @param bool $exit 发生跳转是否直接退出
      */
-	public static function location($url, int $timeout=0, bool $exit=true)
+	public static function location($url, int $timeout=0)
     {
         if($timeout!==0){
             header("refresh:$timeout,".$url);
         }else{
             header("Location:{$url}");
         }
-        if($exit){
-            exitApp("发生强制跳转：  $url");
-        }
+
+        exitApp("发生强制跳转：  $url");
 
     }
 
@@ -154,7 +152,21 @@ class Response
         return !(preg_match('%^127\.|10\.|192\.168|172\.(1[6-9]|2|3[01])%', $ip) === 0);
     }
 
+    /**
+     * 获取当前使用的协议字段
+     * @return mixed
+     */
     public static function getHttpSchema(){
         return $GLOBALS['http_scheme'];
+    }
+
+    /**
+     * 设置响应头
+     * @param $key
+     * @param $name
+     * @return void
+     */
+    public static function setHeader($key,$name){
+        @header("($key:$name",true);
     }
 }

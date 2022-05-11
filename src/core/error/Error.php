@@ -196,7 +196,7 @@ class Error
             global $__module, $__controller, $__action;
             $nameBase = "app\\controller\\$__module\\BaseController";
             if (method_exists($nameBase, 'err500')) {
-                $nameBase::err500($__module, $__controller, $__action, $msg);
+                echo $nameBase::err500($__module, $__controller, $__action, $msg);
             } else {
                 Response::msg(true, 500, 'System Error', 'Something bad.', 3,
                     '/', '立即跳转');

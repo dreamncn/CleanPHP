@@ -49,6 +49,7 @@ class Server extends Db
         if(sizeof($split)!==3)return;
         if($split[1]!=="tasker_server")return;
         Async::getInstance()->response();
+        $GLOBALS["frame_log_tag"] = "task";
         switch ($split[2]){
             case "init":$this->init();break;
         }
@@ -80,6 +81,7 @@ class Server extends Db
      */
     private function init()
     {
+
      //   $this->stop();
         do {
             $file = fopen(APP_TRASH."task.lock", "w+");
@@ -90,7 +92,7 @@ class Server extends Db
             Log::debug("tasker","10s pass....");
             $this->lock(time());//更新锁定时间
             //循环扫描
-            Role::getInstance()->run();
+            Tasker::getInstance()->run();
             sleep(10);
             flock($file, LOCK_UN);
             fclose($file);

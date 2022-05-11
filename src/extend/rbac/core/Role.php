@@ -5,10 +5,9 @@
 
 namespace app\extend\rbac\core;
 
-use app\core\debug\Log;
-use app\core\web\Response;
-use app\core\web\Route;
 
+use app\core\config\Config;
+use ReflectionClass;
 
 /**
  * Class Tasker
@@ -18,41 +17,68 @@ use app\core\web\Route;
  * Description: 定时任务管理器
  */
 
-class Role extends Db
+class Role
 {
-    
-    public static string $table = "rbac_role";
-    
 
-    public function setDb()
+    protected static ?Role $instance= null;
+
+    private $config;
+    public function __construct($rbac)
     {
-        parent::setDb();
+        $this->config = $rbac;
+    }
 
-        $this->execute("CREATE TABLE IF NOT EXISTS rbac_role( id integer PRIMARY KEY AUTOINCREMENT , role_name text,auth TEXT)");
+    public function __destruct()
+    {
+        Config::getInstance("rbac")->setLocation(EXTEND_RBAC."data".DS)->setAll($this->config);
+    }
+
+    public static function getInstance()
+    {
+
+        if(!isset(self::$instance)||self::$instance==null) {
+            self::$instance  = new Role(Config::getInstance("rbac")->setLocation(EXTEND_RBAC."data".DS)->getAll());
+        }
+
+        return self::$instance;
+
     }
 
     public function add($name,$auth){
-        $this->insert()->keyValue(["role_name"=>$name,"auth"=>$auth])->commit();
+        $id = sizeof( $this->config);
+        while (isset( $this->config["id_".$id]))$id++;
+
+        $this->config["id_".$id]=[
+            "role_name"=>$name,
+            "auth"=>$auth
+        ];
+        return $id;
     }
 
     public function udp($id,$auth){
-        $this->update()->set(["auth"=>$auth])->where(["id"=>$id])->commit();
+        if(isset($this->config[$id])){
+            $this->config["id_".$id]=[
+                "role_name"=>$this->config["id_".$id]["role_name"],
+                "auth"=>$auth
+            ];
+        }
     }
 
     public function del($id){
-        $this->delete()->where(["id"=>$id])->commit();
+        if(isset($this->config["id_".$id])){
+            unset($this->config["id_".$id]);
+        }
     }
 
     public function list(){
-        return $this->select()->commit();
+        return $this->config;
     }
 
     public function get($id){
-        $data = $this->select()->where(["id"=>$id])->commit();
-        if(empty($data))return [
-            "id"=>-1,"role_name"=>"admin","auth"=>"all"
-        ];
-        else return $data[0];
+        if(isset($this->config["id_".$id])){
+            return $this->config["id_".$id];
+        }
+        return null;
     }
 
     /**
@@ -63,10 +89,16 @@ class Role extends Db
     public function getApi(string $m, string $c): array
     {
         $name = "app\\controller\\$m\\$c";
-        if(class_exists($name)){
-            return  get_class_methods("app\\controller\\$m\\$c");
+        $methods = get_class_methods($name);
+        $methods2 = get_class_methods("app\\controller\\$m\\BaseController");
+        foreach ($methods as $key => $val) {
+            if (in_array($val,$methods2)) {
+                unset($methods[$key]);
+            }else{
+                $methods[$key]="$m/$c/$val";
+            }
         }
-        return [];
+        return $methods;
     }
 
 }

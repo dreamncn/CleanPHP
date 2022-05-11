@@ -24,7 +24,7 @@
         public static function getInstance()
         {
             $classFullName = get_called_class();
-            if(!in_array($classFullName,self::$instance)) {
+            if(!isset(self::$instance[$classFullName])||self::$instance[$classFullName]==null) {
                 self::$instance[$classFullName]  = new static($classFullName::$table);
             }
             
@@ -32,6 +32,13 @@
             
             return self::$instance[$classFullName];
             
+        }
+
+
+        public function __construct(string $tableName = '')
+        {
+            parent::__construct($tableName);
+            $this->setDb();
         }
 
         public function setDb()

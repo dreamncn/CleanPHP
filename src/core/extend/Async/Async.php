@@ -26,10 +26,10 @@ class Async
         return $this->err;
     }
 
-
+    private $cacheInstance ;
     public function __construct()
     {
-        Cache::init(300,APP_CACHE."task/");
+        $this->cacheInstance = Cache::init(300,APP_CACHE."task/");
     }
 
     /**
@@ -91,7 +91,7 @@ class Async
 
         $identify=md5($token . $identify);
 
-        Cache::set($identify,['token' => $token, 'timeout' => time() + 60]);
+        $this->cacheInstance->set($identify,['token' => $token, 'timeout' => time() + 60]);
 
         $header .= "Token: " . md5($token) . PHP_EOL;
         $header .= "Identify: $identify" . PHP_EOL;
@@ -120,17 +120,13 @@ class Async
         fclose($fp);
         return true;
     }
+
     /**
-     *  响应后台异步请求
-     * @param int $time 最大运行时间
+     * 后台运行
+     * @param int $time 超时时间
      * @return void
      */
-    public function response(int $time = 0)
-    {
-
-        if (!$this->checkToken()) {
-            Response::msg(true,403,"禁止访问","您无权访问该资源。",0,Response::getAddress(),"立即跳转");
-        }
+    public function noWait($time=0){
         ignore_user_abort(true); // 后台运行，不受前端断开连接影响
         set_time_limit($time);
         ob_end_clean();
@@ -144,6 +140,19 @@ class Async
         if (function_exists("fastcgi_finish_request")) {
             fastcgi_finish_request(); /* 响应完成, 关闭连接 */
         }
+    }
+    /**
+     *  响应后台异步请求
+     * @param int $time 最大运行时间
+     * @return void
+     */
+    public function response(int $time = 0)
+    {
+
+        if (!$this->checkToken()) {
+            Response::msg(true,403,"禁止访问","您无权访问该资源。",0,Response::getAddress(),"立即跳转");
+        }
+        $this->noWait($time);
         sleep(1);
     }
 
@@ -155,14 +164,14 @@ class Async
     {
         $header = Request::getHeader();
         if (isset($header['Token']) && isset($header['Identify'])) {
-            $data  =   Cache::get($header['Identify']);
+            $data  =    $this->cacheInstance->get($header['Identify']);
 
             if (empty($data)) {
                 $this->err = 'token缺失';
                 return false;
             }
 
-            Cache::del($header['Identify']);
+            $this->cacheInstance->del($header['Identify']);
 
             $token = $data;
 

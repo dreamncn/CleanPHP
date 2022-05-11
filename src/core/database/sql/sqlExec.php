@@ -10,6 +10,7 @@ use app\core\config\Config;
 use app\core\error\AppError;
 use app\core\error\SqlCheckError;
 use app\core\debug\Log;
+use app\core\error\SqlExecError;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -27,14 +28,19 @@ class sqlExec
 
     public string $sqlIndex = "master";
     protected string $sqlType = "mysql";
-	private array $sqlList = [];
 	private string $db = "";
 	private string $name = "";
 	private array $dbData = [];
 
 	private static array $instances=[];
 
-	/**
+    public function __construct($sqlType = "mysql")
+    {
+        $this->sqlType = $sqlType;
+        $this->db = "";
+    }
+
+    /**
 	* 设置数据库信息存储文件
 	* @param string $file 选择数据库的文件
     * @param string $name 选择数据库文件中的数据库
@@ -53,9 +59,9 @@ class sqlExec
 	private function getDbFile()
     {
         if ($this->db !== null && $this->name !== null) {
-            $this->dbData = Config::getInstance($this->name)->setLocation($this->db)->get();
+            $this->dbData = Config::getInstance($this->name)->setLocation($this->db)->getAll();
         } else {
-            $this->dbData = Config::getInstance("db")->get();
+            $this->dbData = Config::getInstance("db")->getAll();
         }
         return $this->dbData;
 
@@ -102,7 +108,6 @@ class sqlExec
 
         return $this->execute("TRUNCATE TABLE '$string';");
     }
-
 
     /**
      * 数据库执行
@@ -195,12 +200,4 @@ class sqlExec
         return null;
     }
 
-	/**
-	* 输出sql语句
-	* @return array
-	*/
-	public function dumpSql(): array
-    {
-        return $this->sqlList;
-    }
 }

@@ -25,7 +25,7 @@ class Verity
         return self::$instance;
     }
 
-    public function setStr($s)
+    private function setStr($s)
     {
         $this->str = $s;
     }

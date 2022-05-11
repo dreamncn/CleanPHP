@@ -46,9 +46,9 @@ class Tasker extends Db
 
 
 
-    public static function getTimes($id): int
+    public  function getTimes($id): int
     {
-        $data=self::getInstance()->select("times")->table("extend_tasker")->where(["id"=>$id])->limit("1")->commit();
+        $data=self::getInstance()->select("times")->table("extend_tasker")->where(["id"=>$id])->limit(1)->commit();
         if(!empty($data)){
             return 1 - intval($data[0]["times"]);
         }
@@ -58,7 +58,7 @@ class Tasker extends Db
      * 清空所有定时任务
      * @return void
      */
-    public static function clean(){
+    public  function clean(){
         self::getInstance()->emptyTable("extend_tasker");
     }
 
@@ -67,8 +67,29 @@ class Tasker extends Db
      * @param $id
      * @return void
      */
-    public static function del($id){
+    public  function del($id){
         self::getInstance()->delete()->table("extend_tasker")->where(["id"=>$id])->commit();
+    }
+
+    /**
+     * 获取指定id的定时任务
+     * @param $id
+     * @return mixed|null
+     */
+    public  function get($id){
+        $data=self::getInstance()->select("*")->table("extend_tasker")->where(["id"=>$id])->limit(1)->commit();
+        if(!empty($data)){
+            return $data[0];
+        }
+        return null;
+    }
+
+    /**
+     * 获取list
+     * @return array|int
+     */
+    public function list(){
+        return self::getInstance()->select("*")->table("extend_tasker")->commit();
     }
 
     /**
@@ -78,7 +99,7 @@ class Tasker extends Db
      * @param $identify
      * @param int $times
      * @param bool $loop
-     * @return int 返回定时任务ID
+     * 返回定时任务ID
      */
     public function add(array $package, string $url, $identify, int $times=-1,bool $loop=false){
         if(sizeof($package)!=5)return false;
@@ -126,83 +147,6 @@ class Tasker extends Db
 
 
 
-    /**
-     * 以天为周期
-     * @param $hour int 小时
-     * @param $minute int 分钟
-     * @return array
-     */
-    public function cycleDay(int $hour, int $minute): array
-    {
-        return [$minute,$hour,1,0,0];
-    }
-
-    /**
-     * 以N天为周期
-     * @param $day int 天数
-     * @param $hour int 时间
-     * @param $minute int 分钟
-     * @return array
-     */
-    public function cycleNDay(int $day, int $hour, int $minute): array
-    {
-        return [$minute,$hour,$day,0,0];
-    }
-
-    /**
-     * 以N小时为周期
-     * @param $hour int 小时
-     * @param $minute int 分钟
-     * @return array
-     */
-    public function cycleNHour(int $hour, int $minute): array
-    {
-        return [$minute,$hour,1,0,0];
-    }
-
-    /**
-     * 以小时为周期
-     * @param $minute int 分钟
-     * @return array
-     */
-    public function cycleHour(int $minute): array
-    {
-        return [$minute,1,0,0,0];
-    }
-
-    /**
-     * 以N分钟为周期
-     * @param $minute int 分钟
-     * @return array
-     */
-    public function cycleNMinute(int $minute): array
-    {
-        return [$minute,0,0,0,0];
-    }
-
-    /**
-     * 以周为周期
-     * @param $week int 周数
-     * @param $hour int 小时
-     * @param $minute int 分钟
-     * @return array
-     */
-    public function cycleWeek(int $week, int $hour, int $minute): array
-    {
-        return [$minute,$hour,0,0,$week];
-    }
-
-    /**
-     * 以月为周期
-     * @param $day int 天
-     * @param $hour int 小时
-     * @param $minute int 分钟
-     * @return array
-     */
-    public function cycleMonth(int $day, int $hour, int $minute): array
-    {
-        return [$minute,$hour,$day,1,0];
-    }
 
     /**
      * 计算下一次执行时间

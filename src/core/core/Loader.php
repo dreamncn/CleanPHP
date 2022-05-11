@@ -35,7 +35,8 @@ class Loader
                 }
             }
         }
-        require_once APP_COMPOSER . 'autoload.php';
+        if(is_file( APP_COMPOSER . 'autoload.php'))
+            require_once APP_COMPOSER . 'autoload.php';
     }
 	/**
      * 框架本身的自动加载

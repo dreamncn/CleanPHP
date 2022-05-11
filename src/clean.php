@@ -225,20 +225,20 @@ class Release
     {
         $new = dirname(APP_DIR) . "/release/temp";
         FileUtil::copyDir(APP_DIR, $new);
-        FileUtil::delFile($new . "/clean.php");
-        FileUtil::cleanDir($new . "/storage/cache/");//清空文件夹
+        FileUtil::del($new . "/clean.php");
+        FileUtil::empty($new . "/storage/cache/");//清空文件夹
         file_put_contents($new . "/storage/cache/.gitkeep","");
-        FileUtil::cleanDir($new . "/storage/logs/");//清空文件夹
+        FileUtil::empty($new . "/storage/logs/");//清空文件夹
         file_put_contents($new . "/storage/logs/.gitkeep","");
-        FileUtil::cleanDir($new . "/storage/route/");//清空文件夹
+        FileUtil::empty($new . "/storage/route/");//清空文件夹
         file_put_contents($new . "/storage/route/.gitkeep","");
-        FileUtil::cleanDir($new . "/storage/trash/");//清空文件夹
+        FileUtil::empty($new . "/storage/trash/");//清空文件夹
         file_put_contents($new . "/storage/trash/.gitkeep","");
-        FileUtil::cleanDir($new . "/storage/view/");//清空文件夹
+        FileUtil::empty($new . "/storage/view/");//清空文件夹
         file_put_contents($new . "/storage/view/.gitkeep","");
 
         Config::getInstance("frame")->setLocation($new . "/config/")->set("debug", false);//关闭调试模式
-        $hosts = Config::getInstance("frame")->setLocation($new . "/config/")->getOne("host");
+        $hosts = Config::getInstance("frame")->setLocation($new . "/config/")->get("host");
         echo "[项目打包程序]目前绑定域名如下：";
         for ($i = 0; $i < sizeof($hosts); $i++) {
             $host = $hosts[$i];
@@ -260,9 +260,9 @@ class Release
         }
         Config::getInstance("frame")->setLocation($new . "/config/")->set("host", $hosts);
 
-        $appName = Config::getInstance("frame")->setLocation($new . "/config/")->getOne("app");
-        $verCode = Config::getInstance("frame")->setLocation($new . "/config/")->getOne("verCode");
-        $verName = Config::getInstance("frame")->setLocation($new . "/config/")->getOne("verName");
+        $appName = Config::getInstance("frame")->setLocation($new . "/config/")->get("app");
+        $verCode = Config::getInstance("frame")->setLocation($new . "/config/")->get("verCode");
+        $verName = Config::getInstance("frame")->setLocation($new . "/config/")->get("verName");
         $fh = fopen('php://stdin', 'r');
         echo "\n[项目打包程序]项目名称（ $appName ），不修改请留空：";
         $str = fread($fh, 1000);
@@ -303,7 +303,7 @@ class Release
             $fileName=dirname(APP_DIR) . "/release/".$appName."_".$verName."(".$verCode.").zip";
 
             $zip=new ZipUtil();
-            $zip->Zip("../release/temp",$fileName);
+            $zip->zip("../release/temp",$fileName);
             echo "\n[项目打包程序]php程序已打包至$fileName";
             FileUtil::del($new);
         }else{
