@@ -89,10 +89,10 @@ class FileUpload {
 
     /**
      * 调用该方法上传文件
-     * @param $fileField
+     * @param string $fileField
      * @return bool        如果上传成功返回数true
      */
-    function upload($fileField): bool
+    function upload(string $fileField=""): bool
     {
 
         $return = true;
@@ -101,6 +101,14 @@ class FileUpload {
             $this->errorMsg = $this->getError();
             return false;
         }
+
+        if(sizeof($_FILES)==0){
+            $this->errorMsg = "没有任何文件被上传。";
+            return false;
+        }
+
+        if($fileField=="")
+            $fileField = key($_FILES);
 
         /* 将文件上传的信息取出赋给变量 */
 

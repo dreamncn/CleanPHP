@@ -54,8 +54,8 @@ class RSAEncryptHelper
      */
     public function initRSAData($private_key, $public_key)
     {
-        $this->config['private_key'] = $this->getContents($private_key);
-        $this->config['public_key'] = $this->getContents($public_key);
+        $this->config['private_key'] = $private_key;
+        $this->config['public_key'] = $public_key;
     }
     /**
      * @param $private_key_filepath

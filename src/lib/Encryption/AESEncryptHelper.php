@@ -12,21 +12,23 @@ class AESEncryptHelper
 
     const SHA256 = 'sha256';
 
-    const METHOD = 'AES-256-CBC';
+
 
     /**
      * @var string
      */
-    private string $secretKey = '0123456789012345678901';
-
+    private string $secretKey;
+    
+    private string $method = 'AES-256-CBC';
 
 
     /**
      * AESEncryptHelper constructor.
      */
-    public function __construct($secret_key)
+    public function __construct($secret_key, $method = 'AES-256-CBC')
     {
         $this->secretKey = $secret_key;
+        $this->method = $method;
     }
 
 
@@ -38,7 +40,7 @@ class AESEncryptHelper
     public function encryptWithOpenssl($data, int $options = 0): string
     {
         $iv = substr($this->secretKey, 8, 16);
-        return openssl_encrypt($data, self::METHOD, $this->secretKey, $options, $iv);
+        return openssl_encrypt($data, $this->method, $this->secretKey, $options, $iv);
     }
 
 
@@ -50,7 +52,7 @@ class AESEncryptHelper
     public function decryptWithOpenssl($data, int $options = 0): string
     {
         $iv = substr($this->secretKey, 8, 16);
-        return openssl_decrypt($data, self::METHOD, $this->secretKey, $options, $iv);
+        return openssl_decrypt($data, $this->method, $this->secretKey, $options, $iv);
     }
 
 
