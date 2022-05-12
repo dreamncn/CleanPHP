@@ -7,7 +7,7 @@ set -e
 npm run build
 
 # 进入生成的文件夹
-cd docs/docs/.vuepress/dist
+cd docs/.vuepress/dist
 
 # deploy to github pages
 # echo 'b.xugaoyi.com' > CNAME
@@ -40,7 +40,4 @@ git push -f $githubUrl master:gh-pages # 推送到github gh-pages分支
 # git push -f $codingUrl master # 推送到coding
 
 cd -
-rm -rf docs/docs/.vuepress/dist
-rm -rf release
-rm -rf src
-rm -rf test
+rm -rf docs/.vuepress/dist
