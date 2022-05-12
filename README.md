@@ -7,7 +7,7 @@
 
 ## 文档
 
-参考Wiki
+[wiki](https://cleanphp.ankio.net/)
 
 ## 快速上手
 
