@@ -205,38 +205,26 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
       },
     ],
 
-      [
-        '@vssue/vuepress-plugin-vssue', {
-  // 设置 `platform` 而不是 `api`
-  platform: 'github',
-
-        owner: 'dreamncn',
-        repo: 'issues',
-        clientId: 'ccde880a64714cebc411',
-        clientSecret: 'bf456704a2ec3e532974780be59cfe000fa5e5ba',
-        labels: ["cleanphp"],
-}
-      ],
-/*    [
+   [
       'vuepress-plugin-comment', // 评论
       {
         choosen: 'gitalk',
         options: {
-          clientID: 'a6e1355287947096b88b',
-          clientSecret: 'f0e77d070fabfcd5af95bebb82b2d574d7248d71',
-          repo: 'blog-gitalk-comment', // GitHub 仓库
-          owner: 'xugaoyi', // GitHub仓库所有者
-          admin: ['xugaoyi'], // 对仓库有写权限的人
+          clientID: 'ccde880a64714cebc411',
+          clientSecret: 'bf456704a2ec3e532974780be59cfe000fa5e5ba',
+          repo: 'issues', // GitHub 仓库
+          owner: 'dreamncn', // GitHub仓库所有者
+          admin: ['dreamncn'], // 对仓库有写权限的人
           // distractionFreeMode: true,
           pagerDirection: 'last', // 'first'正序 | 'last'倒序
           id: '<%- (frontmatter.permalink || frontmatter.to.path).slice(-16) %>', //  页面的唯一标识,长度不能超过50
           title: '「评论」<%- frontmatter.title %>', // GitHub issue 的标题
-          labels: ['Gitalk', 'Comment'], // GitHub issue 的标签
+          labels: ['cleanphp', 'Comment'], // GitHub issue 的标签
           body:
             '页面：<%- window.location.origin + (frontmatter.to.path || window.location.pathname) %>', // GitHub issue 的内容
         },
       },
-    ],*/
+    ],
     [
       '@vuepress/last-updated', // "上次更新"时间格式
       {

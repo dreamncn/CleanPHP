@@ -1,0 +1,83 @@
+[2022-05-12 19:52:13][debug] 加载：app/core/utils/FileUtil.php
+[2022-05-12 19:52:13][debug] 配置文件读取注册
+[2022-05-12 19:52:13][debug] 加载：app/core/event/EventManager.php
+[2022-05-12 19:52:13][debug] 加载：app/core/utils/StringUtil.php
+[2022-05-12 19:52:13][debug] 加载：app/core/core/Clean.php
+[2022-05-12 19:52:13][debug] 加载：app/core/event/EventListener.php
+[2022-05-12 19:52:13][debug] 加载：app/extend/ankioTask/Main.php
+[2022-05-12 19:52:13][debug] 加载：app/core/database/Sql.php
+[2022-05-12 19:52:13][debug] 加载：app/core/mvc/Model.php
+[2022-05-12 19:52:13][debug] 加载：app/extend/ankioTask/core/Db.php
+[2022-05-12 19:52:13][debug] 加载：app/extend/ankioTask/core/Server.php
+[2022-05-12 19:52:13][debug] 加载：app/core/database/sql/sqlExec.php
+[2022-05-12 19:52:13][debug] 数据库信息：sqlite:/Users/ankio/Documents/Documents/SourceCode/PHP/ClearPHP2.0/src/extend/ankioTask/data/data.db
+[2022-05-12 19:52:13][info] Array
+(
+    [原始SQL] => CREATE TABLE  IF NOT EXISTS extend_lock(
+              lock_time varchar(200)
+            )
+    [填充内容后的SQL] => CREATE TABLE  IF NOT EXISTS extend_lock(
+              lock_time varchar(200)
+            )
+    [执行时间] => 4.3988227844238ms
+)
+
+[2022-05-12 19:52:13][debug] 加载：app/core/web/Response.php
+[2022-05-12 19:52:13][info] Array
+(
+    [原始SQL] => CREATE TABLE  IF NOT EXISTS extend_lock(
+              lock_time varchar(200)
+            )
+    [填充内容后的SQL] => CREATE TABLE  IF NOT EXISTS extend_lock(
+              lock_time varchar(200)
+            )
+    [执行时间] => 0.046968460083008ms
+)
+
+[2022-05-12 19:52:13][debug] 加载：app/core/database/sql/sqlBase.php
+[2022-05-12 19:52:13][debug] 加载：app/core/database/sql/Select.php
+[2022-05-12 19:52:13][info] Array
+(
+    [原始SQL] => SELECT COUNT(*) as M_COUNTER  FROM extend_lock   
+    [填充内容后的SQL] => SELECT COUNT(*) as M_COUNTER  FROM extend_lock   
+    [执行时间] => 1.431941986084ms
+)
+
+[2022-05-12 19:52:13][info] Array
+(
+    [原始SQL] =>  SELECT *  FROM extend_lock    LIMIT 0,100 ;
+    [填充内容后的SQL] =>  SELECT *  FROM extend_lock    LIMIT 0,100 ;
+    [执行时间] => 0.52905082702637ms
+)
+
+[2022-05-12 19:52:13][debug] 加载：app/core/extend/Async/Async.php
+[2022-05-12 19:52:13][debug] 加载：app/core/cache/Cache.php
+[2022-05-12 19:52:13][debug] 框架初始化完毕
+[2022-05-12 19:52:13][debug] 加载：app/core/web/Route.php
+[2022-05-12 19:52:13][debug] 路由开始
+[2022-05-12 19:52:13][debug] 路由重写开始
+[2022-05-12 19:52:13][debug] 正在匹配路由表：http://cleanphp.com/
+[2022-05-12 19:52:13][debug] 尝试匹配：
+[2022-05-12 19:52:13][debug] 已匹配路由：/cleanphp\.com\/$/u
+[2022-05-12 19:52:13][debug] 最终路由数据：Array
+(
+    [m] => index
+    [c] => main
+    [a] => index
+)
+
+[2022-05-12 19:52:13][debug] 路由用时：0.0010008811950684ms
+[2022-05-12 19:52:13][debug] 路由完成
+[2022-05-12 19:52:13][debug] 路由完毕
+[2022-05-12 19:52:13][debug] 响应controller：index/main/index
+[2022-05-12 19:52:13][debug] 创建controller对象：app\controller\index\Main
+[2022-05-12 19:52:13][debug] 加载：app/core/mvc/Controller.php
+[2022-05-12 19:52:13][debug] 加载：app/controller/index/BaseController.php
+[2022-05-12 19:52:13][debug] 加载：app/controller/index/Main.php
+[2022-05-12 19:52:13][debug] 加载：app/core/web/Session.php
+[2022-05-12 19:52:13][debug] 加载：app/extend/rbac/Main.php
+[2022-05-12 19:52:13][debug] 加载：app/extend/rbac/core/Role.php
+[2022-05-12 19:52:13][debug] 加载：app/extend/rbac/core/RBAC.php
+[2022-05-12 19:52:13][debug] 框架退出消息:出现重定向或不可访问的页面。响应代码：  200
+[2022-05-12 19:52:13][debug] 框架响应时长:0.057079076766968ms
+[2022-05-12 19:52:13][debug] ------------> 框架结束 <------------
