@@ -9,9 +9,11 @@ bannerBg: none # auto => 网格纹背景(有bodyBgImg时无背景)，默认 | no
 
 features: # 可选的
 - title: 安全
-  details: CleanPHP对于底层PHP安全十分有研究并非常关注开发阶段安全
+  details: CleanPHP十分注重代码安全，其中有许多设计用来对抗可能的威胁。
 - title: 高效
-  details: 简单几行代码即可快速开发站点
+  details: CleanPHP运行速度非常块，没有特别复杂的操作流程，同时自带缓存处理，提高效率。
+- title: 优雅
+  details: CleanPHP之所以优雅，在于其高效的控制器编写机制，简单两句话就可以构建出一个简单的页面。
 
 
 # 文章列表显示方式: detailed 默认，显示详细版文章列表（包括作者、分类、标签、摘要、分页等）| simple => 显示简约版文章列表（仅标题和日期）| none 不显示文章列表
