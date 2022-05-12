@@ -1,0 +1,7 @@
+/src/storage/logs/*
+/src/storage/cache/*
+/src/storage/route/*
+/src/storage/trash/*
+/src/storage/update/*
+/src/storage/upload/*
+/src/storage/view/*
