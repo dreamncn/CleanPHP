@@ -10,7 +10,8 @@ npm run build
 cd docs/.vuepress/dist
 
 # deploy to github pages
-# echo 'b.xugaoyi.com' > CNAME
+
+echo 'cleanphp.ankio.net' > CNAME
 
 if [ -z "$GITHUB_TOKEN" ]; then
   msg='deploy'
