@@ -191,7 +191,7 @@ class Route
 
         $route_arr = [];
         if($url==""){
-            $url = strtolower($GLOBALS['http_scheme'] . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+            $url = strtolower( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         }
 
         Log::debug("frame_run","正在匹配路由表：$url");
@@ -203,12 +203,13 @@ class Route
 
         foreach ($GLOBALS['route'] as $rule => $mapper) {
             Log::debug("frame_run","尝试匹配：$rule");
-            $rule = Response::getAddress() . '/' . $rule;
+            $rule = Response::getDomain() . '/' . $rule;
+            Log::debug("frame_run","尝试匹配2：$rule");
             $rule = strtolower($rule);
             $rule = '/' . str_ireplace(
-                    ['\\\\', $GLOBALS['http_scheme'], '/', '<', '>', '.'],
-                    ['', '', '\/', '(?P<', '>[\x{4e00}-\x{9fa5}a-zA-Z0-9_\.-]+)', '\.'], $rule) . '$/u';
-            
+                    ['\\\\',  '/', '<', '>', '.'],
+                    ['',  '\/', '(?P<', '>[\x{4e00}-\x{9fa5}a-zA-Z0-9_\.-\/]+)', '\.'], $rule) . '$/u';
+            Log::debug("frame_run","路由规则：".print_r($rule,true));
             if (preg_match($rule, $url, $matchs)) {
                 $route = explode("/", $mapper);
                 if (isset($route[2])) {
