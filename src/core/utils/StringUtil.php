@@ -66,7 +66,7 @@ class StringUtil{
      */
     public function endsWith(string $subString): bool
     {
-        return substr($this->str, strpos($this->str, $subString)) === $subString;
+        return substr($this->str, strrpos($this->str, $subString)) === $subString;
     }
 
     /**

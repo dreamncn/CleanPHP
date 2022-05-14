@@ -167,6 +167,6 @@ class Response
      * @return void
      */
     public static function setHeader($key,$name){
-        @header("($key:$name",true);
+        @header("$key:$name",true);
     }
 }

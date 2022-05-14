@@ -71,9 +71,7 @@ class FileUpload {
     }
 
     public function getFile($fileName){
-       $strUtil=StringUtil::get($fileName);
-       $str=$strUtil->findEnd("/");
-       $path=$this->path.DS.$str;
+       $path=$this->path.DS.$fileName;
         if(file_exists($path)){
             $data=file_get_contents($path);
             if(StringUtil::get(strtolower($data))->contains("<?php")){
