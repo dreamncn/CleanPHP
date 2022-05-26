@@ -21,7 +21,7 @@ use app\core\utils\StringUtil;
  */
 class EventManager
 {
-    private static array $eventList = [];
+    protected static array $eventList = [];
 
     /**
      * 事件注册，主要是注册给拓展使用
