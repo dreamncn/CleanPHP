@@ -82,7 +82,7 @@ class StringUtil{
      * @return false|string
      */
     public function findStart(string $startString){
-        $str = substr($this->str,0,strpos($this->str,$startString));
+        $str = substr($this->str,strpos($this->str,$startString));
         if($str=="")
             $str=$this->str;
         return $str;
