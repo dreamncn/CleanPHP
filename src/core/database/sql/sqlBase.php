@@ -7,7 +7,6 @@
 
 namespace app\core\database\sql;
 use app\core\error\AppError;
-use app\core\utils\StringUtil;
 use PDO;
 
 /**
@@ -127,6 +126,7 @@ class sqlBase
                                 $value = "$left$value$right";
                                 $conditions[$key2] = $value;
                                 $condition  = str_replace( "$left_1$left$key2$right$right_1",$key2,$condition);
+
                                 //condition改写
                             }
 
@@ -138,12 +138,12 @@ class sqlBase
                     unset($conditions[$key]);
                     continue;
                 }
+                $keyRaw = $key;
                 $key = str_replace('.', '_', $key);
                 if (substr($key, 0, 1) != ":") {
-                    unset($conditions[$key]);
-
+                    unset($conditions[$keyRaw]);
                     $conditions[":_WHERE_" . $key] = $condition;
-                    $join[] = "`" . str_replace('.', '`.`', $key) . "` = :_WHERE_" . $key;
+                    $join[] = "`" . str_replace('.', '`.`', $keyRaw) . "` = :_WHERE_" . $key;
                 }
 
             }

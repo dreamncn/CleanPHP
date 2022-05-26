@@ -143,6 +143,7 @@ class sqlExec
 
             $sth->bindValue($k, $v, $data_type);
         }
+
         if ($sth->execute()) {
             $end = microtime(true) - $start;
             if (isDebug()) {
@@ -157,7 +158,9 @@ class sqlExec
 
         }
         $err = $sth->errorInfo();
-         new SqlCheckError($sql,$err);
+
+
+        new SqlCheckError($sql,$err);
          return 0;
     }
 
