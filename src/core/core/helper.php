@@ -8,9 +8,6 @@ use app\core\core\ArgType;
 use app\core\debug\Dump;
 use app\core\debug\Log;
 use app\core\event\EventManager;
-use app\core\mvc\Controller;
-
-use app\core\web\Response;
 use app\core\web\Route;
 
 
@@ -81,12 +78,29 @@ EOF;
 /**
  * 获取前端传来的POST或GET参数
  * @param  ?string $name     参数名
- * @param  ?string $default  默认参数值
+ * @param  mixed $default  默认参数值
  * @param string $type     类型(使用{@link ArgType}构造),当返回所有数据时该校验无效。
  * @return mixed
  */
-function arg(string $name = null, string $default = null, string $type= ArgType::STRING)
+function arg(string $name = null,  $default = null, string $type= ArgType::STRING)
 {
+    if($default!==null){
+        if(is_int($default))
+            $type = ArgType::INT;
+
+        if(is_string($default))
+            $type = ArgType::STRING;
+
+        if(is_bool($default))
+            $type = ArgType::BOOLEAN;
+
+        if(is_float($default))
+            $type = ArgType::FLOAT;
+
+        if(is_double($default))
+            $type = ArgType::DOUBLE;
+    }
+
 	if ($name) {
 		if (!isset($_REQUEST[$name])) {
 			return $default;
