@@ -60,7 +60,7 @@ class Config
         self::$instance->fileData = "";
         self::$instance->fileName = "$file.yml";
 
-        return self::$instance->getConfigFile();
+        return self::$instance->setLocation(APP_CONF)->getConfigFile();
     }
 
     /**
@@ -91,7 +91,7 @@ class Config
     /**
      * 获取配置文件里面一项
      * @param string $key
-     * @return string|array
+     * @return mixed
      */
     public function get(string $key)
     {
@@ -110,7 +110,7 @@ class Config
     }
 
     /**
-     * 设置单个配置文件数组
+     * 设置单个配置
      * @param string $key 参数名称
      * @param  $val
      */
