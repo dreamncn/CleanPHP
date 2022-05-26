@@ -62,13 +62,33 @@ class Select extends sqlBase
      */
     public function orderBy(string $string,string $type = self::DESC): Select
     {
-        if(!FileUtil::isName($string)){
-            new SqlCheckError("字段名称只允许为字母和下划线");
+        if(!$this->isName($string)){
+            new SqlCheckError("字段名称只允许为字母、点、下划线");
         }
-        if($type!==self::DESC||$type!==self::ASC){
+        if($type!==self::DESC&&$type!==self::ASC){
             new SqlCheckError("排序方式只允许使用 DESC 和 ASC 两种");
         }
-        $this->opt['order'] = $string." ".$type;
+        if(isset($this->opt['order'])&&$this->opt['order']!==""){
+            $this->opt['order'] =$this->opt['order'].",". $string." ".$type;
+        }else{
+            $this->opt['order'] = $string." ".$type;
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * 按照某个字段分组
+     * @param string $string
+     * @return $this
+     */
+    public function groupBy(string $string): Select
+    {
+        if(!$this->isName($string)){
+            new SqlCheckError("字段名称只允许为字母、点、下划线");
+        }
+        $this->opt['groupBy'] = $string;
         return $this;
     }
 
@@ -128,6 +148,7 @@ class Select extends sqlBase
         $sql .= $this->getOpt('FROM', 'tableName');
         $sql .= $this->getOpt('WHERE', 'where');
         $sql .= $this->getOpt('ORDER BY', 'order');
+        $sql .= $this->getOpt('GROUP BY', 'groupBy');
 
 
 
@@ -204,6 +225,7 @@ class Select extends sqlBase
         $sql .= $this->getOpt('FROM', 'tableName');
         $sql .= $this->getOpt('WHERE', 'where');
         $sql .= $this->getOpt('ORDER BY', 'order');
+        $sql .= $this->getOpt('GROUP BY', 'groupBy');
         $sql .= $this->getOpt('LIMIT', 'limit');
         $this->traSql = $sql . ";";
     }
@@ -247,5 +269,13 @@ class Select extends sqlBase
     }
 
 
+    public  function isName($name): bool
+    {
+        $isMatched = preg_match_all('/^[0-9a-zA-Z_.]+$/', $name);
+        if($isMatched)return true;
+        else {
 
+            return false;
+        }
+    }
 }
