@@ -77,13 +77,13 @@ EOF;
 
 /**
  * 获取前端传来的POST或GET参数
- * @param  ?string $name     参数名
- * @param  mixed $default  默认参数值
- * @param string $type     类型(使用{@link ArgType}构造),当返回所有数据时该校验无效。
+ * @param  ?string $name 参数名
+ * @param mixed $default 默认参数值
  * @return mixed
  */
-function arg(string $name = null,  $default = null, string $type= ArgType::STRING)
+function arg(string $name = null,  $default = null)
 {
+    $type= ArgType::STRING;
     if($default!==null){
         if(is_int($default))
             $type = ArgType::INT;
@@ -116,12 +116,12 @@ function arg(string $name = null,  $default = null, string $type= ArgType::STRIN
 
 	if(!is_array($arg)){
         switch ($type){
-            case  ArgType::STRING:$arg=strval($arg);break;
             case  ArgType::INT:$arg=intval($arg);break;
             case  ArgType::BOOLEAN:$arg=boolval($arg);break;
             case  ArgType::FLOAT:$arg=floatval($arg);break;
             case  ArgType::DOUBLE:$arg=doubleval($arg);break;
-            default:break;
+            case ArgType::STRING:
+            default:$arg=strval($arg);break;
         }
     }
 

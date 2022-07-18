@@ -12,8 +12,8 @@
 
 namespace app\core\web;
 
-use app\core\debug\Log;
 use app\core\mvc\Controller;
+use app\core\utils\StringUtil;
 
 /**
  * Class Response
@@ -25,11 +25,11 @@ use app\core\mvc\Controller;
 class Response
 {
 
-	/**
-		 * 获取当前访问的URL域名
-		 * @return string
-		 */
-	public static function getAddress(): string
+    /**
+     * 获取当前访问的URL域名
+     * @return string
+     */
+    public static function getAddress(): string
     {
         return $GLOBALS['http_scheme'] . $_SERVER["HTTP_HOST"];
     }
@@ -64,37 +64,38 @@ class Response
      */
     public static function getDomain(): string
     {
-	    return $_SERVER["HTTP_HOST"];
+        return $_SERVER["HTTP_HOST"];
     }
-	/**
-		 * 获取当前访问的地址
-		 * @return string
-		 */
-	public static function getNowAddress(): string
+
+    /**
+     * 获取当前访问的地址
+     * @return string
+     */
+    public static function getNowAddress(): string
     {
         return $GLOBALS['http_scheme'] . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'];
     }
 
-	/**
-		 * 获取当前服务器IP
-		 */
+    /**
+     * 获取当前服务器IP
+     */
     public static function getMyIp(): string
     {
         return gethostbyname(gethostname());
     }
 
 
-	/**
-		 * 跳转提示类
-		 * @param false $err 是否错误
-	 * @param int $code 错误代码（200、403、404等）
-	 * @param string $title 错误标题
-	 * @param string $msg 错误信息
-	 * @param int $time 跳转时间
-	 * @param string $url 跳转URL
-	 * @param string $desc 跳转描述
-		 */
-	public static function msg(bool $err = false, int $code = 404, string $title = "", string $msg = "", int $time = 3, string $url = '', string $desc = "立即跳转")
+    /**
+     * 跳转提示类
+     * @param false $err 是否错误
+     * @param int $code 错误代码（200、403、404等）
+     * @param string $title 错误标题
+     * @param string $msg 错误信息
+     * @param int $time 跳转时间
+     * @param string $url 跳转URL
+     * @param string $desc 跳转描述
+     */
+    public static function msg(bool $err = false, int $code = 404, string $title = "", string $msg = "", int $time = 3, string $url = '', string $desc = "立即跳转")
     {
         global $__module;
         $__module = '';
@@ -102,9 +103,9 @@ class Response
             self::location($url);
             exitApp("出现重定向或不可访问的页面。响应代码：  $code");
         }
-        if(isAPI()){
-            @header('content-type:application/json',true, $code);
-            echo json_encode(["code"=>$code,"msg"=>$msg,"data"=>$url]);
+        if (isAPI()) {
+            @header('content-type:application/json', true, $code);
+            echo json_encode(["code" => $code, "msg" => $msg, "data" => $url]);
         }else{
             @header("Content-type: text/html; charset=utf-8", true, $code);
             $err = $err ? ":(" : ":)";
@@ -130,11 +131,11 @@ class Response
      * @param $url
      * @param int $timeout 延时跳转
      */
-	public static function location($url, int $timeout=0)
+    public static function location($url, int $timeout = 0)
     {
-        if($timeout!==0){
-            header("refresh:$timeout,".$url);
-        }else{
+        if ($timeout !== 0) {
+            header("refresh:$timeout," . $url);
+        } else {
             header("Location:{$url}");
         }
 
@@ -166,7 +167,17 @@ class Response
      * @param $name
      * @return void
      */
-    public static function setHeader($key,$name){
-        @header("$key:$name",true);
+    public static function setHeader($key, $name)
+    {
+        @header("$key:$name", true);
+    }
+
+    public static function getUrl()
+    {
+        $url = $_SERVER['REQUEST_URI'];
+        if (StringUtil::get($url)->contains("?")) {
+            $url = StringUtil::get($url)->findEnd("?");
+        }
+        return $url;
     }
 }

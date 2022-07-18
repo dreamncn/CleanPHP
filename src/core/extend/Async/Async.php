@@ -5,9 +5,11 @@
 
 namespace app\core\extend\Async;
 use app\core\cache\Cache;
+use app\core\debug\Log;
 use app\core\utils\StringUtil;
 use app\core\web\Request;
 use app\core\web\Response;
+use Exception;
 
 /**
  * Class Async
@@ -26,10 +28,10 @@ class Async
         return $this->err;
     }
 
-    private $cacheInstance ;
+    private Cache $cacheInstance;
     public function __construct()
     {
-        $this->cacheInstance = Cache::init(300,APP_CACHE."task/");
+
     }
 
     /**
@@ -37,7 +39,10 @@ class Async
      */
     public static function getInstance(): ?Async
     {
-        return self::$instance===null?(self::$instance=new Async()):self::$instance;
+
+        $instance = self::$instance === null ? (self::$instance = new Async()) : self::$instance;
+        $instance->cacheInstance = Cache::init(300, APP_CACHE . "task/");
+        return $instance;
     }
     /**
      *  发起异步请求，就是后台服务请求
@@ -54,32 +59,32 @@ class Async
 
         $url_array = parse_url($url); //获取URL信息，以便平凑HTTP HEADER
 
-        if($data==[]&&isset($url_array["query"]))
+        if ($data == [] && isset($url_array["query"]))
             parse_str($url_array["query"], $data);
 
         $port = $url_array['scheme'] == 'http' ? 80 : 443;
-        if(isset($url_array["port"])){
+        if (isset($url_array["port"])) {
             $port = $url_array["port"];
         }
-       try{
-           $contextOptions = array(
-               'ssl' => array(
-                   'verify_peer' => false,
-                   'verify_peer_name' => false
-               )
-           );
-           $context = stream_context_create($contextOptions);
-           $fp = stream_socket_client(($url_array['scheme'] == 'http' ? "" : 'ssl://') . $url_array['host'].":". $port, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
-       }catch (\Exception $e){
-           $this->err = '无法向该URL发起请求' . $errstr;
-           return false;
-       }
+        try {
+            $contextOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false
+                )
+            );
+            $context = stream_context_create($contextOptions);
+            $fp = stream_socket_client(($url_array['scheme'] == 'http' ? "" : 'ssl://') . $url_array['host'] . ":" . $port, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
+        } catch (Exception $e) {
+            $this->err = '无法向该URL发起请求' . $errstr;
+            return false;
+        }
         if (!$fp) {
             $this->err = '无法向该URL发起请求' . $errstr;
             return false;
         }
 
-       if ($method == 'GET' && $data!==[])
+        if ($method == 'GET' && $data !== [])
             $getPath = $url_array['path'] . "?" . http_build_query($data);
         else
             $getPath = $url_array['path'];
@@ -116,6 +121,7 @@ class Async
             $post_str =   PHP_EOL . PHP_EOL . " "; //传递POST数据
         }
         $header .= $post_str;
+        Log::debug("task-send", $header);
         fwrite($fp, $header);
         fclose($fp);
         return true;
@@ -126,13 +132,17 @@ class Async
      * @param int $time 超时时间
      * @return void
      */
-    public function noWait($time=0){
+    public function noWait(int $time = 0, $outText = "")
+    {
         ignore_user_abort(true); // 后台运行，不受前端断开连接影响
         set_time_limit($time);
         ob_end_clean();
         header("Connection: close");
         header("HTTP/1.1 200 OK");
         ob_start();
+        if ($outText !== "") {
+            echo $outText;
+        }
         $size = ob_get_length();
         header("Content-Length: $size");
         ob_end_flush();//输出当前缓冲
@@ -146,13 +156,13 @@ class Async
      * @param int $time 最大运行时间
      * @return void
      */
-    public function response(int $time = 0)
+    public function response(int $time = 0, $outText = "")
     {
 
         if (!$this->checkToken()) {
-            Response::msg(true,403,"禁止访问","您无权访问该资源。",0,Response::getAddress(),"立即跳转");
+            Response::msg(true, 403, "禁止访问", "您无权访问该资源。", 0, Response::getAddress(), "立即跳转");
         }
-        $this->noWait($time);
+        $this->noWait($time, $outText);
         sleep(1);
     }
 
@@ -164,7 +174,7 @@ class Async
     {
         $header = Request::getHeader();
         if (isset($header['Token']) && isset($header['Identify'])) {
-            $data  =    $this->cacheInstance->get($header['Identify']);
+            $data = $this->cacheInstance->get($header['Identify']);
             $this->cacheInstance->del($header['Identify']);
             if (empty($data)||$data=="") {
                 $this->err = 'token缺失';

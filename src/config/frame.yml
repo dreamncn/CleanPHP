@@ -1,16 +1,13 @@
 ---
 host :
   # 绑定域名
-  - "localhost"
-  - "cleanphp.com"
-  - "127.0.0.1"
+  - "0.0.0.0"
 #是否为调试模式,发布前请关闭调试模式
-
 debug : true
 # 使用伪静态
-rewrite: true
+rewrite: false
 # 应用模式
-mode: api
+mode: mvc
 # 项目名
 app : cleanPHP
 # 项目升级次数

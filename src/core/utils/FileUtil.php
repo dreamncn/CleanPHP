@@ -115,7 +115,7 @@ class FileUtil {
         clearstatcache();
         if (!is_dir($path))
         {
-            return  mkdir($path, 0777, $recursive);
+            return @mkdir($path, 0777, $recursive);
         }
 
         return true;

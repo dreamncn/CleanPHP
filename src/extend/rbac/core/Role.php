@@ -7,7 +7,6 @@ namespace app\extend\rbac\core;
 
 
 use app\core\config\Config;
-use ReflectionClass;
 
 /**
  * Class Tasker

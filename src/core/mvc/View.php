@@ -19,9 +19,12 @@ use app\core\utils\StringUtil;
  */
 class View
 {
-    private  $template_dir, $compile_dir, $right_delimiter, $left_delimiter;
+    private string $compile_dir;
+    private string $left_delimiter;
+    private string $right_delimiter;
+    private string $template_dir;
     //      模板路径         编译路径       左边分隔符          右边分隔符
-    private $template_vals = [];
+    private array $template_vals = [];
     //      模板变量
 
     /**
@@ -45,7 +48,7 @@ class View
      * @param string $tempalte_name
      * @return false|string
      */
-    public function render($tempalte_name)
+    public function render(string $tempalte_name)
     {
         $complied_file = $this->compile($tempalte_name);
        ob_start();

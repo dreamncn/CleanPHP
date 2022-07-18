@@ -2,5 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/release/yakpro-po" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/release/yakpro-po/PHP-Parser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/yakpro-po" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/test/yakpro-po/PHP-Parser" vcs="Git" />
   </component>
 </project>

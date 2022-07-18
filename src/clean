@@ -1,6 +1,5 @@
+#!/usr/bin/env php
 <?php
-
-
 
 require_once  "./core/utils/StringUtil.php";
 require_once  "./core/config/Spyc.php";
@@ -48,12 +47,13 @@ const APP_INNER = APP_DIR . DS . 'static' . DS . 'innerView' . DS;
 //框架公开位置
 const APP_PUBLIC = APP_DIR . DS . 'public' . DS;
 
+
 class FileCheck
 {
     private static $info = "";
     private static $errCount = 0;
     private static $warnCount = 0;
-    private static $no_check=[];
+    private static $no_check = [];
 
     /**
      * 开始进行安全性检查
@@ -205,131 +205,304 @@ class FileCheck
 }
 class Release
 {
-    public static function run()
+    public static function run($param)
     {
         FileCheck::run();
         $fh = fopen('php://stdin', 'r');
-        echo "\n[项目打包程序]请选择是否继续打包(y/n)：";
-        $str = fread($fh, 1);
-        fclose($fh);
-
-        if ($str == "y") {
-            //继续打包
-            self::package();
-        } else {
-            echo "\n[项目打包程序]打包工作已取消";
+        if(!self::isIgnore($param)){
+            echo "\n[项目打包程序]请选择是否继续打包(y/n)：";
+            $str = fread($fh, 1);
+            fclose($fh);
+            if ($str == "n") {
+                echo "\n[项目打包程序]打包工作已取消";
+                return;
+            }
         }
+        self::package($param);
+
     }
 
-    public static function package()
+
+    public static  function isIgnore($param){
+        foreach ($param as $item){
+            if($item=="--ignore")return true;
+        }
+        return false;
+    }
+
+    public static function package($param)
     {
+
         $new = dirname(APP_DIR) . "/release/temp";
-        FileUtil::copyDir(APP_DIR, $new);
+        FileUtil::copy(APP_DIR, $new);
         FileUtil::del($new . "/clean.php");
         FileUtil::empty($new . "/storage/cache/");//清空文件夹
-        file_put_contents($new . "/storage/cache/.gitkeep","");
+        file_put_contents($new . "/storage/cache/.gitkeep", "");
         FileUtil::empty($new . "/storage/logs/");//清空文件夹
-        file_put_contents($new . "/storage/logs/.gitkeep","");
+        file_put_contents($new . "/storage/logs/.gitkeep", "");
         FileUtil::empty($new . "/storage/route/");//清空文件夹
-        file_put_contents($new . "/storage/route/.gitkeep","");
+        file_put_contents($new . "/storage/route/.gitkeep", "");
         FileUtil::empty($new . "/storage/trash/");//清空文件夹
-        file_put_contents($new . "/storage/trash/.gitkeep","");
+        file_put_contents($new . "/storage/trash/.gitkeep", "");
         FileUtil::empty($new . "/storage/view/");//清空文件夹
-        file_put_contents($new . "/storage/view/.gitkeep","");
+        file_put_contents($new . "/storage/view/.gitkeep", "");
 
         Config::getInstance("frame")->setLocation($new . "/config/")->set("debug", false);//关闭调试模式
         $hosts = Config::getInstance("frame")->setLocation($new . "/config/")->get("host");
-        echo "[项目打包程序]目前绑定域名如下：";
+        echo "\n[项目打包程序]目前绑定域名如下：";
         for ($i = 0; $i < sizeof($hosts); $i++) {
             $host = $hosts[$i];
             echo "\n$host";
-            $fh = fopen('php://stdin', 'r');
-            echo "\n[项目打包程序]如需修改请输入新的域名,不修改请留空，删除请输入-1：";
-            $str = fread($fh, 1000);
-            fclose($fh);
-            if (StringUtil::get($str)->startsWith("-1")) {
-                echo "[项目打包程序]删除域名 {$hosts[$i]}";
-                unset($hosts[$i]);
-            } else if (StringUtil::get($str)->startsWith("\n")) {
-                echo "[项目打包程序]{$hosts[$i]}无需修改。";
-            } else {
-                $hosts[$i] = str_replace("\n", "", $str);
-                echo "[项目打包程序]域名修改为  {$hosts[$i]} 。";
+            if(!self::isIgnore($param)){
+                $fh = fopen('php://stdin', 'r');
+                echo "\n[项目打包程序]如需修改请输入新的域名,不修改请留空，删除请输入-1：";
+                $str = fread($fh, 1000);
+                fclose($fh);
+                if (StringUtil::get($str)->startsWith("-1")) {
+                    echo "\n[项目打包程序]删除域名 {$hosts[$i]}";
+                    unset($hosts[$i]);
+                } else if (StringUtil::get($str)->startsWith("\n")) {
+                    echo "\n[项目打包程序]{$hosts[$i]}无需修改。";
+                } else {
+                    $hosts[$i] = str_replace("\n", "", $str);
+                    echo "\n[项目打包程序]域名修改为  {$hosts[$i]} 。";
 
+                }
             }
+
         }
         Config::getInstance("frame")->setLocation($new . "/config/")->set("host", $hosts);
 
         $appName = Config::getInstance("frame")->setLocation($new . "/config/")->get("app");
         $verCode = Config::getInstance("frame")->setLocation($new . "/config/")->get("verCode");
         $verName = Config::getInstance("frame")->setLocation($new . "/config/")->get("verName");
-        $fh = fopen('php://stdin', 'r');
-        echo "\n[项目打包程序]项目名称（ $appName ），不修改请留空：";
-        $str = fread($fh, 1000);
-        if (StringUtil::get($str)->startsWith("\n")) {
-            echo "[项目打包程序]无需修改。";
-        } else {
-            $appName = str_replace("\n","",$str);
-            echo "[项目打包程序]修改项目名称为：$appName";
-            Config::getInstance("frame")->setLocation($new . "/config/")->set("app", $appName);
-        }
-        fclose($fh);
 
-        $fh = fopen('php://stdin', 'r');
-        echo "[项目打包程序]更新版本号（ $verCode ），不修改请留空：";
-        $str = fread($fh, 1000);
-        if (StringUtil::get($str)->startsWith("\n")) {
-            echo "[项目打包程序]无需修改。";
-        } else {
-            $verCode =  str_replace("\n","",$str);
-            echo "[项目打包程序]修改版本号为：$verCode";
-            Config::getInstance("frame")->setLocation($new . "/config/")->set("verCode", $verCode);
-        }
-        fclose($fh);
+        if(!self::isIgnore($param)) {
+            $fh = fopen('php://stdin', 'r');
+            echo "\n[项目打包程序]项目名称（ $appName ），不修改请留空：";
+            $str = fread($fh, 1000);
+            if (StringUtil::get($str)->startsWith("\n")) {
+                echo "\n[项目打包程序]无需修改。";
+            } else {
+                $appName = str_replace("\n", "", $str);
+                echo "\n[项目打包程序]修改项目名称为：$appName";
+                Config::getInstance("frame")->setLocation($new . "/config/")->set("app", $appName);
+            }
+            fclose($fh);
 
-        $fh = fopen('php://stdin', 'r');
-        echo "[项目打包程序]更新版本名（ $verName ），不修改请留空：";
-        $str = fread($fh, 1000);
-        if (StringUtil::get($str)->startsWith("\n")) {
-            echo "\n[项目打包程序]无需修改。";
-        } else {
-            $verName =  str_replace("\n","",$str);
-            echo "\n[项目打包程序]修改版本名为：$verName";
-        }
-        fclose($fh);
+            $fh = fopen('php://stdin', 'r');
+            echo "\n[项目打包程序]更新版本号（ $verCode ），不修改请留空：";
+            $str = fread($fh, 1000);
+            if (StringUtil::get($str)->startsWith("\n")) {
+                echo "\n[项目打包程序]无需修改。";
+            } else {
+                $verCode = str_replace("\n", "", $str);
+                echo "\n[项目打包程序]修改版本号为：$verCode";
+                Config::getInstance("frame")->setLocation($new . "/config/")->set("verCode", $verCode);
+            }
+            fclose($fh);
 
-
-        if(class_exists("ZipArchive")){
-            $fileName=dirname(APP_DIR) . "/release/".$appName."_".$verName."(".$verCode.").zip";
-
-            $zip=new ZipUtil();
-            $zip->zip("../release/temp",$fileName);
-            echo "\n[项目打包程序]php程序已打包至$fileName";
-            FileUtil::del($new);
-        }else{
-            $fileName=dirname(APP_DIR) . "/release/temp";
-            echo "\n[项目打包程序]缺少zip拓展，请手动生成压缩包，程序位于：$fileName";
+            $fh = fopen('php://stdin', 'r');
+            echo "\n[项目打包程序]更新版本名（ $verName ），不修改请留空：";
+            $str = fread($fh, 1000);
+            if (StringUtil::get($str)->startsWith("\n")) {
+                echo "\n[项目打包程序]无需修改。";
+            } else {
+                $verName = str_replace("\n", "", $str);
+                echo "\n[项目打包程序]修改版本名为：$verName";
+            }
+            fclose($fh);
         }
 
+        $needCompress = false;
+        $needSingle = false;
+        foreach ($param as $item){
+            if($item==="--single"){
+                $needSingle = true;
+            }
+            if($item==="--compress"){
+                $needCompress = true;
+            }
+        }
+
+        if($needCompress){
+            //需要加密
+            (new Compress())->run($new);
+        }
+
+
+
+        if($needSingle){
+            Config::getInstance("frame")->setLocation($new . "/config/")->set("rewrite", false);//关闭调试模式
+            $name = "single_{$appName}_{$verName}_{$verCode}";
+            (new Single($name))->run($new);
+            if($needCompress){
+                (new Compress)->run( APP_DIR . "/../release/$name.php", APP_DIR . "/../release/compress_$name.php");
+            }
+        }else {
+            if (class_exists("ZipArchive")) {
+                if($needCompress){
+                    $appName = "compress_$appName";
+                }
+                $fileName = dirname(APP_DIR) . "/release/" . $appName . "_" . $verName . "(" . $verCode . ").zip";
+
+                $zip = new ZipUtil();
+                $zip->zip("../release/temp", $fileName);
+                echo "\n[项目打包程序]php程序已打包至$fileName";
+                FileUtil::del($new);
+            } else {
+                $fileName = dirname(APP_DIR) . "/release/temp";
+                echo "\n[项目打包程序]缺少zip拓展，请手动生成压缩包，程序位于：$fileName";
+            }
+
+        }
 
 
     }
 
 }
+
+
+
+class Single
+{
+    private $fp;
+    public function __construct($fileName)
+    {
+        $file = APP_DIR . "/../release/$fileName.php";
+        FileUtil::del($file);
+        $this->fp = fopen($file, "w+");
+    }
+
+    public function __destruct()
+    {
+        fclose($this->fp);
+
+    }
+
+    function run($new)
+    {
+
+        fwrite($this->fp, '<?php
+$randKey = "');
+        $token = StringUtil::get()->getRandom(128);
+
+        fwrite($this->fp, StringUtil::get()->getRandom(64));
+        fwrite($this->fp, '";$token="'.$token);
+        fwrite($this->fp, '";
+        $path = dirname(__FILE__)."/tmp_".md5($randKey)."/";
+        function deldir($dir) {$dh = opendir($dir);while ($file = readdir($dh)) {if($file != "." && $file!="..") {$fullpath = $dir."/".$file;if(!is_dir($fullpath)) {unlink($fullpath);} else {deldir($fullpath);}}}closedir($dh);if(rmdir($dir)) {return true;} else {return false;}}
+
+        if(isset($_GET["token"])&&$token===$_GET["token"]){
+            deldir($path);
+            unlink(__FILE__);
+            exit("bye!");
+        }
+$path = dirname(__FILE__)."/tmp_".md5($randKey)."/";
+if(!is_dir($path)){
+mkdir($path,0777,true);
+$codes = [
+'
+        );
+        $this->scan($new);
+        fwrite($this->fp, '
+
+];
+foreach($codes as $item=>$data){
+
+$p =  pathinfo($path.$item,PATHINFO_DIRNAME);
+if(!is_dir($p)){
+mkdir($p,0777,true);
+}
+file_put_contents($path.$item,base64_decode($data));
+}
+}
+include $path."public/index.php";
+'
+        );
+        FileUtil::del($new);
+        echo "\n[信息]PHP痕迹清除密钥：$token ";
+        echo "\n[信息]单一文件打包完成. ";
+    }
+
+
+    function scan($dirname)
+    {
+        $dirArr = scandir($dirname);
+        foreach ($dirArr as $v) {
+            $filename = $dirname . DIRECTORY_SEPARATOR . $v;
+            if ($v == ".gitkeep" || !StringUtil::get($v)->startsWith(".")) {
+                if (is_dir($filename)) {
+                    $this->scan($filename);
+                } else {
+                    if ($v !== "clean") {
+                        fwrite($this->fp, '"' . str_replace(dirname(APP_DIR) . "/release/temp/", "", $filename) . '"=>"' . base64_encode(file_get_contents($filename)) . '",');
+                    }
+                }
+            }
+        }
+    }
+}
+
+class Compress
+{
+
+    public  function run($from,$to=""){
+        if(is_file($from)){
+            file_put_contents($to, php_strip_whitespace($from));
+            return;
+        }
+        $dirArray = array();
+        $this->scanDirs($from, scandir($from), $dirArray);
+        if (is_array($dirArray) && count($dirArray) > 0) {
+            foreach ($dirArray as $dir) {
+                $files = scandir($dir);
+                if (!is_array($files) || count($files) < 1) continue;
+                foreach ($files as $file) {
+                    if (is_dir($file) || $file === '.' || $file === '..') continue;
+                    $file = $dir . DIRECTORY_SEPARATOR . $file;
+                    $fileInfo = pathinfo($file);
+                    if (!isset($fileInfo['extension']) || $fileInfo['extension'] != 'php') continue;
+                    file_put_contents($file, php_strip_whitespace($file));
+                }
+            }
+        }
+        #FileUtil::del("$from");
+        echo "\n[信息]代码压缩完成！";
+    }
+
+    function scanDirs($path, $dirs, &$dirArray)
+    {
+        if (!is_array($dirs) || count($dirs) < 1) return;
+
+        foreach ($dirs as $dir) {
+            if ($dir === '.' || $dir === '..') continue;
+
+            $dir = $path . DIRECTORY_SEPARATOR . $dir;
+            if (is_dir($dir)) {
+                array_push($dirArray, $dir);
+                $this->scanDirs($dir, scandir($dir), $dirArray);
+            }
+        }
+    }
+}
+
 function help()
 {
     echo <<<EOF
-Usage: php clean.php [options] 
+Usage: ./clean [options] 
 Options:
   check                     代码检查.
   release                   发布安装包.
-  
+  single                    编译为单一文件.
+  encrypt                   代码混淆。
+  single_encrypt            代码混淆并编译为单一文件。
   run [index/main/index]    命令行模式运行CleanPHP.
 EOF;
     return null;
 }
 
-function run($argv)
+function run($argv,$param=[])
 {
     if (!isset($argv[2]) && ($argv != "clean_check" && $argv != "clean_release")) return help();
     $_SERVER['CLEAN_CONSOLE'] = true;
@@ -359,23 +532,15 @@ function run($argv)
         return null;
 
     } else{
-        if($argv == "clean_check"){
+        if ($argv == "clean_check") {
             FileCheck::run();
-        }else if($argv == "clean_release"){
-            Release::run();
+        } else if ($argv == "clean_release") {
+            Release::run($param);
         }
     }
+    return null;
 }
 
-function release()
-{
-    run("clean_release");
-}
-
-function check()
-{
-    run("clean_check");
-}
 
 
 if (!isset($argv[1]))
@@ -383,10 +548,10 @@ if (!isset($argv[1]))
 
 switch ($argv[1]) {
     case "check":
-        check();
+        run("clean_check");
         break;
     case "release":
-        release();
+        run("clean_release",$argv);
         break;
     case "run":
         run($argv);
