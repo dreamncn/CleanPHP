@@ -3,7 +3,7 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 /**
- * Package: app\extend\ankioTask\core
+ * Package: extend\ankioTask\core
  * Class Db
  * Created By ankio.
  * Date : 2022/5/5
@@ -11,9 +11,9 @@
  * Description :
  */
 
-namespace app\extend\ankioTask\core;
+namespace extend\ankioTask\core;
 
-use app\core\mvc\Model;
+use core\mvc\Model;
 
 class Db extends Model
 {

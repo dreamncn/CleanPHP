@@ -3,22 +3,22 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\database;
-use app\core\config\Config;
-use app\core\database\sql\Delete;
-use app\core\database\sql\Insert;
-use app\core\database\sql\Page;
-use app\core\database\sql\Select;
-use app\core\database\sql\sqlExec;
-use app\core\database\sql\Update;
-use app\core\utils\StringUtil;
+namespace core\database;
+use core\config\Config;
+use core\database\sql\Delete;
+use core\database\sql\Insert;
+use core\database\sql\Page;
+use core\database\sql\Select;
+use core\database\sql\sqlExec;
+use core\database\sql\Update;
+use core\utils\StringUtil;
 use Exception;
 use PDO;
 use PDOException;
 
 /**
  * Class Sql
- * @package app\core\database
+ * @package core\database
  * Date: 2020/11/22 11:05 下午
  * Author: ankio
  * Description:sql的集合类
@@ -77,7 +77,7 @@ class Sql
     private function sqlInstance(string $name = "")
     {
         if ($name === "") return $this->sql;//为空直接获取执行实例
-        $class = 'app\core\database\sql\\' . $name;
+        $class = 'core\database\sql\\' . $name;
         if (isset($this->instances[$name]) && get_class($this->instances[$name]) === $class)
             return $this->instances[$name]->table($this->tableName);
 

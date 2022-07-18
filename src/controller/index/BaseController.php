@@ -3,10 +3,10 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\controller\index;
+namespace controller\index;
 
-use app\core\mvc\Controller;
-use app\core\web\Session;
+use core\mvc\Controller;
+use core\web\Session;
 
 class BaseController extends Controller
 {

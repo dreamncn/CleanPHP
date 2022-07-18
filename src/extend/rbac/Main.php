@@ -3,14 +3,14 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\extend\rbac;
+namespace extend\rbac;
 
 
-use app\core\event\EventListener;
-use app\core\utils\StringUtil;
-use app\core\web\Response;
-use app\extend\rbac\core\RBAC;
-use app\extend\rbac\core\Role;
+use core\event\EventListener;
+use core\utils\StringUtil;
+use core\web\Response;
+use extend\rbac\core\RBAC;
+use extend\rbac\core\Role;
 
 
 

@@ -10,17 +10,17 @@
  * Description :
  */
 
-namespace app\core\error;
+namespace core\error;
 
-use app\core\debug\Log;
-use app\core\web\Response;
+use core\debug\Log;
+use core\web\Response;
 
 class RouteError
 {
     public function __construct($message)
     {
         global $__module, $__controller, $__action;
-        $nameBase = "app\\controller\\$__module\\BaseController";
+        $nameBase = "controller\\$__module\\BaseController";
         if (!isDebug()) {
             Log::info("frame_error",$message);
             if (method_exists($nameBase, 'err404')) {

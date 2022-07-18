@@ -10,14 +10,14 @@
  * Description:响应类
  */
 
-namespace app\core\web;
+namespace core\web;
 
-use app\core\mvc\Controller;
-use app\core\utils\StringUtil;
+use core\mvc\Controller;
+use core\utils\StringUtil;
 
 /**
  * Class Response
- * @package app\core\web
+ * @package core\web
  * Date: 2020/11/22 11:21 下午
  * Author: ankio
  * Description:客户端响应类

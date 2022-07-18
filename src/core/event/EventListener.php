@@ -3,12 +3,12 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\event;
+namespace core\event;
 
 
 /**
  * Interface EventListener
- * @package app\core\event
+ * @package core\event
  */
 interface EventListener
 {

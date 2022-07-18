@@ -1,6 +1,6 @@
 <?php
 
-namespace app\core\extend\Json;
+namespace core\extend\Json;
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 use stdClass;

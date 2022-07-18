@@ -3,17 +3,17 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\extend\ankioTask\core;
+namespace extend\ankioTask\core;
 
-use app\core\cache\Cache;
-use app\core\debug\Log;
-use app\core\extend\Async\Async;
-use app\core\web\Response;
+use core\cache\Cache;
+use core\debug\Log;
+use core\extend\Async\Async;
+use core\web\Response;
 
 
 /**
  * Class Tasker
- * @package app\extend\net_ankio_tasker\core
+ * @package extend\net_ankio_tasker\core
  * Date: 2020/12/23 23:46
  * Author: ankio
  * Description: 定时任务管理器

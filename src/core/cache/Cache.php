@@ -11,15 +11,14 @@
  * Description :  缓存类
  */
 
-namespace app\core\cache;
+namespace core\cache;
 
-use app\core\debug\Debug;
-use app\core\debug\Log;
-use app\core\utils\FileUtil;
+use core\debug\Log;
+use core\utils\FileUtil;
 
 /**
  * Class Cache
- * @package app\core\cache
+ * @package core\cache
  * Date: 2020/11/21 11:33 下午
  * Author: ankio
  * Description: 缓存类

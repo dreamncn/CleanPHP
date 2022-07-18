@@ -3,10 +3,10 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\controller\index;
+namespace controller\index;
 
 
-use app\core\web\Response;
+use core\web\Response;
 
 
 class Main extends BaseController

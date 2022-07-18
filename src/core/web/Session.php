@@ -3,12 +3,12 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\web;
+namespace core\web;
 
 
 /**
  * Class Session
- * @package app\core\web
+ * @package core\web
  * Date: 2020/11/29 12:24 上午
  * Author: ankio
  * Description:Session操作类

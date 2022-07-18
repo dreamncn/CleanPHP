@@ -1,6 +1,6 @@
 <?php
 
-namespace app\lib\Encryption;
+namespace lib\Encryption;
 
 /**
  * Class RSAEncryptHelper

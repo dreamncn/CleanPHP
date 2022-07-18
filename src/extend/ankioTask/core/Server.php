@@ -3,19 +3,19 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\extend\ankioTask\core;
+namespace extend\ankioTask\core;
 
 
-use app\core\cache\Cache;
-use app\core\debug\Log;
-use app\core\extend\Async\Async;
-use app\core\web\Response;
-use app\extend\ankioTask\task\ATasker;
+use core\cache\Cache;
+use core\debug\Log;
+use core\extend\Async\Async;
+use core\web\Response;
+use extend\ankioTask\task\ATasker;
 use Throwable;
 
 /**
  * Class Server
- * @package app\extend\net_ankio_tasker\core
+ * @package extend\net_ankio_tasker\core
  * Date: 2020/12/31 09:57
  * Author: ankio
  * Description:Tasker服务

@@ -3,15 +3,15 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\debug;
+namespace core\debug;
 
-use app\core\utils\StringUtil;
+use core\utils\StringUtil;
 use ReflectionClass;
 use ReflectionException;
 
 /**
  * Class Dump
- * @package app\core\debug
+ * @package core\debug
  * Date: 2020/11/20 11:24 下午
  * Author: ankio
  * Description: 调试输出类

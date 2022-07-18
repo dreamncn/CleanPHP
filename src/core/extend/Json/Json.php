@@ -3,7 +3,7 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 /**
- * Package: app\core\extend\Json
+ * Package: core\extend\Json
  * Class Json
  * Created By ankio.
  * Date : 2022/5/5
@@ -11,7 +11,7 @@
  * Description :
  */
 
-namespace app\core\extend\Json;
+namespace core\extend\Json;
 
 use stdClass;
 

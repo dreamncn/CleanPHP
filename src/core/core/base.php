@@ -3,10 +3,10 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\core;
-use app\core\config\Config;
-use app\core\error\Error;
-use app\core\event\EventManager;
+namespace core\core;
+use core\config\Config;
+use core\error\Error;
+use core\event\EventManager;
 
 // 全局变量清空
 //框架加载的开始时间

@@ -5,13 +5,13 @@
 
 
 
-namespace app\core\database\sql;
-use app\core\error\AppError;
+namespace core\database\sql;
+use core\error\AppError;
 use PDO;
 
 /**
  * Class sqlBase
- * @package app\core\database\sql
+ * @package core\database\sql
  * Date: 2020/11/20 11:32 下午
  * Author: ankio
  * Description:sql数据对象构成的基类

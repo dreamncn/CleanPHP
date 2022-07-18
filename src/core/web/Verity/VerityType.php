@@ -3,7 +3,7 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 /**
- * Package: app\core\web\Verity
+ * Package: core\web\Verity
  * Class VerityType
  * Created By ankio.
  * Date : 2022/5/5
@@ -11,7 +11,7 @@
  * Description :
  */
 
-namespace app\core\web\Verity;
+namespace core\web\Verity;
 
 class VerityType
 {

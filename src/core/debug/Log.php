@@ -3,14 +3,14 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\debug;
+namespace core\debug;
 
-use app\core\config\Config;
-use app\core\utils\FileUtil;
+use core\config\Config;
+use core\utils\FileUtil;
 
 /**
  * Class Log
- * @package app\core\debug
+ * @package core\debug
  * Date: 2020/11/20 12:16 上午
  * Author: ankio
  * Description:日志类

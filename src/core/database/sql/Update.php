@@ -3,11 +3,11 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\database\sql;
+namespace core\database\sql;
 
 /**
  * Class Update
- * @package app\core\database\sql
+ * @package core\database\sql
  * Date: 2020/11/22 10:55 下午
  * Author: ankio
  * Description: 更新

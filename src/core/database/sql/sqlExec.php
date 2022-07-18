@@ -4,20 +4,20 @@
  ******************************************************************************/
 
 
-namespace app\core\database\sql;
+namespace core\database\sql;
 
-use app\core\config\Config;
-use app\core\error\AppError;
-use app\core\error\SqlCheckError;
-use app\core\debug\Log;
-use app\core\error\SqlExecError;
+use core\config\Config;
+use core\error\AppError;
+use core\error\SqlCheckError;
+use core\debug\Log;
+use core\error\SqlExecError;
 use PDO;
 use PDOException;
 use PDOStatement;
 
 /**
  * Class sqlExec
- * @package app\core\database\sql
+ * @package core\database\sql
  * Date: 2020/11/20 11:35 下午
  * Author: ankio
  * Description:数据库执行基类

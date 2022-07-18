@@ -3,7 +3,7 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 /**
- * Package: app\extend\ankioTask\core
+ * Package: extend\ankioTask\core
  * Class cycle
  * Created By ankio.
  * Date : 2022/5/10
@@ -11,7 +11,7 @@
  * Description :
  */
 
-namespace app\extend\ankioTask\core;
+namespace extend\ankioTask\core;
 
 class Cycle
 {

@@ -8,10 +8,10 @@ require_once  "./core/utils/FileUtil.php";
 
 require_once  "./core/utils/ZipUtil.php";
 
-use app\core\config\Config;
-use app\core\utils\FileUtil;
-use app\core\utils\StringUtil;
-use app\core\utils\ZipUtil;
+use core\config\Config;
+use core\utils\FileUtil;
+use core\utils\StringUtil;
+use core\utils\ZipUtil;
 
 /*******************************************************************************
  * Copyright (c) 2021. CleanPHP. All Rights Reserved.

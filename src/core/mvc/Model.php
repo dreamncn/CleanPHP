@@ -3,15 +3,15 @@
      * Copyright (c) 2022. CleanPHP. All Rights Reserved.
      ******************************************************************************/
     
-    namespace app\core\mvc;
+    namespace core\mvc;
     
     
     
-    use app\core\database\Sql;
+    use core\database\Sql;
 
     /**
      * Class Model
-     * @package app\core\mvc
+     * @package core\mvc
      * Date: 2020/12/3 12:21 上午
      * Author: ankio
      * Description: 模型类

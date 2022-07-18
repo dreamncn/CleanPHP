@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\lib\HttpClient;
+namespace lib\HttpClient;
 
 
 use ArrayObject;use Exception;

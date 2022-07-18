@@ -3,14 +3,14 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\config;
+namespace core\config;
 
-use app\core\debug\Log;
-use app\core\error\AppError;
+use core\debug\Log;
+use core\error\AppError;
 
 /**
  * Class Config
- * @package app\core\config
+ * @package core\config
  * Date: 2020/11/19 12:22 上午
  * Author: ankio
  * Description:配置管理器

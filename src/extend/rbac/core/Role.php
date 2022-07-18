@@ -3,14 +3,14 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\extend\rbac\core;
+namespace extend\rbac\core;
 
 
-use app\core\config\Config;
+use core\config\Config;
 
 /**
  * Class Tasker
- * @package app\extend\net_ankio_tasker\core
+ * @package extend\net_ankio_tasker\core
  * Date: 2020/12/23 23:46
  * Author: ankio
  * Description: 定时任务管理器
@@ -87,9 +87,9 @@ class Role
      */
     public function getApi(string $m, string $c): array
     {
-        $name = "app\\controller\\$m\\$c";
+        $name = "controller\\$m\\$c";
         $methods = get_class_methods($name);
-        $methods2 = get_class_methods("app\\controller\\$m\\BaseController");
+        $methods2 = get_class_methods("controller\\$m\\BaseController");
         foreach ($methods as $key => $val) {
             if (in_array($val,$methods2)) {
                 unset($methods[$key]);

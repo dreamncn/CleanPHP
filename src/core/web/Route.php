@@ -3,19 +3,19 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\web;
+namespace core\web;
 
-use app\core\cache\Cache;
-use app\core\config\Config;
-use app\core\debug\Log;
-use app\core\error\RouteError;
-use app\core\event\EventManager;
-use app\core\utils\StringUtil;
+use core\cache\Cache;
+use core\config\Config;
+use core\debug\Log;
+use core\error\RouteError;
+use core\event\EventManager;
+use core\utils\StringUtil;
 
 
 /**
  * Class Route
- * @package app\core\web
+ * @package core\web
  * Date: 2020/11/22 11:24 下午
  * Author: ankio
  * Description:路由类

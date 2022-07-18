@@ -3,11 +3,11 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\extend\ankioTask;
+namespace extend\ankioTask;
 
-use app\core\debug\Log;
-use app\extend\ankioTask\core\Server;
-use app\core\event\EventListener;
+use core\debug\Log;
+use extend\ankioTask\core\Server;
+use core\event\EventListener;
 
 define("EXTEND_TASKER",APP_EXTEND."ankioTask".DS);
 

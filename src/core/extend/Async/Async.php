@@ -3,17 +3,17 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\extend\Async;
-use app\core\cache\Cache;
-use app\core\debug\Log;
-use app\core\utils\StringUtil;
-use app\core\web\Request;
-use app\core\web\Response;
+namespace core\extend\Async;
+use core\cache\Cache;
+use core\debug\Log;
+use core\utils\StringUtil;
+use core\web\Request;
+use core\web\Response;
 use Exception;
 
 /**
  * Class Async
- * @package app\extend\net_ankio_tasker
+ * @package extend\net_ankio_tasker
  * Date: 2020/12/20 23:04
  * Author: ankio
  * Description:异步处理，多用于后台与多线程

@@ -3,12 +3,12 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\web;
+namespace core\web;
 
 
 /**
  * Class Cookie
- * @package app\core\web
+ * @package core\web
  * Date: 2020/11/19 12:24 上午
  * Author: ankio
  * Description:Cookie操作类

@@ -3,7 +3,7 @@
  * Copyright (c) 2021. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\error;
+namespace core\error;
 
 /**
  * Class SqlCheckError

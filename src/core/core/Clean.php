@@ -3,22 +3,22 @@
  * Copyright (c) 2021. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\core;
+namespace core\core;
 
-use app\core\debug\Debug;
-use app\core\debug\Log;
-use app\core\error\RouteError;
-use app\core\event\EventManager;
-use app\core\mvc\Controller;
-use app\core\release\FileCheck;
-use app\core\release\Release;
-use app\core\web\Request;
-use app\core\web\Route;
+use core\debug\Debug;
+use core\debug\Log;
+use core\error\RouteError;
+use core\event\EventManager;
+use core\mvc\Controller;
+use core\release\FileCheck;
+use core\release\Release;
+use core\web\Request;
+use core\web\Route;
 
 
 /**
  * Class Clean
- * @package app\core\core
+ * @package core\core
  * Date: 2020/11/21 11:01 下午
  * Author: ankio
  * Description:框架启动
@@ -94,7 +94,7 @@ class Clean
             new RouteError("错误: 模块 '$__module' 不存在!");
         }
 
-        $controller_name = 'app\\controller\\' . $__module . '\\' . $controller_name;
+        $controller_name = 'controller\\' . $__module . '\\' . $controller_name;
 
 
         Log::debug("frame_run","创建controller对象：".$controller_name);
@@ -144,7 +144,7 @@ class Clean
             }
 
         } else {
-            $base='app\\controller\\' . $__module . '\\BaseController';
+            $base='controller\\' . $__module . '\\BaseController';
             $controller_obj = new $base();
             if ($auto_tpl_file_exists) {
                 $result = $controller_obj->display($auto_tpl_name);

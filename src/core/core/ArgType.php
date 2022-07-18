@@ -3,7 +3,7 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 /**
- * Package: app\core\core
+ * Package: core\core
  * Class ArgType
  * Created By ankio.
  * Date : 2022/5/4
@@ -11,7 +11,7 @@
  * Description :
  */
 
-namespace app\core\core;
+namespace core\core;
 
 class ArgType
 {

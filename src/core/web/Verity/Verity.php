@@ -2,7 +2,7 @@
 /*******************************************************************************
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
-namespace app\core\web\Verity;
+namespace core\web\Verity;
 /**
  * Class Verity
  * Created By ankio.

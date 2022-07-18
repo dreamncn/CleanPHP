@@ -5,14 +5,14 @@
 
 
 
-namespace app\core\database\sql;
+namespace core\database\sql;
 
 
-use app\core\error\Error;
+use core\error\Error;
 
 /**
  * Class Insert
- * @package app\core\database\sql
+ * @package core\database\sql
  * Date: 2020/11/21 12:40 下午
  * Author: ankio
  * Description:插入语句的语法糖包装

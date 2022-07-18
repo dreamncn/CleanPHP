@@ -3,7 +3,7 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\utils;
+namespace core\utils;
 
 /**
  * 字符串工具类

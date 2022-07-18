@@ -9,7 +9,7 @@
  * Time : 2:56 下午
  * Description : 异常处理
  */
-namespace app\core\error;
+namespace core\error;
 
 class AppError
 {

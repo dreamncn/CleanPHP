@@ -3,16 +3,16 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\mvc;
+namespace core\mvc;
 
-use app\core\error\Error;
-use app\core\debug\Log;
-use app\core\utils\StringUtil;
+use core\error\Error;
+use core\debug\Log;
+use core\utils\StringUtil;
 
 
 /**
  * Class View
- * @package app\core\mvc
+ * @package core\mvc
  * Date: 2020/11/30 11:42 下午
  * Author: ankio
  * Description:视图渲染
@@ -91,7 +91,7 @@ class View
         $template_data = $this->_compile_struct($template_data);
 
         $template_data = $this->_compile_function($template_data);
-        $template_data = '<?php use app\core\mvc; if(!class_exists("app\\\\core\\\\mvc\\\\View", false)) exit("模板文件禁止被直接访问.");?>' . $template_data;
+        $template_data = '<?php use core\mvc; if(!class_exists("core\\\\mvc\\\\View", false)) exit("模板文件禁止被直接访问.");?>' . $template_data;
         $template_data = $this->_complie_script_get($template_data);
         $template_data = $this->_complie_script_put($template_data);
         $template_data = $this->cleanRemark($template_data);

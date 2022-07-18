@@ -1,6 +1,6 @@
 <?php
 
-namespace app\core\utils;
+namespace core\utils;
 
 
 /**

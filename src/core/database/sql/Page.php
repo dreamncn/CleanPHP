@@ -3,7 +3,7 @@
  * Copyright (c) 2021. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\database\sql;
+namespace core\database\sql;
 /**
  * Class Page
  * Created By ankio.

@@ -10,7 +10,7 @@
  * Description :
  */
 
-namespace app\lib\Encryption;
+namespace lib\Encryption;
 
 class Crypto{
     static ?Crypto $instance=null;

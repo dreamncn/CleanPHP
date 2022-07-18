@@ -3,13 +3,13 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\web;
+namespace core\web;
 
-use app\core\utils\StringUtil;
+use core\utils\StringUtil;
 
 /**
  * Class Request
- * @package app\core\web
+ * @package core\web
  * Date: 2020/11/22 11:18 下午
  * Author: ankio
  * Description:客户端请求处理

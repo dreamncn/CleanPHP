@@ -8,13 +8,13 @@
  * Class EventManager
  */
 
-namespace app\core\event;
+namespace core\event;
 
-use app\core\utils\StringUtil;
+use core\utils\StringUtil;
 
 /**
  * Class EventManager
- * @package app\core\event
+ * @package core\event
  * Date: 2020/11/20 12:13 上午
  * Author: ankio
  * Description: 事件管理器

@@ -3,16 +3,16 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\core;
+namespace core\core;
 
-use app\core\debug\Log;
-use app\core\error\Error;
+use core\debug\Log;
+use core\error\Error;
 
 
 
 /**
  * Class Loader
- * @package app\core\core
+ * @package core\core
  * Date: 2020/11/19 11:47 下午
  * Author: ankio
  * Description:自动加载类
@@ -24,7 +24,7 @@ class Loader
      */
 	public static function register()
     {
-        spl_autoload_register('app\\core\\core\\Loader::autoload', true, true);
+        spl_autoload_register('core\\core\\Loader::autoload', true, true);
         //注册第三方库的自动加载
         $data = scandir(APP_LIB);
         foreach ($data as $value) {

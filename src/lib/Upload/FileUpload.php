@@ -1,8 +1,8 @@
 <?php
-namespace app\lib\Upload;
-use app\core\debug\Log;
-use app\core\utils\FileUtil;
-use app\core\utils\StringUtil;
+namespace lib\Upload;
+use core\debug\Log;
+use core\utils\FileUtil;
+use core\utils\StringUtil;
 
 /**
  * Class FileUpload

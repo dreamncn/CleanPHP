@@ -5,12 +5,12 @@
 
 
 
-namespace app\core\database\sql;
+namespace core\database\sql;
 
 
 /**
  * Class Delete
- * @package app\core\database\sql
+ * @package core\database\sql
  * Date: 2020/11/22 10:51 下午
  * Author: ankio
  * Description:删除封装

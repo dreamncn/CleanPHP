@@ -3,7 +3,7 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 declare(strict_types=1);
-use app\core\core\Clean;
+use core\core\Clean;
 //定义运行根目录
 define('APP_DIR', dirname(__FILE__, 2));
 //定义斜杠符号

@@ -4,7 +4,7 @@
  ******************************************************************************/
 
 /**
- * Package: app\extend\ankioTask\core
+ * Package: extend\ankioTask\core
  * Class ATasker
  * Created By ankio.
  * Date : 2022/6/4
@@ -12,10 +12,10 @@
  * Description :
  */
 
-namespace app\extend\ankioTask\task;
+namespace extend\ankioTask\task;
 
-use app\core\cache\Cache;
-use app\extend\ankioTask\core\Tasker;
+use core\cache\Cache;
+use extend\ankioTask\core\Tasker;
 
 abstract class ATasker
 {

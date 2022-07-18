@@ -3,14 +3,14 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\mvc;
+namespace core\mvc;
 
-use app\core\debug\Log;
-use app\core\event\EventManager;
+use core\debug\Log;
+use core\event\EventManager;
 
 /**
  * Class Controller
- * @package app\core\mvc
+ * @package core\mvc
  * Date: 2020/12/3 10:52 下午
  * Author: ankio
  * Description:控制器

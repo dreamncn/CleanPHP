@@ -3,14 +3,14 @@
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
 
-namespace app\core\error;
-use app\core\debug\Log;
-use app\core\mvc\Controller;
-use app\core\web\Response;
+namespace core\error;
+use core\debug\Log;
+use core\mvc\Controller;
+use core\web\Response;
 
 /**
  * Class Error
- * @package app\core\debug
+ * @package core\debug
  * Date: 2020/11/20 12:09 上午
  * Author: ankio
  * Description:框架错误处理
@@ -194,7 +194,7 @@ class Error
 
         if (!isDebug()) {
             global $__module, $__controller, $__action;
-            $nameBase = "app\\controller\\$__module\\BaseController";
+            $nameBase = "controller\\$__module\\BaseController";
             if (method_exists($nameBase, 'err500')) {
                 echo $nameBase::err500($__module, $__controller, $__action, $msg);
             } else {
