@@ -11,7 +11,6 @@ use core\debug\Log;
 use core\extend\Async\Async;
 use core\web\Response;
 use extend\ankioTask\task\ATasker;
-use Throwable;
 
 /**
  * Class Server
@@ -46,20 +45,16 @@ class Server extends Db
      */
     public  function route()
     {
-        $split = explode("/", Response::getUrl());
-        Log::debug("tasker", print_r($split, true));
-        if (sizeof($split) !== 3) return;
-        if ($split[1] !== "tasker_server") return;
+        $split=explode("/",Response::getUrl());
+        Log::debug("tasker",print_r($split,true));
+        if(sizeof($split)!==3)return;
+        if($split[1]!=="tasker_server")return;
         Async::getInstance()->response();
         $GLOBALS["frame_log_tag"] = "task_";
-        Log::debug("tasker", "事件{$split[2]}");
-        switch ($split[2]) {
-            case "task_request":
-                $this->request();
-                break;
-            case "init":
-                $this->init();
-                break;
+        Log::debug("tasker","事件{$split[2]}");
+        switch ($split[2]){
+            case "task_request":$this->request();break;
+            case "init":$this->init();break;
         }
 
     }
@@ -69,8 +64,8 @@ class Server extends Db
      * @return void
      */
     public function start(){
-        if (Cache::init(20)->get("task") == "") {//没有锁定，请求保持锁定
-            Async::getInstance()->request($this->taskerUrl . "init", "GET", [], [], "tasker_start");
+        if(Cache::init(20)->get("task")==""){//没有锁定，请求保持锁定
+            Async::getInstance()->request($this->taskerUrl."init","GET",[],[],"tasker_start");
         }
     }
 
@@ -82,15 +77,15 @@ class Server extends Db
     private function init()
     {
         do {
-            Log::debug("tasker", "10s pass....");
+            Log::debug("tasker","10s pass....");
             $this->lock();//更新锁定时间
             //循环扫描
             Tasker::getInstance()->run();
             sleep(10);
-            if (!$this->isLock())
+            if(!$this->isLock())
                 break;
 
-        } while (true);
+        } while(true);
         Cache::init()->del("task");
         exitApp("服务退出，框架退出");
     }
@@ -99,10 +94,10 @@ class Server extends Db
      * 更新锁定时间
      * @return void
      */
-    private function lock()
-    {
-        Cache::init(20)->set("task", getmypid());
-    }
+    private function lock(){
+        Cache::init(20)->set("task",getmypid());
+   }
+
 
 
     /**
@@ -111,7 +106,7 @@ class Server extends Db
      */
     private function isLock(): bool
     {
-        return Cache::init(20)->get("task") === getmypid();
+       return  Cache::init(20)->get("task") === getmypid();
     }
 
     /**
@@ -124,19 +119,19 @@ class Server extends Db
         $id = arg("task_id");
         $name = arg("task_name");
         $cls = arg("task_url");
-        $task = new $cls($id, $name);
+        $task = new $cls($id,$name);
         $pid = getmypid();
         //任务Id
-        Cache::init(0, APP_CACHE . DS . "task" . DS)->set($id, $pid);
-        try {
+        Cache::init(0,APP_CACHE.DS."task".DS)->set($id,$pid);
+        try{
             /**
              * @var  ATasker $task
              */
             @$task->onStart();
-        } catch (Throwable $e) {
+        }catch (\Throwable $e){
             $task->onAbort($e);
         }
-        Cache::init(0, APP_CACHE . DS . "task" . DS)->del($id);
+        Cache::init(0,APP_CACHE.DS."task".DS)->del($id);
         $task->onStop();
         exitApp("服务退出，框架退出");
     }

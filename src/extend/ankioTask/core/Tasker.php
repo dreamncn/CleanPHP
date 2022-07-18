@@ -8,6 +8,7 @@ namespace extend\ankioTask\core;
 use core\cache\Cache;
 use core\debug\Log;
 use core\extend\Async\Async;
+use core\utils\StringUtil;
 use core\web\Response;
 
 
@@ -18,11 +19,12 @@ use core\web\Response;
  * Author: ankio
  * Description: 定时任务管理器
  */
+
 class Tasker extends Db
 {
-
+    
     public static string $table = "extend_tasker";
-
+    
 
     public function setDb()
     {
@@ -43,6 +45,8 @@ class Tasker extends Db
                     )"
         );
     }
+    
+
 
 
     public  function getTimes($id): int
@@ -53,8 +57,7 @@ class Tasker extends Db
         }
         return 0;
     }
-
-    /**
+        /**
      * 清空所有定时任务
      * @return void
      */
@@ -67,12 +70,11 @@ class Tasker extends Db
      * @param $id
      * @return void
      */
-    public  function del($id)
-    {
-        self::getInstance()->delete()->table("extend_tasker")->where(["id" => $id])->commit();
-        $data = Cache::init(0, APP_CACHE . DS . "task" . DS)->get($id);
-        if ($data == "") return;
-        Cache::init(0, APP_CACHE . DS . "task" . DS)->set($id, "false");
+    public  function del($id){
+        self::getInstance()->delete()->table("extend_tasker")->where(["id"=>$id])->commit();
+        $data = Cache::init(0,APP_CACHE.DS."task".DS)->get($id);
+        if($data=="")return;
+        Cache::init(0,APP_CACHE.DS."task".DS)->del($id);
     }
 
     /**
@@ -139,17 +141,20 @@ class Tasker extends Db
         foreach ($data as $value){
             if(intval($value["times"])==0){
                 Log::info("tasker","该ID {$value["id"]} 的数据执行完毕，删掉");
-                $db->delete()->table("extend_tasker")->where(["id"=>$value["id"]])->commit();
-            }elseif($value["next"]<=time()) {
-                $time = $this->getNext($value["minute"], $value["hour"], $value["day"], $value["month"], $value["week"], intval($value["loop"]));
-                $db->update()->table("extend_tasker")->where(["id" => $value["id"]])->set(["times=times-1", "next" => $time])->commit();
-                Log::info("tasker", "下次执行时间为：" . date("Y-m-d H:i:s", $time));
+               $db->delete()->table("extend_tasker")->where(["id"=>$value["id"]])->commit();
+            }elseif($value["next"]<=time()){
+                $time=$this->getNext($value["minute"],$value["hour"],$value["day"],$value["month"],$value["week"],intval($value["loop"]));
+                $db->update()->table("extend_tasker")->where(["id"=>$value["id"]])->set(["times=times-1","next"=>$time])->commit();
+                Log::info("tasker","下次执行时间为：".date("Y-m-d H:i:s",$time));
 
-                $this->startTasker($value["url"], $value["identify"], $value["id"]);
+                $this->startTasker($value["url"],$value["identify"],$value["id"]);
             }
         }
 
     }
+
+
+
 
 
     /**
@@ -185,7 +190,7 @@ class Tasker extends Db
             }
             //判断出循环类型
             $retTime = $date+$time;
-            if ($add <= 0) $add = 60;
+            if($add<=0)$add=60;
             while($retTime<time()){
                 $retTime = $retTime+$add;
             }
@@ -201,8 +206,8 @@ class Tasker extends Db
      * @param $identify string 唯一标识
      * @return void
      */
-    private function startTasker(string $url, string $identify, string $id)
+    private function startTasker(string $url, string $identify,string $id)
     {
-        Async::getInstance()->request(Response::getAddress() . "/tasker_server/task_request", "POST", ["task_id" => $id, "task_url" => $url, "task_name" => $identify], [], $identify);
+        Async::getInstance()->request(Response::getAddress()."/tasker_server/task_request","POST",["task_id"=>$id,"task_url"=>$url,"task_name"=>$identify],[],$identify);
     }
 }

@@ -2,7 +2,6 @@
 /*******************************************************************************
  * Copyright (c) 2022. CleanPHP. All Rights Reserved.
  ******************************************************************************/
-
 /**
  * Package: extend\ankioTask\core
  * Class ATasker
@@ -17,15 +16,14 @@ namespace extend\ankioTask\task;
 use core\cache\Cache;
 use extend\ankioTask\core\Tasker;
 
-abstract class ATasker
+abstract class ATasker implements ITasker
 {
 
     private string $taskId = "";//定时任务Id
     private string $taskName = "";
-
-    public function __construct($taskId, $taskName)
+    public function __construct($taskId,$taskName)
     {
-        $this->taskId = $taskId;
+        $this->taskId  = $taskId;
         $this->taskName = $taskName;
     }
 
@@ -48,28 +46,15 @@ abstract class ATasker
 
     public function isStop(): bool
     {
-        $data = Cache::init(0, APP_CACHE . DS . "task" . DS)->get($this->taskId);
-        return $data !== getmypid();
+        $data = Cache::init(0,APP_CACHE.DS."task".DS)->get($this->taskId);
+        return $data=="";
     }
 
-    public function stop()
-    {
+    public function stop(){
         Tasker::getInstance()->del($this->taskId);
+        $this->onStop();
         exitApp("task stop");
     }
 
-    public function onStart()
-    {
 
-    }
-
-    public function onStop()
-    {
-
-    }
-
-    public function onAbort($e)
-    {
-
-    }
 }
