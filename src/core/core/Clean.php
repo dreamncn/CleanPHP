@@ -139,7 +139,8 @@ class Clean
             if ($controller_obj->_auto_display) {
 
                 if ($auto_tpl_file_exists) {
-                  $result =  $controller_obj->display($auto_tpl_name);
+                    $controller_obj->setEncode(false);
+                    $result =  $controller_obj->display($auto_tpl_name);
                 }
             }
 
@@ -147,6 +148,7 @@ class Clean
             $base='controller\\' . $__module . '\\BaseController';
             $controller_obj = new $base();
             if ($auto_tpl_file_exists) {
+                $controller_obj->setEncode(false);
                 $result = $controller_obj->display($auto_tpl_name);
             }
 
