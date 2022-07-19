@@ -123,7 +123,7 @@ class Clean
         }
 
 
-        if(!in_array_case($action_name,get_class_methods($controller_name))){
+        if(!in_array_case($action_name,get_class_methods($controller_name))&&!$auto_tpl_file_exists){
             new RouteError("错误: 控制器 '$controller_name' 中的方法 '$action_name' 为私有方法，禁止访问!");
         }
 
