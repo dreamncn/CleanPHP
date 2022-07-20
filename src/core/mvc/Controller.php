@@ -7,6 +7,8 @@ namespace core\mvc;
 
 use core\debug\Log;
 use core\event\EventManager;
+use core\utils\FileUtil;
+use core\utils\StringUtil;
 
 /**
  * Class Controller
@@ -37,7 +39,27 @@ class Controller
      */
     public function __construct()
     {
+        if(isDebug()&&isMVC()){
+            //调试模式下复制public
+            $public = APP_DIR.DS."static".DS."public".DS;
+            if(!is_dir($public))return;
+            foreach (scandir($public) as $item){
+                $path = $public.$item;
+                if(StringUtil::get($item)->startsWith("."))
+                    continue;
+                elseif (is_dir($path)){
+                    FileUtil::copy($path,APP_DIR.DS."public".DS.$item);
+                }
+            }
+
+        }
+
+
         $this->init_result = $this->init();
+    }
+    public function __destruct()
+    {
+
     }
 
     public function getInit()
@@ -121,10 +143,15 @@ class Controller
         $GLOBALS['display_start'] = microtime(true);
         if (!$this->_v) {
             $compile_dir = APP_TMP;
-            if ($this->_auto_path_dir !== "")
+            if(!is_dir($compile_dir))mkdir($compile_dir,0777,true);
+            if ($this->_auto_path_dir !== ""){
+                if(!is_dir($this->_auto_path_dir))mkdir($this->_auto_path_dir,0777,true);
                 $this->_v = new View($this->_auto_path_dir, $compile_dir);
-            else
+            } else{
+                if(!is_dir(APP_VIEW))mkdir(APP_VIEW,0777,true);
                 $this->_v = new View(APP_VIEW, $compile_dir);
+            }
+
         }
         $this->_v->assign(get_object_vars($this));
         $this->_v->assign($this->_data);
@@ -133,7 +160,11 @@ class Controller
             $tpl_name = $this->layout;
         }
         $this->_auto_display = false;
-     //   $this->encode = false;
-        return $this->_v->render($tpl_name);
+        //   $this->encode = false;
+        $result = $this->_v->render($tpl_name);
+        if(isMVC()){
+            $result = str_replace("../../public","",$result);
+        }
+        return $result;
     }
 }
