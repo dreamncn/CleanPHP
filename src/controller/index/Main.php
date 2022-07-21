@@ -15,12 +15,7 @@ class Main extends BaseController
 
     public function index()
 	{
-
-        var_dump($_SERVER);
          Response::msg(false,200,"CleanPHP","Welcome to use CleanPHP",-1,"https://github.com/dreamncn/CleanPHP","Github");
-    }
-    public function test(){
-        var_dump("test");
     }
 
 }
