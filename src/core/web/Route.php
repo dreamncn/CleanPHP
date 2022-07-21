@@ -6,10 +6,8 @@
 namespace core\web;
 
 use core\cache\Cache;
-use core\config\Config;
 use core\debug\Log;
 use core\error\RouteError;
-use core\event\EventManager;
 use core\utils\StringUtil;
 
 
@@ -35,17 +33,12 @@ class Route
     public static function url(string $m, string $c, string $a, array $params = []): string
     {
         $isRewrite=$GLOBALS["frame"]["rewrite"];
-        if(!$isRewrite){
-            $params["m"]=$m;
-            $params["c"]=$c;
-            $params["a"]=$a;
 
-            return Response::getAddress() . "/".(empty($params) ? '' : '?' ). http_build_query($params);
-        }
 
         $paramsStr = empty($params) ? '' : '?' . http_build_query($params);
         $route = "$m/$c/$a";
         $url = Response::getAddress() . "/";
+        if(!$isRewrite) $url.="?";
         $default = $url . $route ;
         $default = strtolower($default). $paramsStr;
        $instance =  Cache::init(365 * 24 * 60 * 60, APP_ROUTE);
@@ -108,11 +101,29 @@ class Route
         $GLOBALS['route_start']=microtime(true);
         Log::debug("frame_run","路由开始");
         $isRewrite=$GLOBALS["frame"]["rewrite"];
-        if($isRewrite){
+
+        if(!$isRewrite){
+            $query = $_SERVER["QUERY_STRING"];
+            if($query!==""){
+                if(($len = strpos($query,"?"))!==false){
+
+                    $query = substr($query,0,$len);
+                  //  dumpAll($query,$len);
+                    $realQuery = str_replace("$query?","",$_SERVER["QUERY_STRING"]);
+                    parse_str($realQuery,$result);
+                    $_GET = $result;
+                    foreach ($result as $item => $value){
+                        $_REQUEST[$item]=$value;
+                    }
+                }
+                unset($_GET[$query]);
+                unset($_REQUEST[$query]);
+            }
+        }
+
             Log::debug("frame_run","路由重写开始");
             //不允许的参数
             if (isset($_REQUEST['m']) || isset($_REQUEST['a']) || isset($_REQUEST['c'])) {
-
                 new RouteError("以下参数名不允许：m,a,c!");
             }
             $url = strtolower(urldecode($_SERVER['REQUEST_URI']));
@@ -164,12 +175,6 @@ class Route
                     $instance->set($url, $arr);
 
             }
-        }else{
-            if(!isset($_REQUEST['m']))$_GET["m"]="index";
-            if(!isset($_REQUEST['a']))$_GET["a"]="index";
-            if(!isset($_REQUEST['c']))$_GET["c"]="main";
-            $route_arr_cp=[];
-        }
 
         $_REQUEST = array_merge($_GET, $_POST, $route_arr_cp);
 
@@ -188,10 +193,10 @@ class Route
      */
     public static function convertUrl(string $url=""): array
     {
-
+        $isRewrite=$GLOBALS["frame"]["rewrite"];
         $route_arr = [];
         if($url==""){
-            $url = strtolower( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+            $url = strtolower( $_SERVER['HTTP_HOST'] .($isRewrite? $_SERVER['REQUEST_URI']:str_replace("//","/","/".$_SERVER["QUERY_STRING"])));
         }
 
         Log::debug("frame_run","正在匹配路由表：$url");
