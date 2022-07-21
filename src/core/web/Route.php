@@ -89,6 +89,9 @@ class Route
         if (!isDebug())
             $instance->set('route_' . $default, $retUrl);
 
+        if(strrpos($retUrl,"?")===strlen($retUrl)-1){
+            return substr($retUrl,0,strlen($retUrl)-1);
+        }
         return $retUrl;
 
     }
