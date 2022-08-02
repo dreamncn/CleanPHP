@@ -32,7 +32,7 @@ class Sql
     /**
      * @var mixed|string
      */
-    private $tableName;
+    private $tableName = "";
     private array $instances = [];
     private ?sqlExec $sql;
 

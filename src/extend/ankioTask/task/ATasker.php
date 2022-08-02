@@ -14,7 +14,7 @@
 namespace extend\ankioTask\task;
 
 use core\cache\Cache;
-use extend\ankioTask\core\Tasker;
+use lib\SSE\db\Tasker;
 
 abstract class ATasker implements ITasker
 {

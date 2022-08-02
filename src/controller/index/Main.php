@@ -18,4 +18,7 @@ class Main extends BaseController
          Response::msg(false,200,"CleanPHP","Welcome to use CleanPHP",-1,"https://github.com/dreamncn/CleanPHP","Github");
     }
 
+    public function sse(){
+
+    }
 }

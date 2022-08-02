@@ -17,6 +17,7 @@ use core\mvc\Model;
 
 class Db extends Model
 {
+
     public function setDb()
     {
         //手动设置默认数据库位置
